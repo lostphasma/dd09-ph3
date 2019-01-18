@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>draggable quadratic bezier curve</title>
+<style>
+#figure1 {
+  border: 2px solid black;
+}
+.draggable {
+  cursor: move;
+}
+.control-point {
+  opacity: 0.5;
+  stroke: none;
+  fill: rgb(0, 140, 255);
+}
+</style>
+</head>
+<body>
+
+
+<svg id="figure1" width="400" height="300">
+  <!-- <path d="M70 250 20 110 250 50" stroke="black" fill="none" id="controlPath"/> -->
+  <path d="M50 100C50 100 100 100 150 100S200 100 250 100 300 100 350 100" stroke="blue" stroke-width="3px" fill="none" id="curve"/>
+  <circle cx="50" cy="100" r="8" id="p1" class="control-point draggable"/>
+  <circle cx="150" cy="100" r="8" id="p2" class="control-point draggable"/>
+  <circle cx="250" cy="100" r="8" id="p3" class="control-point draggable"/>
+  <circle cx="350" cy="100" r="8" id="p4" class="control-point draggable"/>
+</svg>
+
+
+<script>
+var controlPath = document.getElementById('controlPath');
+var curve = document.getElementById('curve');
+
+var p1 = document.getElementById('p1');
+var p2 = document.getElementById('p2');
+var p3 = document.getElementById('p3');
+var p4 = document.getElementById('p4');
+
+var dragElem = null;
+var svg = document.getElementById('figure1');
+
+svg.addEventListener('mousemove', onMouseMove);
+svg.addEventListener('mouseup', onMouseUp);
+
+var elements = [p1, p2, p3, p4];
+
+for (i = 0; i < elements.length; i++) {
+  elements[i].addEventListener('mousedown', onMouseDown);
+}
+
+var mouseOffsetX, mouseOffsetY;
+
+
+
+function getClientPointInSVG(ev) {
+  var p, m;
+  p = svg.createSVGPoint();
+  p.x = ev.clientX;
+  p.y = ev.clientY;
+  m = dragElem.getScreenCTM();
+  return p.matrixTransform(m.inverse());
+}
+
+function onMouseDown(ev) {
+  var p;
+  dragElem = ev.target;
+  p = getClientPointInSVG(ev);
+  mouseOffsetX = p.x - dragElem.getAttribute('cx');
+  mouseOffsetY = p.y - dragElem.getAttribute('cy');
+}
+
+function onMouseMove(ev) {
+  var p;
+  if (!dragElem) {
+    return;
+  }
+  p = getClientPointInSVG(ev);
+//   dragElem.setAttribute('cx', p.x - mouseOffsetX);
+  dragElem.setAttribute('cy', p.y - mouseOffsetY);
+//   controlPath.setAttribute('d',
+//     'M' + p1.getAttribute('cx') + ' ' + p1.getAttribute('cy') +
+//     ' ' + p2.getAttribute('cx') + ' ' + p2.getAttribute('cy') +
+//     ' ' + p3.getAttribute('cx') + ' ' + p3.getAttribute('cy'));
+
+var boffset = 50;
+var mX = p1.getAttribute('cx');
+var mY = p1.getAttribute('cy');
+var cX = p2.getAttribute('cx');
+var cY = p2.getAttribute('cy');
+var sX = p3.getAttribute('cx');
+var sY = p3.getAttribute('cy');
+var ssX = p4.getAttribute('cx');
+var ssY = p4.getAttribute('cy');
+
+  curve.setAttribute('d',
+    'M' + mX + ' ' + mY +
+    'C' + (Math.floor(mX)+boffset) + ' ' + mY + ' ' + (cX-boffset) + ' ' + cY + ' ' + cX  + ' ' + cY +
+    'S' + (sX-boffset) + ' ' + sY + ' ' + sX + ' ' + sY + ' ' +
+        + (ssX-boffset) + ' ' + ssY + ' ' + ssX + ' ' + ssY);
+}
+
+function onMouseUp(ev) {
+  dragElem = null;
+}
+</script>
+</body>
+</html>

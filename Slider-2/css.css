@@ -1,0 +1,119 @@
+/* vietnamese */
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url(https://fonts.gstatic.com/s/inconsolata/v16/QldKNThLqRwH-OJ1UHjlKGlW5qhWxg.woff2) format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+
+/* latin-ext */
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url(https://fonts.gstatic.com/s/inconsolata/v16/QldKNThLqRwH-OJ1UHjlKGlX5qhWxg.woff2) format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* latin */
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Inconsolata Regular'), local('Inconsolata-Regular'), url(https://fonts.gstatic.com/s/inconsolata/v16/QldKNThLqRwH-OJ1UHjlKGlZ5qg.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+path {
+  fill: transparent;
+  stroke: red;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+#svg_control {
+  display: inline;
+  float: left;
+  width: 500px;
+  height: 500px;
+  margin: 0 10px 10px 0;
+  background-color: #fff;
+}
+
+.control_circle {
+  fill: white;
+  stroke: black;
+  stroke-width: 1;
+}
+
+#points,
+#points svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  z-index: 2000;
+  position: absolute;
+}
+
+#points svg {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#points .point circle {
+  cursor: pointer;
+  fill: #E2137E;
+  r: 10;
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+#points .point-index {
+  cursor: pointer;
+  fill: #fff;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+#points .delete-point text {
+  cursor: pointer;
+  fill: #bbb;
+  font-size: 12px;
+  stroke: #333;
+  stroke-width: 1px;
+}
+
+#points-list {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  padding: 0;
+  list-style-type: none;
+}
+
+.curves {
+  stroke: black;
+  fill: none;
+}
+
+.control-line {
+  stroke: green;
+  fill: none;
+}
+
+.handle {
+  fill: red;
+  opacity: 0.5;
+  cursor: move;
+}
+
+.handle-text {
+  font-size: 12px;
+  font-family: 'Noto Sans Japanese', sans;
+}
