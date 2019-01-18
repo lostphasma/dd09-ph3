@@ -1,45 +1,33 @@
 var point_positions = [];
 // var json_data_muliple_lines = [[{"id": "82","x": "50","y": "50"}, {"id": "83","x": "25","y": "110"}, {"id": "97","x": "90","y": "150"}, {"id": "98","x": "150","y": "224"}, {"id": "99","x": "250","y": "150"}, {"id": "100","x": "300","y": "200"}, {"id": "100","x": "320","y": "230"}],[{"id": "1","x": "120","y": "60"}, {"id": "2","x": "30","y": "150"}, {"id": "3","x": "120","y": "170"}, {"id": "4","x": "180","y": "260"}, {"id": "5","x": "300","y": "250"}]];
 var json_data = [{
-    //punto partenza
+    //punto partenza, M
     "x": "50",
     "y": "50"
 }, {
     //primo punto, C
-    "x1": "25",
-    "y1": "110",
-    "x2": "25",
-    "y2": "110",
     "x": "25",
     "y": "110"
 }, {
-    "x2": "90",
-    "y2": "150"
+    // primo punto bezier specchiato, S
     "x": "90",
     "y": "150"
 }, {
-    "x2": "150",
-    "y2": "224"
     "x": "150",
     "y": "224"
 }, {
-    "x2": "250",
-    "y2": "150"
     "x": "250",
     "y": "150"
 }, {
-    "x2": "300",
-    "y2": "200"
     "x": "300",
     "y": "200"
 }, {
-    "x2": "320",
-    "y2": "230"
     "x": "320",
     "y": "230"
 }];
 
 var handleRadius = 8;
+var handleOffset = 50;
 
 
 //-----Pusha le posizioni dei punti nell'array nel dato momento
@@ -117,13 +105,16 @@ function curves_init(point_positions) {
 function pathData(d) {
     var p = d.points;
     curve = [
+        //x y
         'M', p[0].x, ' ', p[0].y,
-        'Q', p[1].x, ' ', p[1].y,
-        ' ', p[2].x, ' ', p[2].y,
-        ' ', p[3].x, ' ', p[3].y,
-        ' ', p[4].x, ' ', p[4].y,
-        ' ', p[5].x, ' ', p[5].y,
-		' ', p[6].x, ' ', p[6].y
+        //x1 y1 x2 y2 x y
+        'C', p[0].x + handleOffset, ' ', p[0].y, ' ', p[1].x - handleOffset, ' ', p[1].y, ' ', p[1].x, ' ', p[1].y,
+        //x2 y2 x y
+        'S', p[2].x - handleOffset, ' ', p[2].y, ' ', p[2].x, ' ', p[2].y, 
+        ' ', p[3].x - handleOffset, ' ', p[3].y, ' ', p[3].x, ' ', p[3].y, 
+        ' ', p[4].x - handleOffset, ' ', p[4].y, ' ', p[4].x, ' ', p[4].y,
+        ' ', p[5].x - handleOffset, ' ', p[5].y, ' ', p[5].x, ' ', p[5].y,
+        ' ', p[6].x - handleOffset, ' ', p[6].y, ' ', p[6].x, ' ', p[6].y
     ].join('');
 
     console.log("curve", curve);

@@ -98,7 +98,8 @@ path {
 }
 
 .curves {
-  stroke: black;
+  stroke: lightskyblue;
+  stroke-width: 2px;
   fill: none;
 }
 
@@ -108,8 +109,10 @@ path {
 }
 
 .handle {
-  fill: red;
-  opacity: 0.5;
+  stroke: blue;
+  stroke-width: 3px;
+  fill: white;
+  opacity: 1;
   cursor: move;
 }
 

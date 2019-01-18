@@ -23,8 +23,8 @@ var json_data = [{
     "y": "300"
 }];
 
-var handleRadius = 8;
-
+var handleRadius = 6;
+var handleOffset = 35;
 
 //-----Pusha le posizioni dei punti nell'array nel dato momento
 $.each(json_data, function(i, item) {
@@ -102,13 +102,16 @@ function pathData(d) {
 
     var p = d.points;
     curve = [
-        'M', p[0].x, ' ', p[0].y,
-        ' ', p[1].x, ' ', p[1].y,
-        ' ', p[2].x, ' ', p[2].y,
-        ' ', p[3].x, ' ', p[3].y,
-        ' ', p[4].x, ' ', p[4].y,
-        ' ', p[5].x, ' ', p[5].y,
-		' ', p[6].x, ' ', p[6].y
+    //x y
+    'M', p[0].x, ' ', p[0].y,
+    //x1 y1 x2 y2 x y
+    'C', p[0].x + handleOffset, ' ', p[0].y, ' ', p[1].x - handleOffset, ' ', p[1].y, ' ', p[1].x, ' ', p[1].y,
+    //x2 y2 x y
+    'S', p[2].x - handleOffset, ' ', p[2].y, ' ', p[2].x, ' ', p[2].y, 
+    ' ', p[3].x - handleOffset, ' ', p[3].y, ' ', p[3].x, ' ', p[3].y, 
+    ' ', p[4].x - handleOffset, ' ', p[4].y, ' ', p[4].x, ' ', p[4].y,
+    ' ', p[5].x - handleOffset, ' ', p[5].y, ' ', p[5].x, ' ', p[5].y,
+    ' ', p[6].x - handleOffset, ' ', p[6].y, ' ', p[6].x, ' ', p[6].y
     ].join('');
 
     console.log("curve", curve);
@@ -144,7 +147,26 @@ function show_curves(controlLineLayer, mainLayer, handleTextLayer, handleLayer, 
             var pathElem = d3.select(this),
                 controlLineElem,
                 handleTextElem;
-                
+
+    handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
+        .data(d.points).enter().append('text')
+        .attr({
+            'class': function(handleD, handleI) {
+                return 'handle-text path' + i + ' p' + (handleI + 1);
+            },
+            x: function(d) {
+                return d.x
+            },
+            y: function(d) {
+                return d.y
+            },
+
+            //controlla quanto distante è il testo dai pallini
+            dx: 10,
+            dy: 20
+        })
+        .text(handleText);
+    
     handleLayer.selectAll('circle.handle.path' + i)
         .data(d.points).enter().append('circle')
         .attr({
