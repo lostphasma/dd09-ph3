@@ -1,0 +1,231 @@
+:root {
+    --c-bg: #151315;
+    --c-el: #252428;
+    --c-el-h: #353438;
+    --c-cl: #aaaaaa;
+    --c-tx: #303030;
+    --c-cs: #c20808;
+    --sp: 16px;
+    --t-cl: #dddddd;
+}
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    color: var(--t-cl);
+    background-color: var(--c-bg);
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+a {
+    color: var(--t-cl);
+    text-decoration: none;
+}
+
+span {
+    font-size: .82em;
+    font-weight: lighter;
+    letter-spacing: 0.35px;
+}
+
+#wrapper {
+    height: 100%;
+    /* position: absolute; */
+    width: calc(100% - (var(--sp) * 2));
+    height: calc(100% - (var(--sp) * 2));
+    padding: var(--sp);
+
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+}
+
+div.module {
+    background-color: var(--c-el);
+}
+
+#content {
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: var(--sp);
+}
+
+#content > #timeline {
+    box-sizing: border-box;
+    border: 0.5px solid rgb(120, 120, 120);
+    overflow: hidden;
+
+    grid-column: 1 / 6;
+
+    display: grid;
+    grid-template-rows: 1fr 6fr 1fr;
+}
+
+#content > #timeline > #timeline-header {
+    width: 100%;
+    grid-row: 1 / 2;
+    border-bottom: 0.5px solid rgb(120, 120, 120);
+
+    display: grid;
+    grid-template-columns: 1fr repeat(6, 1.5fr) 1fr;
+}
+#content > #timeline > #timeline-header > div.timeline-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#content > #timeline > #timeline-line {
+    position: relative;
+}
+
+#content > #timeline > #timeline-line > div#cursor {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    border: 1px solid white;
+    background-color: var(--c-cl);
+}
+
+#content > #timeline > #timeline-line > div#cursor.blink {
+    animation: blinking .85s linear 0s infinite alternate;
+    transition: border 1s;
+}
+
+@keyframes blinking {
+    0% {
+        border: 1px solid white;
+    }
+    100% {
+        border: 1px solid var(--c-el);
+    }
+}
+
+#content > #timeline > #timeline-line > #timeline-line-sliders {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: grid;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-sliders > #timeline-line-sliders-container {
+    display: grid;
+    grid-template-columns: 1fr repeat(6, 1.5fr) 1fr;
+    justify-items: center;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-sliders > #timeline-line-sliders-container > input[type=range][orient=vertical] {
+    width: 100%;
+    margin: 72px 0 0 0;
+    box-shadow: none;
+    -webkit-appearance: slider-vertical; /* WebKit */
+}
+
+
+#content > #timeline > #timeline-line > #timeline-line-bars {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1.335fr repeat(12, 1fr) 1.335fr;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    border-right: 0.5px solid rgb(120, 120, 120);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:last-child {
+    border-right: none;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:nth-child(2n) {
+    border-right: 0.5px solid rgb(80, 80, 80);
+}
+
+#content > #timeline > #timeline-censor {
+    border-top: 2px solid red;
+    box-sizing: content-box;
+    background-color: var(--c-bg);
+    z-index: 20;
+
+    box-shadow: 0px -10px 30px rgba(0, 0, 0, 1);
+}
+
+#content > #playback {
+    grid-column: 6 / 8;
+    
+    display: grid;
+    grid-template-rows: 4fr 1fr 64px;
+    grid-gap: var(--sp);
+}
+
+#playback > #playback-endbutton.module > a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+#playback > #playback-container.module > #playback-content {
+    width: 100%;
+    height: 50%;
+}
+
+#playback > #playback-container.module > video {
+    background-color: black;
+}
+
+#playback > #playback-container.module > #subtitles > span {
+    padding: var(--sp);
+    font-size: 0.9em;
+    text-align: center;
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#playback > #playback-controls {
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+#playback > #playback-controls > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    font-weight: lighter;
+    font-size: .7em;
+    text-align: center;
+    width: 100%;
+}
+#playback > #playback-controls > * > * {
+    display: block;
+}
+
+#playback > #playback-controls > .playback-control > svg {
+    cursor: pointer;
+}
+
+#playback > #playback-controls > .playback-control > svg > .playback-control-button {
+    fill: var(--t-cl);
+}
+
+#playback > #playback-controls > .playback-control > .playback-control-label {
+    pointer-events: none;
+    height: 24px;
+}
+
+#playback > #playback-endbutton.module:hover {
+    background-color: var(--c-el-h);
+}
