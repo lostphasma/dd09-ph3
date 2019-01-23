@@ -1,8 +1,8 @@
 var playback = {
     playbackElement: document.getElementById("playback-content"),
     path: 'static/assets/1/',
-    contents: [ '1.mp4', '2.3.mp4', '3.mp4', '4.mp4', '5.mp4', '6.mp4' ],
-    volumes: [ 1, 1, 1, 1, 1, 1 ],
+    contents: ['1.mp4', '2.3.mp4', '3.mp4', '4.mp4', '5.mp4', '6.mp4'],
+    volumes: [1, 1, 1, 1, 1, 1],
     current: 0,
     get contentsLength() {
         return this.contents.length;
@@ -28,7 +28,6 @@ var playback = {
         var el = document.createElement("DIV");
         el.id = "cursor";
         el.style.visibility = 'hidden';
-        el.style.left = '0px';
         document.getElementById(DOMelement).appendChild(el);
         return el;
     },
@@ -50,6 +49,8 @@ var NEXT_BTN = document.getElementById("next");
 window.onresize = () => {
     playPause();
     playPause();
+    // e fammi resizare sta benedetta finestra
+    console.clear();
 }
 
 PREV_BTN.onclick = () => {
@@ -73,24 +74,31 @@ var stepper; // entity used to update cursor position every 100 milliseconds
 playback.playbackElement.addEventListener('play', () => {
 
     var c = playback.current;
-    setTimeline(c);
-    var start = getStartingPoint(c);
 
+    var start = getStartingPoint(c);
     stepper = setInterval(() => {
         var t = playback.currentTime;
         var d = playback.totalTime;
-        var width = document.querySelectorAll(".timeline-line-section")[1].clientWidth * 2;
-        cursor.style.left = `${start + mapper(t, 0, d, 0, width)}px`;
+        var w = document.querySelectorAll(".timeline-line-section")[1].clientWidth * 2;
+        var r = (start + mapper(t, 0, d, 0, w)).toFixed(2);
+        cursor.style.left = `${r}px`;
 
         // function n(n){
         //     return n > 9 ? "" + Math.round(n): "0" + Math.round(n);
         // }
 
         // document.getElementById("timecode").innerHTML = `${n(t)}`;
-        
+
     }, 100);
 
     cursor.classList.remove("blink");
+
+    setTimeout(() => {
+        setTimeline(c);
+        if (cursor.style.visibility != 'visible') {
+            cursor.style.visibility = 'visible';
+        } else return;
+    }, 100);
 
 }, false);
 
@@ -114,6 +122,10 @@ document.body.onkeyup = (e) => {
             return;
         case 39:
             playNextContent();
+            return;
+        case 77:
+            // current volume as a parameter
+            mutePlayback(playback.playbackElement.volume);
             return;
         default:
             // console.log(e.keyCode);
@@ -145,7 +157,7 @@ function setSrc() {
 
 function playPreviousContent() {
     clearInterval(stepper);
-    
+
     const skipThreshold = 0.5;
     if (playback.currentTime > skipThreshold) {
         playback.setCurrentTime(0);
@@ -165,7 +177,7 @@ function playPreviousContent() {
 
 function playNextContent() {
     clearInterval(stepper);
-    
+
     if (playback.current >= playback.contents.length - 1) {
         playback.current = 0;
 
@@ -188,7 +200,7 @@ function hightlightTimelineMarker(markerClassName) {
 }
 
 function setTimeline(which) {
-    updateCursorPos(which);
+    // updateCursorPos(which);
     switch (which) {
         case 0:
             hightlightTimelineMarker('first');
@@ -239,6 +251,10 @@ function updateCursorPos(index) {
         }
     })
     cursor.style.visibility = 'visible';
+}
+
+function mutePlayback(currVol) {
+    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
 }
 
 const mapper = (num, in_min, in_max, out_min, out_max) => {
