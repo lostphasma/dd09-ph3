@@ -50,7 +50,7 @@
                             <div class="scale">Tolerable</div>
                             <div class="scale">A&nbsp;bit<br>tolerable</div>
                             <div class="scale">Not<br>tolerable</div>
-                            <div class="scale">Absolutely<br>not&nbsptolerable</div>
+                            <div class="scale">Absolutely<br>not&nbsp;tolerable</div>
                             <div class="scale" style="color: red">Censor</div>
                         </div>
                         <div class="timeline-line-section" js-spacer="first"></div>
@@ -69,7 +69,7 @@
                             <div class="scale">Tolerable</div>
                             <div class="scale">A&nbsp;bit<br>tolerable</div>
                             <div class="scale">Not<br>tolerable</div>
-                            <div class="scale">Absolutely<br>not&nbsptolerable</div>
+                            <div class="scale">Absolutely<br>not&nbsp;tolerable</div>
                             <div class="scale" style="color: red">Censor</div>
                         </div>
                     </div>
@@ -81,6 +81,7 @@
                 <div id="playback-container" class="module">
                     <video id="playback-content">
                         <source type="video/mp4">
+                        <track src="static/assets/1/1.vtt">
                         Your browser does not support the video tag.
                     </video>
                     <div id="subtitles">
@@ -90,33 +91,38 @@
                     </div>
                 </div>
                 <div id="playback-controls" class="module">
-                    <div id="previous" class="playback-control">
+
+                    <button id="previous" class="playback-control">
                         <svg width="72px" version="1.1" viewBox="0 0 36 36">
                             <path d="m 12,12 h 2 v 12 h -2 z m 3.5,6 8.5,6 V 12 z" class="playback-control-button"></path>
                         </svg>
                         <span class="playback-control-label">
                             Previous<br>Content
                         </span>
+                    </button>
 
-                    </div>
-
-
-                    <div id="play" class="playback-control">
-                        <svg width="72px" version="1.1" viewBox="0 0 36 36">
-                            <path d="M 12,26 18.5,22 18.5,14 12,10 z M 18.5,22 25,18 25,18 18.5,14 z" class="playback-control-button"></path>
-                        </svg>
+                    <button id="play" class="playback-control">
+                        <svg width="72px" viewBox="0 0 36 36" >
+                            <defs>
+                                <path id="pause-icon" data-state="playing" class="playback-control-button" d="M11,10 L16,10 16,26 11,26 M20,10 L25,10 25,26 20,26" />
+                                <path id="play-icon"  data-state="paused" class="playback-control-button" d="M11,10 L18,13.74 18,22.28 11,26 M18,13.74 L26,18 26,18 18,22.28" />
+                            </defs>
+                            <use xlink:href="#play-icon" />
+                        </svg>                    
                         <span class="playback-control-label">
                             Play/Pause
                         </span>
-                    </div>
-                    <div id="next" class="playback-control">
+                    </button>
+
+                    <button id="next" class="playback-control">
                         <svg width="72px" version="1.1" viewBox="0 0 36 36">
                             <path d="M 12,24 20.5,18 12,12 V 24 z M 22,12 v 12 h 2 V 12 h -2 z" class="playback-control-button"></path>
                         </svg>
                         <span class="playback-control-label">
                             Next<br>Content
                         </span>
-                    </div>
+                    </button>
+
                 </div>
                 <div id="playback-endbutton" class="module">
                     <a href="#">Done</a>
@@ -126,7 +132,8 @@
     </div>
 </body>
 
-<script src="static/menu.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="static/main.js"></script>
+<script src="static/menu.js"></script>
 
 </html>

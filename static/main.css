@@ -55,6 +55,17 @@ span {
 
 div.module {
     background-color: var(--c-el);
+    transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -webkit-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -moz-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -ms-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+div.module.hidden {
+    opacity: 0;
+    transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -webkit-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -moz-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+    -ms-transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 #menu {
@@ -67,16 +78,16 @@ div.module {
     top: -100vh;
     
     /* CPU-Expensive stuff */
-    backdrop-filter: saturate(100%);
+    /* backdrop-filter: saturate(100%);
     -webkit-backdrop-filter: saturate(100%);
     -moz-backdrop-filter: saturate(100%);
     -ms-backdrop-filter: saturate(100%);
     
-    transition: top 1s cubic-bezier(0.77, 0, 0.175, 1),
-        backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -webkit-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -moz-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -ms-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: top .7s cubic-bezier(0.77, 0, 0.175, 1),
+    backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+    -webkit-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+    -moz-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+    -ms-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1); */
 }
 #menu.show {
     top: 0;
@@ -86,11 +97,11 @@ div.module {
     -moz-backdrop-filter: saturate(0%);
     -ms-backdrop-filter: saturate(0%);
     
-    transition: top 1s cubic-bezier(0.77, 0, 0.175, 1),
-        backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -webkit-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -moz-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1),
-        -ms-backdrop-filter 1s cubic-bezier(0.77, 0, 0.175, 1);
+    transition: top .7s cubic-bezier(0.77, 0, 0.175, 1),
+        backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+        -webkit-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+        -moz-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1),
+        -ms-backdrop-filter .7s cubic-bezier(0.77, 0, 0.175, 1);
 }
 #menu > ul {
     height: 100%;
@@ -140,23 +151,27 @@ div.module {
     cursor: pointer;
 }
 #wrapper > #header > #hamburger > #menu-line:first-child {
-    transform: rotate(0deg);
+    transform: translateY(0px) rotate(0deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
 #wrapper > #header > #hamburger > #menu-line:last-child {
-    transform: rotate(-0deg);
+    transform: translateY(0px) rotate(0deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
 #wrapper > #header > #hamburger > #menu-line:nth-child(2) {
     transform: scale(1);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
+#wrapper > #header > #hamburger.show {
+    transform: rotate(90deg);
+    transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
+}
 #wrapper > #header > #hamburger.show > #menu-line:first-child {
-    transform: translateY(8px) rotate(45deg);
+    transform: translateY(9px) rotate(-45deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
 #wrapper > #header > #hamburger.show > #menu-line:last-child {
-    transform: translateY(-8px) rotate(-45deg);
+    transform: translateY(-8px) rotate(45deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
 #wrapper > #header > #hamburger.show > #menu-line:nth-child(2) {
@@ -172,6 +187,7 @@ div.module {
 
 #content {
     height: 100%;
+    max-width: 100%;
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-gap: var(--sp);
@@ -264,6 +280,8 @@ div.module {
     line-height: 1.5;
     padding: 0 calc(var(--sp) / 2) 0 calc(var(--sp) / 6);
     text-transform: uppercase;
+    pointer-events: none;
+    -webkit-user-select: none;
 }
 #content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer > .scale:last-child {
     z-index: 40;
@@ -320,6 +338,10 @@ div.module {
     box-shadow: 0px -10px 30px rgba(0, 0, 0, 1);
 }
 
+
+
+
+
 #content > #playback {
     min-height: 20%;
     max-height: 100%;
@@ -334,18 +356,18 @@ div.module {
     height: auto;
 }
 
-#playback > #playback-endbutton.module > a {
+#playback > #playback-endbutton.module > :first-child {
     display: flex;
     justify-content: center;
+    text-align: center;
     align-items: center;
     height: 100%;
+
+    transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-#playback > #playback-container.module > #playback-content {
+#playback > #playback-container.module > video#playback-content {
     width: 100%;
-}
-
-#playback > #playback-container.module > video {
     background-color: black;
 }
 
@@ -378,15 +400,21 @@ div.module {
     text-align: center;
     width: 100%;
 }
+
+#playback > #playback-controls > .playback-control {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    outline: none;
+    color: white;
+}
+
 #playback > #playback-controls > * > * {
     display: block;
 }
 
 #playback > #playback-controls > .playback-control > svg {
     cursor: pointer;
-}
-
-#playback > #playback-controls > .playback-control > svg > .playback-control-button {
     fill: var(--t-cl);
 }
 
