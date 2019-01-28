@@ -9,7 +9,6 @@
 #content > #timeline {
     box-sizing: border-box;
     border: 0.5px solid rgb(120, 120, 120);
-    overflow: hidden;
 
     grid-column: 1 / 6;
 
@@ -39,8 +38,9 @@
     position: absolute;
     height: 100%;
     top: 0;
-    border: 1px solid white;
     background-color: var(--c-cl);
+    border: 1px solid white;
+    transition: border 1s;
 }
 
 #content > #timeline > #timeline-line > div#cursor.blink {
@@ -60,86 +60,33 @@
 #content > #timeline > #timeline-line > #timeline-line-bars {
     height: 100%;
     display: grid;
-    grid-template-columns: 92px repeat(12, 1fr) 92px;
+    grid-template-columns: 92px 1fr 92px;
 }
 
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section {
-    display: flex;
-    flex-direction: row;
-    box-sizing: border-box;
-    border-right: 0.5px solid rgb(120, 120, 120);
-}
-
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-    padding-top: calc(var(--sp) * 4);
-}
-
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child {
-    align-items: center;
-    text-align: center;
-}
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child {
-    align-items: center;
-    text-align: center;
-}
-
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer > .scale {
-    font-size: 1vmin;
-    color: var(--c-cl);
-    letter-spacing: .2px;
-    line-height: 1.5;
-    padding: 0 calc(var(--sp) / 2) 0 calc(var(--sp) / 6);
-    text-transform: uppercase;
-    pointer-events: none;
-    -webkit-user-select: none;
-}
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer > .scale:last-child {
-    z-index: 40;
-}
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child > .scale:last-child::before {
-    width: 0;
-    visibility: none;
-    background-color: transparent;
-}
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale:last-child::before {
-    width: 0;
-    visibility: none;
-    background-color: transparent;
-}
-
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale {
-    padding: 0 calc(var(--sp) / 6) 0 calc(var(--sp) / 2);
-}
-
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child > .scale::before {
-    content: '';
-    background-color: var(--c-cl);
-    height: 1px;
-    width: 6px;
+#content > #timeline > #timeline-line > #timeline-line-bars #curves {
     position: absolute;
-    margin-top: 4.2px;
-
-    left: 86px;
-}
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale::before {
-    content: '';
-    background-color: var(--c-cl);
-    height: 1px;
-    width: 6px;
-    position: absolute;
-    margin-top: 4.2px;
-    right: 86px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
 }
 
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:last-child {
+#content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: 1fr;
+}
+
+#content>#timeline>#timeline-line>#timeline-line-bars>#timeline-line-units > .timeline-line-section.bar {
+    border-right: 0.5px solid rgb(80, 80, 80);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units > .timeline-line-section:last-child {
     border-right: none;
 }
 
-#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:nth-child(2n) {
-    border-right: 0.5px solid rgb(80, 80, 80);
+#content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units > .timeline-line-section:nth-child(2n) {
+    border-right: 0.5px solid rgb(120, 120, 120);
 }
 
 #content > #timeline > #timeline-censor {
@@ -149,6 +96,57 @@
     z-index: 20;
 
     box-shadow: 0px -10px 30px rgba(0, 0, 0, 1);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-top: calc(var(--sp) * 4);
+    align-items: center;
+    text-align: center;
+    border-right: 0.5px solid rgb(120, 120, 120);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler > .scale {
+    font-size: 1vmin;
+    color: var(--c-cl);
+    letter-spacing: .2px;
+    line-height: 1.5;
+    padding: 0 calc(var(--sp) / 2) 0 calc(var(--sp) / 6);
+    text-transform: uppercase;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler > .scale:last-child {
+    z-index: 40;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler:last-child > .scale {
+    padding: 0 calc(var(--sp) / 6) 0 calc(var(--sp) / 2);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler:first-child > .scale:last-child::before, #content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler:last-child > .scale:last-child::before  {
+    width: 0;
+    visibility: none;
+    background-color: transparent;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler > .scale::before {
+    content: '';
+    background-color: var(--c-cl);
+    height: 1px;
+    width: 6px;
+    position: absolute;
+    margin-top: 4.2px;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler:first-child > .scale::before  {
+    left: 86px;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler:last-child > .scale::before {
+    right: 86px;
 }
 
 

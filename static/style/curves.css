@@ -1,6 +1,7 @@
-svg {
-  width: auto;
-  height: auto;
+#curves > svg {
+  z-index: 100 !important;
+  padding-top: calc(var(--sp) * 4);
+  overflow: hidden;
 }
 
 #svg_control {
@@ -16,10 +17,6 @@ svg {
   fill: white;
   stroke: black;
   stroke-width: 1;
-}
-
-rect {
-  pointer-events: none;
 }
 
 #points,
@@ -72,7 +69,7 @@ rect {
 
 .curves {
   stroke: lightskyblue;
-  stroke-width: 2px;
+  stroke-width: 3px;
   fill: none;
 }
 
@@ -84,17 +81,9 @@ rect {
 .handle {
   stroke: blue;
   stroke-width: 3px;
-  fill: white;
+  fill: var(--c-bg);
   opacity: 1;
   cursor: move;
-  transition: stroke .35s cubic-bezier(0.5, 0, 0.175, 1);
-}
-
-.redHandle {
-  stroke: red;
-  stroke-width: 3px;
-  fill: white;
-  transition: stroke .35s cubic-bezier(0.5, 0, 0.175, 1);
 }
 
 .handle.path0:first-child, .handle.path0:last-child,
@@ -107,4 +96,3 @@ rect {
   font-size: 12px;
   font-family: 'Noto Sans Japanese', sans;
 }
-

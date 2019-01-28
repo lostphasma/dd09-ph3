@@ -52,6 +52,16 @@ var playback = {
 
         this.contents[this.current].volume = this.playbackElement.volume;
     },
+    // setContentVolume: function() {
+    //     var a = document.querySelectorAll(".handle");
+
+    //     Array.prototype.forEach.call(a, (pt) => {
+    //         console.log(pt);
+    //         this.playbackElement.volume = map(pt, 0, 360, 0, 1);
+    //     })        
+
+    //     this.contents[this.current].volume = this.playbackElement.volume;
+    // },
     makeCursor: function (DOMelement) {
         var el = document.createElement("DIV");
         el.id = "cursor";
