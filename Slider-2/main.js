@@ -8,19 +8,19 @@ var curva_arrivo = [{
     "y": "300"
 }, {
     "x": "150",
-    "y": "600"
+    "y": "500"
 }, {
     "x": "250",
-    "y": "600"
+    "y": "500"
 }, {
     "x": "350",
-    "y": "600"
+    "y": "500"
 }, {
     "x": "450",
-    "y": "600"
+    "y": "500"
 }, {
     "x": "550",
-    "y": "600"
+    "y": "500"
 }, {
     "x": "650",
     "y": "300"
@@ -31,7 +31,8 @@ console.log(json_data);
 
 var handleRadius = 6;
 var handleOffset = 35;
-var maxYOffset = 400;
+var minYoffset = 300;
+var maxYOffset = 600;
 
 //-----Pusha le posizioni dei punti nell'array point_position nel dato momento
 $.each(json_data, function(i, item) {
@@ -72,17 +73,17 @@ function curves_init(point_positions) {
     // elementi draggabili, funzione che controlla il drag delle maniglie
     function dragmove(d) {
         // d.x = d3.event.x;
-        d.y = d3.event.y;
+        d.y = clamp(d3.event.y, minYoffset, maxYOffset);
         
         // se il mouse è inferiore a un certo valore y, non eseguire la funzione
         // da problemi, la curva si aggiorna comunque
         // if (d.y > 300) {
 
             // pallino maniglia
-            if (d.y < maxYOffset) {
+            if ( d.y < maxYOffset - 20 ) {
                 d3.select(this).attr({
                     // cx: d.x,
-                    cy: d.y  
+                    cy: d.y
                 });
 
                 handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
@@ -91,12 +92,10 @@ function curves_init(point_positions) {
                     y: d.y
                 }).text(handleText(d, d.handleID));
 
-                d.pathElem.attr('d', pathData);
-                
             } else {
                 d3.select(this).attr({
                     // cx: d.x,
-                    cy: maxYOffset     
+                    cy: maxYOffset  
                 });
 
                 handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
@@ -104,9 +103,10 @@ function curves_init(point_positions) {
                     // x: d.x,
                     y: maxYOffset
                 }).text(handleText(d, d.handleID));
+
             }
-            
-            
+            d.pathElem.attr('d', pathData); 
+                
         // }
     }
 
@@ -131,20 +131,29 @@ function curves_init(point_positions) {
 function pathData(d) {
 
     var p = d.points;
+
+    d.points.forEach(el => {
+        // console.log(el);
+        el.y = clamp(el.y, minYoffset, maxYOffset);
+        if ( el.y >= maxYOffset - 20 ) {
+            el.y = maxYOffset;
+        }
+    });
+    
     curve = [
     //x y
-    'M', p[0].x, ' ', p[0].y,
-    //x1 y1 x2 y2 x y
-    'C', p[0].x + handleOffset, ' ', p[0].y, ' ', p[1].x - handleOffset, ' ', p[1].y, ' ', p[1].x, ' ', p[1].y,
-    //x2 y2 x y
-    'S', p[2].x - handleOffset, ' ', p[2].y, ' ', p[2].x, ' ', p[2].y, 
-    ' ', p[3].x - handleOffset, ' ', p[3].y, ' ', p[3].x, ' ', p[3].y, 
-    ' ', p[4].x - handleOffset, ' ', p[4].y, ' ', p[4].x, ' ', p[4].y,
-    ' ', p[5].x - handleOffset, ' ', p[5].y, ' ', p[5].x, ' ', p[5].y,
-    ' ', p[6].x - handleOffset, ' ', p[6].y, ' ', p[6].x, ' ', p[6].y
+    'M', parseInt(p[0].x), ',', parseInt(p[0].y),
+    //x1 parseInt(y1 x2 )y2 x y
+    'C', parseInt(p[0].x + handleOffset), ',', parseInt(p[0].y), ',', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ',', parseInt(p[1].x), ',', parseInt(p[1].y),
+    //x2 parseInt(y2 x y)
+    'S', parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ',', parseInt(p[2].x), ',', parseInt(p[2].y), 
+    'S', parseInt(p[3].x - handleOffset), ',', parseInt(p[3].y), ',', parseInt(p[3].x), ',', parseInt(p[3].y), 
+    'S', parseInt(p[4].x - handleOffset), ',', parseInt(p[4].y), ',', parseInt(p[4].x), ',', parseInt(p[4].y),
+    'S', parseInt(p[5].x - handleOffset), ',', parseInt(p[5].y), ',', parseInt(p[5].x), ',', parseInt(p[5].y),
+    'S', parseInt(p[6].x - handleOffset), ',', parseInt(p[6].y), ',', parseInt(p[6].x), ',', parseInt(p[6].y)
     ].join('');
 
-    //console.log("curve", curve);
+    console.log("curve", curve);
     return curve;
 }
 
@@ -158,11 +167,7 @@ function pathData(d) {
 // }
 
 function handleText(d, i) {
-    if (d.y < 400) {
-        return 'p' + (i + 1) + ': ' + d.x + '/' + d.y;
-    } else {
-        return 'p' + (i + 1) + ': ' + d.x + '/' + maxYOffset;
-    }
+    return 'p' + (i + 1) + ': ' + d.x + '/' + d.y;
 }
 
 
@@ -211,7 +216,11 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                 return d.x
             },
             cy: function(d) {
-                return d.y
+                if (d.y < maxYOffset){
+                    return d.y;
+                } else {
+                    return (d.y - 30);
+                }
             },
             r: handleRadius
         })
@@ -249,43 +258,32 @@ function storeJSON() {
 // ------ ANIMATE LINES
 function animateLines() {
     var p = curva_arrivo;
+    
     ca = [
         //x y
-        'M', p[0].x, ' ', p[0].y,
+        'M', parseInt(p[0].x), ',', parseInt(p[0].y),
         //x1 y1 x2 y2 x y
-        'C', p[0].x + handleOffset, ' ', p[0].y, ' ', p[1].x - handleOffset, ' ', p[1].y, ' ', p[1].x, ' ', p[1].y,
+        'C', parseInt(p[0].x + handleOffset), ',', parseInt(p[0].y), ',', parseInt(p[1].x - handleOffset), ' ', parseInt(p[1].y), ' ', parseInt(p[1].x), ' ', parseInt(p[1].y),
         //x2 y2 x y
-        'S', p[2].x - handleOffset, ' ', p[2].y, ' ', p[2].x, ' ', p[2].y, 
-        ' ', p[3].x - handleOffset, ' ', p[3].y, ' ', p[3].x, ' ', p[3].y, 
-        ' ', p[4].x - handleOffset, ' ', p[4].y, ' ', p[4].x, ' ', p[4].y,
-        ' ', p[5].x - handleOffset, ' ', p[5].y, ' ', p[5].x, ' ', p[5].y,
-        ' ', p[6].x - handleOffset, ' ', p[6].y, ' ', p[6].x, ' ', p[6].y
+        'S', parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ',', parseInt(p[2].x), ',', parseInt(p[2].y), 
+        ' ', parseInt(p[3].x - handleOffset), ',', parseInt(p[3].y), ',', parseInt(p[3].x), ',', parseInt(p[3].y), 
+        ' ', parseInt(p[4].x - handleOffset), ',', parseInt(p[4].y), ',', parseInt(p[4].x), ',', parseInt(p[4].y),
+        ' ', parseInt(p[5].x - handleOffset), ',', parseInt(p[5].y), ',', parseInt(p[5].x), ',', parseInt(p[5].y),
+        ' ', parseInt(p[6].x - handleOffset), ',', parseInt(p[6].y), ',', parseInt(p[6].x), ',', parseInt(p[6].y)
         ].join('');
 
-        console.log(ca);
+    var asd = d3.select('.curves').attr('d');
+    // console.log(asd);
+    console.log(ca);
 
-    d3.select('curves')
+    d3.select('.curves')
         .transition()
         .duration(1000)
         .attrTween('d', function () {
-            endPath = ca;
-            return endPath;
-            // return d3.morphPath(startPath, endPath);
+            var startPath = d3.select('.curves').attr('d');
+            var endPath = ca;
+            return d3.morphPath(startPath, endPath);
     });
-
-    $.each(json_data, function(i, item) {
-        point_positions = [];
-
-        line_response = json_data[i];
-        // var line_pi_id = line_response.line_pi_id;
-        var li_x = parseInt(line_response.x);
-        var li_y = parseInt(line_response.y);
-    
-        point_positions.push({
-            x: li_x,
-            y: li_y
-        })
-    })
 
     console.log("fatto");
     
