@@ -38,7 +38,6 @@ var playback = {
     set src(i) {
         this.playbackElement.src = this.path + this.category + '/' + this.contents[i].src;
     },
-    // TO-DO: volume function?
     setContentVolume: function(bool) {
         const incr = 0.1;
         
@@ -129,7 +128,7 @@ var playButton = {
     }
 };
 
-playButton.init();
+
 
 /* --------------- ======== ---------------- */
 /* ---------------- EVENTS ----------------- */
@@ -137,6 +136,7 @@ playButton.init();
 window.onload = () => {
     setSessionid();
     playback.src = 0;
+    playButton.init();
 }
 
 window.onresize = () => {
@@ -164,8 +164,8 @@ NEXT_BTN.children[0].onclick = () => {
 
 DONE_BTN.onclick = () => {
     // endSession();
-    enqueueOps(endOps);
     DONE_BTN.style.pointerEvents = 'none';
+    enqueueOps(endOps);
 }
 
 
@@ -184,7 +184,7 @@ playback.playbackElement.addEventListener('play', () => {
     var start = getStartingPoint(c);
     
     // setTimeout interval constant
-    const ms = 2;
+    const ms = 100;
 
     stepper = setInterval(() => {
         // update cursor position and increment it 
@@ -231,6 +231,8 @@ playback.playbackElement.addEventListener('pause', () => {
 
 /* ----------- KEYBOARD SUPPORT ------------ */
 
+
+// TO-DO: Stop listening for keyboard events once DONE_BTN has been clicked
 document.body.onkeyup = (e) => {
     switch (e.keyCode) {
         case 32:
@@ -279,10 +281,10 @@ function setSessionid() {
             title.innerHTML = 'Gender';
             return;
         case 3:
-            title.innerHTML = 'Religion';
+            title.innerHTML = 'Disability';
             return;
         case 4:
-            title.innerHTML = 'Sexuality';
+            title.innerHTML = 'Religion';
             return;
         default:
             playback.category = 1;
@@ -494,6 +496,10 @@ var endOps = [{
     start: 9000
 }]
 function enqueueOps(ops) {
+    // micro-function to compute timers?
+    // maybe: forEach obj.start in ops
+    // calculate timeout by adding previous
+    // objects in endOps array
     ops.forEach((op) => {
         setTimeout(() => {
             op.fn();

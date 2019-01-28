@@ -1,0 +1,246 @@
+#content {
+    height: 100%;
+    max-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: var(--sp);
+}
+
+#content > #timeline {
+    box-sizing: border-box;
+    border: 0.5px solid rgb(120, 120, 120);
+    overflow: hidden;
+
+    grid-column: 1 / 6;
+
+    display: grid;
+    grid-template-rows: 1fr 8fr 1fr;
+}
+
+#content > #timeline > #timeline-header {
+    width: 100%;
+    grid-row: 1 / 2;
+    border-bottom: 0.5px solid rgb(120, 120, 120);
+
+    display: grid;
+    grid-template-columns: 92px repeat(6, 1fr) 92px;
+}
+#content > #timeline > #timeline-header > div.timeline-marker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#content > #timeline > #timeline-line {
+    position: relative;
+}
+
+#content > #timeline > #timeline-line > div#cursor {
+    position: absolute;
+    height: 100%;
+    top: 0;
+    border: 1px solid white;
+    background-color: var(--c-cl);
+}
+
+#content > #timeline > #timeline-line > div#cursor.blink {
+    animation: blinking .85s linear 0s infinite alternate;
+    transition: border 1s;
+}
+
+@keyframes blinking {
+    0% {
+        border: 1px solid white;
+    }
+    100% {
+        border: 1px solid var(--c-el);
+    }
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 92px repeat(12, 1fr) 92px;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section {
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    border-right: 0.5px solid rgb(120, 120, 120);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    padding-top: calc(var(--sp) * 4);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child {
+    align-items: center;
+    text-align: center;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child {
+    align-items: center;
+    text-align: center;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer > .scale {
+    font-size: 1vmin;
+    color: var(--c-cl);
+    letter-spacing: .2px;
+    line-height: 1.5;
+    padding: 0 calc(var(--sp) / 2) 0 calc(var(--sp) / 6);
+    text-transform: uppercase;
+    pointer-events: none;
+    -webkit-user-select: none;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer > .scale:last-child {
+    z-index: 40;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child > .scale:last-child::before {
+    width: 0;
+    visibility: none;
+    background-color: transparent;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale:last-child::before {
+    width: 0;
+    visibility: none;
+    background-color: transparent;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale {
+    padding: 0 calc(var(--sp) / 6) 0 calc(var(--sp) / 2);
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:first-child > .scale::before {
+    content: '';
+    background-color: var(--c-cl);
+    height: 1px;
+    width: 6px;
+    position: absolute;
+    margin-top: 4.2px;
+
+    left: 86px;
+}
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.spacer:last-child > .scale::before {
+    content: '';
+    background-color: var(--c-cl);
+    height: 1px;
+    width: 6px;
+    position: absolute;
+    margin-top: 4.2px;
+    right: 86px;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:last-child {
+    border-right: none;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section:nth-child(2n) {
+    border-right: 0.5px solid rgb(80, 80, 80);
+}
+
+#content > #timeline > #timeline-censor {
+    border-top: 2px solid red;
+    box-sizing: content-box;
+    background-color: var(--c-bg);
+    z-index: 20;
+
+    box-shadow: 0px -10px 30px rgba(0, 0, 0, 1);
+}
+
+
+
+
+
+#content > #playback {
+    min-height: 20%;
+    max-height: 100%;
+    grid-column: 6 / 8;
+    
+    display: grid;
+    grid-template-rows: 4fr 1fr 64px;
+    grid-gap: var(--sp);
+}
+
+#playback > #playback-container {
+    height: auto;
+}
+
+#playback > #playback-endbutton.module > :first-child {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    height: 100%;
+
+    transition: opacity .5s cubic-bezier(0.77, 0, 0.175, 1);
+}
+#playback > #playback-endbutton.module:hover {
+    background-color: var(--c-el-h);
+}
+#playback > #playback-endbutton.module:active {
+    background-color: var(--c-el-a);
+}
+
+#playback > #playback-container.module > video#playback-content {
+    max-width: 100%;
+    background-color: black;
+}
+
+#playback > #playback-container.module > #subtitles > span {
+    padding: var(--sp);
+    font-size: 0.9em;
+    font-family: var(--f-s);
+    text-align: center;
+    pointer-events: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#playback > #playback-controls {
+    min-width: 10%;
+    padding: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    overflow: hidden;
+}
+#playback > #playback-controls > * {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    font-weight: lighter;
+    font-size: .7em;
+    text-align: center;
+    width: 100%;
+}
+
+#playback > #playback-controls > .playback-control {
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    outline: none;
+    color: white;
+}
+
+#playback > #playback-controls > * > * {
+    display: block;
+}
+
+#playback > #playback-controls > .playback-control > svg {
+    cursor: pointer;
+    fill: var(--t-cl);
+}
+
+#playback > #playback-controls > .playback-control > .playback-control-label {
+    pointer-events: none;
+    height: 24px;
+}

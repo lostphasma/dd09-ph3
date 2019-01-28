@@ -1,0 +1,53 @@
+#wrapper > #content {
+    max-width: 960px;
+    padding: calc(var(--sp) * 4);
+}
+
+#wrapper > #content > #hero  {
+    font-family: var(--f-el);
+    font-size: 2.5em;
+
+    grid-column: 2 / 7;
+
+    margin-bottom: calc(var(--sp) * 4);
+}
+#wrapper > #content > #hero .ti-cursor {
+    left: -1.2ch !important;
+}
+
+#wrapper > #content > a > div#continue {
+    display: inline-block;
+    
+    font-family: 'IBM Plex Mono Light';
+    font-size: 1em;
+    padding: var(--sp);
+    margin: 0;
+
+    opacity: 0;
+    visibility: hidden;
+    border: 1px solid white;
+    color: white;
+    background-color: transparent;
+
+    cursor: pointer;
+
+    transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -webkit-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -moz-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -ms-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+#wrapper > #content > a > #continue.show {
+    opacity: 1;
+    visibility: visible;
+
+    transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -webkit-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -moz-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+    -ms-transition: opacity .7s cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+#wrapper > #content > a > div#continue:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+#wrapper > #content > a > div#continue:active {
+    background-color: rgba(255, 255, 255, 0.5);
+}
