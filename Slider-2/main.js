@@ -25,11 +25,13 @@ var curva_arrivo = [{
     "x": "650",
     "y": "300"
 }];
+
 console.log("dati iniziali");
 console.log(json_data);
 
 var handleRadius = 6;
 var handleOffset = 35;
+var maxYOffset = 400;
 
 //-----Pusha le posizioni dei punti nell'array point_position nel dato momento
 $.each(json_data, function(i, item) {
@@ -53,10 +55,10 @@ function curves_init(point_positions) {
         type: 'Q',
         points: point_positions
     }];
-    //console.log("curves", curves);
+    // console.log("curves", curves);
 
-    //crea dei gruppi nell'svg e da attributi
-    var controlLineLayer = svg.append('g').attr('class', 'control-line-layer');
+    // crea dei gruppi nell'svg e da attributi
+    // var controlLineLayer = svg.append('g').attr('class', 'control-line-layer');
     var mainLayer = svg.append('g').attr('class', 'main-layer');
     var handleTextLayer = svg.append('g').attr('class', 'handle-text-layer');
     var handleLayer = svg.append('g').attr('class', 'handle-layer');
@@ -67,7 +69,7 @@ function curves_init(point_positions) {
         })
         .on('drag', dragmove);
 
-    //elementi draggabili, funzione che controlla il drag delle maniglie
+    // elementi draggabili, funzione che controlla il drag delle maniglie
     function dragmove(d) {
         // d.x = d3.event.x;
         d.y = d3.event.y;
@@ -76,26 +78,39 @@ function curves_init(point_positions) {
         // da problemi, la curva si aggiorna comunque
         // if (d.y > 300) {
 
-            d3.select(this).attr({
-                // cx: d.x,
-                cy: d.y
-            });
+            // pallino maniglia
+            if (d.y < maxYOffset) {
+                d3.select(this).attr({
+                    // cx: d.x,
+                    cy: d.y  
+                });
 
-            d.pathElem.attr('d', pathData);
-
-            if (d.controlLineElem) {
-                d.controlLineElem.attr('d', controlLinePath);
-            }
-            
-            handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
+                handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
                 .attr({
                     // x: d.x,
                     y: d.y
                 }).text(handleText(d, d.handleID));
+
+                d.pathElem.attr('d', pathData);
+                
+            } else {
+                d3.select(this).attr({
+                    // cx: d.x,
+                    cy: maxYOffset     
+                });
+
+                handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
+                .attr({
+                    // x: d.x,
+                    y: maxYOffset
+                }).text(handleText(d, d.handleID));
+            }
+            
+            
         // }
     }
 
-    show_curves(controlLineLayer, mainLayer, handleTextLayer, handleLayer, curves, drag);
+    show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag);
 }
 
 //----- Prima curva deve essere C
@@ -143,20 +158,25 @@ function pathData(d) {
 // }
 
 function handleText(d, i) {
-    return 'p' + (i + 1) + ': ' + d.x + '/' + d.y;
+    if (d.y < 400) {
+        return 'p' + (i + 1) + ': ' + d.x + '/' + d.y;
+    } else {
+        return 'p' + (i + 1) + ': ' + d.x + '/' + maxYOffset;
+    }
 }
 
 
 //----Disegna le curve
 
-function show_curves(controlLineLayer, mainLayer, handleTextLayer, handleLayer, curves, drag) {
+function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
+
     mainLayer.selectAll('path.curves').data(curves)
         .enter().append('path')
         .attr({
             'class': function(d, i) {
                 return 'curves path' + i;
             },
-            d: pathData
+             d: pathData
         })
                 .each(function(d, i) {
             var pathElem = d3.select(this),
@@ -182,7 +202,7 @@ function show_curves(controlLineLayer, mainLayer, handleTextLayer, handleLayer, 
         })
         .text(handleText);
     
-        //disegna i cerchietti
+        //sposta le maniglie cerchietti
     handleLayer.selectAll('circle.handle.path' + i)
         .data(d.points).enter().append('circle')
         .attr({
