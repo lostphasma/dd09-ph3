@@ -12,7 +12,7 @@
     margin-bottom: calc(var(--sp) * 4);
 }
 #wrapper > #content > #hero .ti-cursor {
-    left: -1.2ch !important;
+    left: -1.3ch !important;
 }
 
 #wrapper > #content > a > div#continue {
