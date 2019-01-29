@@ -14,6 +14,8 @@
 
     display: grid;
     grid-template-rows: 1fr 8fr 1fr;
+
+    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 #content > #timeline > #timeline-header {
@@ -65,13 +67,16 @@
 
 #content > #timeline > #timeline-line > #timeline-line-bars #curves {
     position: absolute;
+    height: 100%;
+    z-index: 60;
+}
+
+#content > #timeline > #timeline-line > #timeline-line-bars #curves > svg {
     width: 100%;
     height: 100%;
-    z-index: 100;
 }
 
 #content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units {
-    width: 100%;
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: 1fr;
@@ -110,6 +115,7 @@
 
 #content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler > .scale {
     font-size: 1vmin;
+    font-family: var(--f-f);
     color: var(--c-cl);
     letter-spacing: .2px;
     line-height: 1.5;
@@ -183,8 +189,19 @@
     background-color: var(--c-el-a);
 }
 
+#playback > #playback-endbutton.module > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#playback > #playback-endbutton.module > div > p {
+    font-size: 1.25em;
+    line-height: 1.35;
+}
+
 #playback > #playback-container.module > video#playback-content {
-    max-width: 100%;
+    max-height: 50%;
+    width: 100%;
     background-color: black;
 }
 
@@ -202,7 +219,7 @@
 
 #playback > #playback-controls {
     min-width: 10%;
-    padding: 12px;
+    padding: var(--sp);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -226,7 +243,7 @@
     border: 0;
     background-color: transparent;
     outline: none;
-    color: white;
+    color: var(--c-cl);
 }
 
 #playback > #playback-controls > * > * {
@@ -235,7 +252,7 @@
 
 #playback > #playback-controls > .playback-control > svg {
     cursor: pointer;
-    fill: var(--t-cl);
+    fill: var(--c-cl);
 }
 
 #playback > #playback-controls > .playback-control > .playback-control-label {

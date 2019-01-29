@@ -1,4 +1,8 @@
 @font-face {
+    font-family: 'IBM Plex Mono Text';
+    src: url('../assets/fonts/IBM-Plex-Mono/IBMPlexMono-Text.woff2') format('Woff2');
+}
+@font-face {
     font-family: 'IBM Plex Mono';
     src: url('../assets/fonts/IBM-Plex-Mono/IBMPlexMono-Regular.woff2') format('Woff2');
 }
@@ -12,18 +16,34 @@
 }
 
 :root {
-    --c-bg: #151315;
-    --c-el: #252428;
+    /* background */
+    --c-bg: #18181a;
+    /* button */
+    --c-el: #272629;
+    /* button hover */
     --c-el-h: #353438;
+    /* button active */
     --c-el-a: #5a585f;
-    --c-cl: #aaaaaa;
+    /* clear color */
+    --c-cl: #eee;
+    /* boh don't remember */
     --c-tx: #303030;
+    /* censor colour */
     --c-cs: #c20808;
+    /* spacing (either padding or margin,
+    * it's more for consistency reasons) */
     --sp: 16px;
+    /* text color */
     --t-cl: #ddd;
+    /* main font bold */
+    --f-b: 'IBM Plex Mono Text';
+    /* main font */
     --f-m: 'IBM Plex Mono';
+    /* light font (> 1em) */
     --f-ml: 'IBM Plex Mono Light';
+    /* extra-light font (> 2em) */
     --f-el: 'IBM Plex Mono ExtraLight';
+    /* fallback font */
     --f-f: Helvetica, Arial, sans-serif;
 }
 
@@ -38,7 +58,7 @@ body {
     overflow: hidden;
 }
 
-a, span, p, div {
+a, span, p, div, text {
     -webkit-touch-callout: none; /* iOS Safari */
       -webkit-user-select: none; /* Safari */
        -khtml-user-select: none; /* Konqueror HTML */
@@ -88,29 +108,32 @@ div.module.hidden {
 
 #menu {
     position: absolute;
-    z-index: 100;
+    z-index: 200;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(6, 6, 8, 0.9);
     overflow: hidden;
     
     height: 0%;
     transition: height 1s cubic-bezier(0.77, 0, 0.175, 1);
     
     /* CPU-Expensive stuff */
-    /* backdrop-filter: saturate(100%);
-    -webkit-backdrop-filter: saturate(100%);
-    -moz-backdrop-filter: saturate(100%);
-    -ms-backdrop-filter: saturate(100%); */
+    backdrop-filter: saturate(100%) blur(20px);
+    -webkit-backdrop-filter: saturate(100%) blur(20px);
+    -moz-backdrop-filter: saturate(100%) blur(20px);
+    -ms-backdrop-filter: saturate(100%) blur(20px);
+    /* CPU-Expensive stuff */
 }
 #menu.show {
     height: 100%;
     transition: height 1s cubic-bezier(0.77, 0, 0.175, 1);
-
-    /* backdrop-filter: saturate(0%);
-    -webkit-backdrop-filter: saturate(0%);
-    -moz-backdrop-filter: saturate(0%);
-    -ms-backdrop-filter: saturate(0%); */
+    
+    /* CPU-Expensive stuff */
+    backdrop-filter: saturate(0%) blur(20px);
+    -webkit-backdrop-filter: saturate(0%) blur(20px);
+    -moz-backdrop-filter: saturate(0%) blur(20px);
+    -ms-backdrop-filter: saturate(0%) blur(20px);
+    /* CPU-Expensive stuff */
 }
 #menu > ul {
     height: 100%;
@@ -150,7 +173,7 @@ div.module.hidden {
 
 #wrapper > #header > #hamburger {
     position: relative;
-    z-index: 100;
+    z-index: 200;
     display: flex;
     flex-direction: column;
     align-items: center;

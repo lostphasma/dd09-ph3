@@ -81,15 +81,12 @@ var playback = {
         this.playbackElement.currentTime = currentTime;
     },
 }
-
 //initializing playback object
 var cursor = playback.makeCursor("timeline-line");
 var PREV_BTN = document.getElementById("previous");
 var PLAY_BTN = document.getElementById("play");
 var NEXT_BTN = document.getElementById("next");
 var DONE_BTN = document.getElementById("playback-endbutton");
-
-
 
 
 // "use strict";
@@ -162,6 +159,7 @@ window.onload = () => {
     playback.src = 0;
     playback.setContentVolume();
     playButton.init();
+    SVGResize();
 }
 
 window.onresize = () => {
@@ -169,6 +167,7 @@ window.onresize = () => {
     playPause();
     // e fammi resizare sta benedetta finestra
     console.clear();
+    SVGResize();
 }
 
 PREV_BTN.children[0].onclick = () => {
@@ -188,9 +187,8 @@ NEXT_BTN.children[0].onclick = () => {
 }
 
 DONE_BTN.onclick = () => {
-    // endSession();
     DONE_BTN.style.pointerEvents = 'none';
-    enqueueOps(endOps);
+    endSession();
 }
 
 
@@ -433,95 +431,88 @@ function updateCursorPosition(index) {
 }
 
 
-// TO-DO: sostituisci variabili globali con oggetto?
-const target = document.getElementById("playback");
-var els = target.children;
-var timing = 1.2;
-var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
-var msgEl = document.createElement("P");
+function endSession() {
+    // TO-DO: sostituisci variabili globali con oggetto?
+    const target = document.getElementById("playback");
+    var els = target.children;
+    var timing = 1.2;
+    var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
+    var msgEl = document.createElement("DIV");
+    msgEl.style.padding = 'var(--sp)';
+    msgEl.style.margin = '0px';
 
-var endOps = [{
-    fn: function () {
-        playback.playbackElement.pause();
-        cursor.style.visibility = 'hidden';
-        
-        var els = document.getElementsByClassName('timeline-line-section');
-        Array.prototype.forEach.call(els, (el) => {
-            el.style.backgroundColor = 'transparent';
-        })    
-    },
-    start: 0
-}, {
-    fn: function () {
-        DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
-        // remove first two elements that are Children of target
-        for (var i = 0; i < 2; i++) {
-            els[i].classList.add("hidden");
-        }
-    },
-    start: 0
-}, {
-    fn: function () {
-        for (var i = 0; i < 2; i++) {
-            target.removeChild(els[0]);
-        }
-        target.style.gridTemplateRows = '1fr';
-        DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
-    },
-    start: 500
-}, {
-    fn: function () {
-        DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
-        DONE_BTN.style.transform = `translateY(0px)`;
-        DONE_BTN.style.maxHeight = '100%';
+    var ops = [{
+        fn: function () {
+            playback.playbackElement.pause();
+            cursor.style.visibility = 'hidden';
 
-        DONE_BTN.children[0].style.opacity = '0';
-    },
-    start: 1000
-}, {
-    fn: function () {
-        DONE_BTN.removeChild(DONE_BTN.children[0]);
-        msgEl.style.opacity = '0';
-        msgEl.style.transition = `opacity ${timing / 3}s linear`;
-        DONE_BTN.appendChild(msgEl);
-    },
-    start: 1500
-}, {
-    fn: function () {
-        msgEl.style.opacity = '1';
-        msgEl.innerHTML = `
-        Che bel messaggino wiwi!<br>
-        Proprio bello!`;
-    },
-    start: 3000
-}, {
-    fn: function () {
-        msgEl.style.opacity = '0';
-    },
-    start: 5000
-}, {
-    fn: function () {
-        msgEl.innerHTML = `
-        Beh dopo il messaggino bello cosa diciamo?<br>
-        Boh raga pd che sbatti sti setTimeout nestati.`;
-        msgEl.style.opacity = '1';
-    },
-    start: 6000
-}, {
-    fn: function () {
-        msgEl.style.opacity = '0';
-    },
-    start: 8000
-}, {
-    fn: function () {
-        msgEl.innerHTML = `
-        Ciao raga è stato bello.<br>
-        Buonanotte`;
-        msgEl.style.opacity = '1';
-    },
-    start: 9000
-}]
-function enqueueOps(ops) {
+            var els = document.getElementsByClassName('timeline-line-section');
+            Array.prototype.forEach.call(els, (el) => {
+                el.style.backgroundColor = 'transparent';
+            })
+            DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
+        },
+        start: 0
+    }, {
+        fn: function () {
+            // remove first two elements that are Children of target
+            for (var i = 0; i < 2; i++) {
+                els[i].classList.add("hidden");
+            }
+        },
+        start: 0
+    }, {
+        fn: function () {
+            for (var i = 0; i < 2; i++) {
+                target.removeChild(els[0]);
+            }
+            target.style.gridTemplateRows = '1fr';
+            DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
+        },
+        start: 0.5
+    }, {
+        fn: function () {
+            DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
+            DONE_BTN.style.transform = `translateY(0px)`;
+            DONE_BTN.style.maxHeight = '100%';
+            DONE_BTN.style.width = '100%';
+
+            DONE_BTN.children[0].style.opacity = '0';
+        },
+        start: 1
+    }, {
+        fn: function () {
+            DONE_BTN.removeChild(DONE_BTN.children[0]);
+            msgEl.style.opacity = '0';
+            msgEl.style.transition = `opacity ${timing / 3}s linear`;
+            DONE_BTN.appendChild(msgEl);
+        },
+        start: 1.5
+    }, {
+        fn: function () {
+            msgEl.style.opacity = '1';
+            msgEl.innerHTML = `
+            <p>This is how an IT company that uses traditional filtering methods would moderate the same&nbsp;contents.</p>
+            <p>No shades, no debates, just one point of view and it does not depend on&nbsp;you.</p>
+            <p>Do you like the noise of&nbsp;silence?</p>`;
+        },
+        start: 3
+    }, {
+        fn: function () {
+            msgEl.style.opacity = '0';
+        },
+        start: 9
+    }, {
+        fn: function () {
+            msgEl.innerHTML = `
+            <p>Let us introduce you to our alternative contents regulation&nbsp;method.</p>
+            <p>With this approach nothing will be censored. The&nbsp;community will decide how much visibility to give to each&nbsp;content, helping to create a civic&nbsp;moderation.</p>
+            <p>Don’t&nbsp;mute! Down-Vote!</p>`;
+            msgEl.style.opacity = '1';
+        },
+        start: 10
+    }]
+
     // micro-function to compute timers?
     // maybe: forEach obj.start in ops
     // calculate timeout by adding previous
@@ -529,71 +520,15 @@ function enqueueOps(ops) {
     ops.forEach((op) => {
         setTimeout(() => {
             op.fn();
-        }, op.start);
+        }, op.start * 1000);
     });
-}
-
-function endSession() {
-    const target = document.getElementById("playback");
-    var els = target.children;
-    DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
-
-    // remove first two elements that are Children of target
-    for (var i = 0; i < 2; i++) {
-        els[i].classList.add("hidden");
     }
-
-    setTimeout(() => {
-        for (var i = 0; i < 2; i++) {
-            target.removeChild(els[0]);
-        }
-        target.style.gridTemplateRows = '1fr';
-        DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
-
-        setTimeout(() => {
-            var timing = 1.2;
-            var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
-            DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
-            DONE_BTN.style.transform = `translateY(0px)`;
-            DONE_BTN.style.maxHeight = '100%';
-
-            DONE_BTN.children[0].style.opacity = '0';
-
-            setTimeout(() => {
-                DONE_BTN.removeChild(DONE_BTN.children[0]);
-                var msgEl = document.createElement("P");
-                msgEl.style.opacity = '0';
-                msgEl.style.transition = `opacity ${timing / 3}s linear`;
-                DONE_BTN.appendChild(msgEl);
-
-                setTimeout(() => {
-                    msgEl.style.opacity = '1';
-                    msgEl.innerHTML = `
-                    Che bel messaggino wiwi!<br>
-                    Proprio bello!`;
-
-                    setTimeout(() => {
-                        msgEl.style.opacity = '0';
-
-                        setTimeout(() => {
-                            msgEl.innerHTML = `
-                            Beh dopo il messaggino bello cosa diciamo?<br>
-                            Boh raga pd che sbatti sti setTimeout nestati.`;
-                            msgEl.style.opacity = '1';
-
-                        }, 1000);
-                    }, 3000);
-                }, 750);
-            }, 500);
-        }, 500);
-    }, 500);
-}
 
 // increments cursor position, given a point to start from
 function stepOn(startPoint) {
     var t = playback.currentTime;
     var d = playback.totalTime;
-    var w = document.querySelectorAll(".timeline-line-section")[1].clientWidth * 2;
+    var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
     var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
     cursor.style.left = `${r}px`;
 
@@ -602,6 +537,15 @@ function stepOn(startPoint) {
     // }
 
     // document.getElementById("timecode").innerHTML = `${n(t)}`;
+}
+
+function SVGResize() {
+    var crv = document.getElementById("curves");
+    var tl = document.getElementById("timeline-line-units");
+
+    crv.style.left = tl.offsetLeft+'px';
+    crv.style.width = tl.clientWidth+'px';
+    crv.style.height = tl.clientHeight+'px';
 }
 
 function mutePlayback(currVol) {

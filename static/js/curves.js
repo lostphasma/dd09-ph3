@@ -60,7 +60,7 @@ var curva_arrivo = [{
 var handleRadius = 6;
 var handleOffset = 50;
 var minYoffset = 0;
-var maxYOffset = 380;
+var maxYOffset = 640;
 
 //----- Pusha le posizioni dei punti nell'array point_position nel dato momento
 json_data.forEach((el) => {
@@ -89,8 +89,9 @@ json_data.forEach((el) => {
 
 //----- Crea un svg con dimensioni definite
 var svg = d3.select('#curves').append('svg').attr({
-    viewBox: '50 -3 700 700',
-    preserveAspectRatio: "none"
+    viewBox: '101 0 601 700',
+    preserveAspectRatio: "none",
+    // preserveAspectRatio: "xMidYMid meet"
 });
 
 // preserveAspectRatio="none"
@@ -191,6 +192,7 @@ function curves_init(point_positions) {
 
         }
 
+        // main.js reference
         playback.setContentVolume();
 
         // aggiorna la curva
