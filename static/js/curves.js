@@ -54,8 +54,8 @@ var curva_arrivo = [{
     "y": "300"
 }];
 
-console.log("dati iniziali");
-console.log(json_data);
+// console.log("dati iniziali");
+// console.log(json_data);
 
 var handleRadius = 6;
 var handleOffset = 50;
@@ -190,6 +190,8 @@ function curves_init(point_positions) {
                 }).text(handleText(d, d.handleID));
 
         }
+
+        playback.setContentVolume();
 
         // aggiorna la curva
         d.pathElem.attr('d', pathData);

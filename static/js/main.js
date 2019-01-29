@@ -38,30 +38,38 @@ var playback = {
     set src(i) {
         this.playbackElement.src = this.path + this.category + '/' + this.contents[i].src;
     },
-    setContentVolume: function(bool) {
-        const incr = 0.1;
+    // setContentVolume: function(bool) {
+    //     const incr = 0.1;
         
-        if (bool == true) {
-            this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
-        } else if (bool == false) {
-            this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
-        } else {
-            this.src = this.current;
-            this.playbackElement.volume = this.contents[this.current].volume;        
-        }
-
-        this.contents[this.current].volume = this.playbackElement.volume;
-    },
-    // setContentVolume: function() {
-    //     var a = document.querySelectorAll(".handle");
-
-    //     Array.prototype.forEach.call(a, (pt) => {
-    //         console.log(pt);
-    //         this.playbackElement.volume = map(pt, 0, 360, 0, 1);
-    //     })        
+    //     if (bool == true) {
+    //         this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
+    //     } else if (bool == false) {
+    //         this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
+    //     } else {
+    //         this.src = this.current;
+    //         this.playbackElement.volume = this.contents[this.current].volume;        
+    //     }
 
     //     this.contents[this.current].volume = this.playbackElement.volume;
     // },
+    setContentVolume: function() {
+
+        const mapper = (num, in_min, in_max, out_min, out_max) => {
+            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        var a = [].slice.call(document.querySelectorAll(".handle"));
+        a.shift();
+        a.pop();
+        
+        Array.prototype.forEach.call(a, (pt, i) => {
+            var attr = pt.getAttribute("cy");
+            this.contents[i].volume = clamp(mapper(attr, 0, 360, 1, 0), 0, 1);
+        })
+
+        this.playbackElement.volume = this.contents[this.current].volume;
+
+    },
     makeCursor: function (DOMelement) {
         var el = document.createElement("DIV");
         el.id = "cursor";
@@ -73,6 +81,7 @@ var playback = {
         this.playbackElement.currentTime = currentTime;
     },
 }
+
 //initializing playback object
 var cursor = playback.makeCursor("timeline-line");
 var PREV_BTN = document.getElementById("previous");
@@ -81,7 +90,9 @@ var NEXT_BTN = document.getElementById("next");
 var DONE_BTN = document.getElementById("playback-endbutton");
 
 
-"use strict";
+
+
+// "use strict";
 /* global d3, document */
 var playButton = {
     el: document.getElementById("play"),
@@ -140,12 +151,16 @@ var playButton = {
 
 
 
+
+
+
 /* --------------- ======== ---------------- */
 /* ---------------- EVENTS ----------------- */
 
 window.onload = () => {
     setSessionid();
     playback.src = 0;
+    playback.setContentVolume();
     playButton.init();
 }
 
@@ -314,8 +329,9 @@ function playPause() {
 }
 
 function setSrc() {
-    playback.setContentVolume();
+    playback.src = playback.current;
     playPause();
+    playback.setContentVolume();
 }
 
 function playPreviousContent() {
@@ -417,7 +433,7 @@ function updateCursorPosition(index) {
 }
 
 
-// rimuovi variabili globali con oggetto?
+// TO-DO: sostituisci variabili globali con oggetto?
 const target = document.getElementById("playback");
 var els = target.children;
 var timing = 1.2;
