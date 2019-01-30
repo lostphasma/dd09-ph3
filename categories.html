@@ -54,12 +54,12 @@
             var color = el.getAttribute("js-color");
             el.style.backgroundColor = '#' + color;
             if (el.id != 'Race') {
-                el.style.color = '#444';
+                el.style.color = 'var(--c-tx)';
             } else return;
         }
         el.onmouseout = () => {
-            el.style.backgroundColor = '#252428'
-            el.style.color = '#ddd';
+            el.style.backgroundColor = 'var(--c-el)'
+            el.style.color = 'var(--t-cl)';
         }
     })
 </script>
