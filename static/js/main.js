@@ -248,13 +248,18 @@ var playButton = {
 window.onload = () => {
     setSessionid();
 
+    // this function is called only after clicking on either one
+    // of the buttons for data collection
     dataConsent.init(() => {
-        // this function is called only after clicking on either one
-        // of the buttons for data collection
         tut.classList.add("hidden");
         tut.classList.add("translated");
         HELP_BTN.classList.remove('disabled');
 
+        // trick the browser into thinking that the user pressed play
+        // then we start the playback after the tutorial closing transition
+        playPause();
+        playPause();
+        
         setTimeout(() => {
             dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);
             dataConsent.denialBtn.parentElement.removeChild(dataConsent.denialBtn);
@@ -262,6 +267,9 @@ window.onload = () => {
             var cnstxt = document.getElementById("consent-text");
             cnstxt.parentElement.removeChild(cnstxt);
             tut.childNodes[1].style.gridTemplateRows = '1fr 1fr';
+            
+            // start the audio after the tutorial dialog closes
+            playPause();
         }, trn);
     });
 
