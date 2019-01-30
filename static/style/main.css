@@ -18,10 +18,10 @@
 :root {
     /* background */
     --c-bg: #18181a;
-    /* button */
-    --c-el: #272629;
+    /* button # a*1.1 a a*1.2 */
+    --c-el: #373539;
     /* button hover */
-    --c-el-h: #353438;
+    --c-el-h: #424045;
     /* button active */
     --c-el-a: #5a585f;
     /* clear color */

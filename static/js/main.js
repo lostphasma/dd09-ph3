@@ -81,13 +81,23 @@ var playback = {
         this.playbackElement.currentTime = currentTime;
     },
 }
+
+
+
 //initializing playback object
 var cursor = playback.makeCursor("timeline-line");
 
 var PREV_BTN = document.getElementById("previous");
 var PLAY_BTN = document.getElementById("play");
 var NEXT_BTN = document.getElementById("next");
+
+var HELP_BTN = document.getElementById("help");
+var tut = document.getElementById("tutorial");
+var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
+
 var DONE_BTN = document.getElementById("playback-endbutton");
+
+
 
 // object that controls session data recording consent
 var dataConsent = {
@@ -119,12 +129,15 @@ var dataConsent = {
         this.denialBtn.style.pointerEvents = 'none';
     },
 
-    saveSessionData: function() {
-        this.approval == true ? {
+    saveSessionData: function(callback = function() {}) {
+        if (this.approval == true) {
             // save the data
-        } : {
+            console.log('Data saved!');
+        } else {
             // don't save the data
+            console.log('Data not saved');
         }
+        callback();
     }
 };
 
@@ -196,15 +209,21 @@ var playButton = {
 window.onload = () => {
     setSessionid();
 
-    dataConsent.init(function() {
-        var tut = document.getElementById("tutorial");
+    dataConsent.init(() => {
+        // this function is called only after clicking on either one
+        // of the buttons for data collection
         tut.classList.add("hidden");
         tut.classList.add("translated");
-        var trn = parseFloat(getComputedStyle(tut).transitionDuration);
+        HELP_BTN.classList.remove('disabled');
 
         setTimeout(() => {
-            tut.parentElement.removeChild(tut);
-        }, trn * 1000);
+            dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);
+            dataConsent.denialBtn.parentElement.removeChild(dataConsent.denialBtn);
+            
+            var cnstxt = document.getElementById("consent-text");
+            cnstxt.parentElement.removeChild(cnstxt);
+            tut.childNodes[1].style.gridTemplateRows = '1fr 1fr';
+        }, trn);
     });
 
     playback.src = 0;
@@ -238,12 +257,32 @@ NEXT_BTN.children[0].onclick = () => {
 }
 
 
+HELP_BTN.onclick = () => {
+    // console.log(HELP_BTN);
+    if (tut.classList.contains("hidden")) {
+        tut.classList.remove("hidden");
+        tut.classList.remove("translated");
+        setTimeout(() => {
+            HELP_BTN.innerHTML = 'close';
+        }, trn);
+    } else {
+        tut.classList.add("hidden");
+        tut.classList.add("translated");
+        HELP_BTN.classList.remove('disabled');
+        setTimeout(() => {
+            HELP_BTN.innerHTML = 'help';
+        }, trn);
+    }
+};
 
 DONE_BTN.onclick = () => {
     DONE_BTN.style.pointerEvents = 'none';
-    endSession();
-    saveSessionData(function() {
-        // what do we do after 
+
+    document.body.onkeyup = '';
+
+    dataConsent.saveSessionData(function() {
+        // what do we do after ?
+        endSession();
     });
 }
 
