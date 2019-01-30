@@ -86,13 +86,15 @@ rect {
   fill: none;
 }
 
+/* ----- HANDLES ----- */
 .handle {
-  stroke: white;
-  stroke-width: 4px;
   fill: blue;
+  stroke: white;
   opacity: 1;
+  stroke-width: 4px;
   cursor: grab; /*move, ns-resize, grab*/
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
 }
 
 .handle-behind {
@@ -100,6 +102,12 @@ rect {
   opacity: 1;
   pointer-events: none;
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
+}
+
+.faded {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .redHandle {

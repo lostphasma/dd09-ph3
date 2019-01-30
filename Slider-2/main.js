@@ -4,7 +4,7 @@ var point_positions = [];
 
 
 var json_data = [{
-    "x": "50",
+    "x": "100",
     "y": "300"
 }, {
     "x": "150",
@@ -25,7 +25,7 @@ var json_data = [{
     "x": "650",
     "y": "300"
 }, {
-    "x": "750",
+    "x": "700",
     "y": "300"
 }];
 
@@ -73,7 +73,7 @@ var handleOffset = 50;
 var minYoffset = 300;
 var maxYOffset = 600;
 
-var jumpOffset = 20;
+var jumpOffset = 60;
 
 // ----- Larghezza e altezza della viewBox dell'SVG
 var w = 800;
@@ -146,7 +146,7 @@ function curves_init(point_positions) {
     function dragmove(d, i) {
         // Qui assegna il valore y e aggiorna la posizione dei punti
         // d.x = d3.event.x;
-        d.y = clamp(d3.event.y, minYoffset, maxYOffset);
+        d.y = clamp(d3.event.y, minYoffset, maxYOffset - jumpOffset);
 
         // Se il mouse è inferiore a un certo valore y (maxYoffset), eseguire la funzione
         if (d.y < maxYOffset - jumpOffset) {
@@ -175,13 +175,13 @@ function curves_init(point_positions) {
         } else {
             d3.select(this).attr({
                 // cx: d.x,
-                cy: maxYOffset
+                cy: maxYOffset - jumpOffset
             });
 
             circlesToResizeB.attr("cy", function (d, ind) {
                 if (ind == i) {
                     d3.select(this).classed("redHandleBehind", true)
-                    return maxYOffset
+                    return maxYOffset - jumpOffset
                 } else {
                     return this.getAttribute("cy");
                 }
@@ -192,7 +192,7 @@ function curves_init(point_positions) {
             handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
                 .attr({
                     // x: d.x,
-                    y: maxYOffset
+                    y: maxYOffset - jumpOffset
                 }).text(handleText(d, d.handleID));
         }
 
@@ -201,6 +201,10 @@ function curves_init(point_positions) {
     }
     show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag);
 }
+
+//----- ------------------------- -----
+//----- PATH DATA e PATH SPEZZATA -----
+//----- ------------------------- -----
 
 //----- Prima curva deve essere C
 //----- C x1 y1,             x2 y2,           x y
@@ -216,7 +220,6 @@ function curves_init(point_positions) {
 //----- C offset,coord(mY)          coord(cX)-offset,coord(cY)      coord(cX),coord(cY)
 //----- S coord(X)-offset,coord(Y)      coord(X) coordY
 
-//----- PATH DATA e PATH SPEZZATA
 function pathData(d) {
 
     var p = d.points;
@@ -253,7 +256,11 @@ function handleText(d, i) {
     }
 }
 
-// ------------ SHOW CURVES
+
+// ------------ ----------- ------------
+// ------------ SHOW CURVES ------------
+// ------------ ----------- ------------
+
 function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
 
     mainLayer.selectAll('path.curves').data(curves)
@@ -270,26 +277,26 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                 controlLineElem,
                 handleTextElem;
 
-            handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
-                .data(d.points).enter().append('text').filter(function (d, i) {
-                    if (i != 0 && i != 7) return d
-                })
-                .attr({
-                    'class': function (handleD, handleI) {
-                        return 'handle-text path' + i + ' p' + (handleI + 1);
-                    },
-                    x: function (d) {
-                        return d.x
-                    },
-                    y: function (d) {
-                        return d.y
-                    },
+            // handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
+            //     .data(d.points).enter().append('text').filter(function (d, i) {
+            //         if (i != 0 && i != 7) return d
+            //     })
+            //     .attr({
+            //         'class': function (handleD, handleI) {
+            //             return 'handle-text path' + i + ' p' + (handleI + 1);
+            //         },
+            //         x: function (d) {
+            //             return d.x
+            //         },
+            //         y: function (d) {
+            //             return d.y
+            //         },
 
-                    // Controlla quanto distante è il testo dai pallini
-                    dx: -30,
-                    dy: 30
-                })
-                .text(handleText);
+            //         // Controlla quanto distante è il testo dai pallini
+            //         dx: -30,
+            //         dy: 30
+            //     })
+            //     .text(handleText);
 
             // // Sposta le maniglie cerchietti
             // handleLayer.selectAll('circle.handle.path' + i)
@@ -318,9 +325,7 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
             //     .call(drag);
 
             // Sposta le maniglie cerchietti
-            var handles = handleLayer.selectAll('circle.handle.path' + i)
-                .data(d.points)
-                
+            var handles = handleLayer.selectAll('circle.handle.path' + i).data(d.points)
             var handlesEnter = handles.enter().append("g");
             
             handlesEnter.append('ellipse').filter(function (d, i) {
@@ -335,8 +340,8 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                         return d.y;
                     },
 
-                    rx: 9,
-                    ry: 9,
+                    rx: handleRadius,
+                    ry: handleRadius,
                     'vector-effect': 'non-scaling-stroke'
                 })
                 .each(function (d, handleI) {
@@ -373,16 +378,19 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
         });
 }
 
+// ----- inizializza la funzione
 curves_init(point_positions);
 
-// console.log(curve_users[0]);
+// ------------ ------------- ------------
+// ------------ ANIMATE LINES ------------
+// ------------ ------------- ------------
 
-// ------------ ANIMATE LINES
 function animateLines() {
     var p = curva_arrivo;
     const ease = 'easeInOutQuad';
     const duration = 1500;
 
+    // Elabora il d della curva d'arrivo
     ca = [
         //x y
         'M', parseInt(p[0].x), ',', parseInt(p[0].y),
@@ -397,9 +405,13 @@ function animateLines() {
         ' ', parseInt(p[7].x) - handleOffset, ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
     ].join('');
 
+    var cd = curves_data
+    // crea un nuovo gruppo svg in cui inserire le curve
+    svg.selectAll("g.users-layer").remove();
     var usersLayer = svg.append('g').attr('class', 'users-layer');
 
-    usersLayer.selectAll('path.curves-layer').data(curves_data)
+    // crea n curve in base al json, le imposta uguali alla curva d'arrivo
+    usersLayer.selectAll('path.curves-layer').data(cd)
     .enter().append('path')
     .attr({
         'class': function (d, i) {
@@ -409,31 +421,19 @@ function animateLines() {
         'vector-effect': 'non-scaling-stroke'
     })
 
-    // usersLayer.selectAll('path.curves-layer').data(curve_users)
-    // .enter().append('path')
-    // .attr({
-    //     'class': function (d, i) {
-    //         return 'users-curve users-path' + i;
-    //     },
-    //     'd': function (d,i) {
-    //         return curve_users[i].d
-    //     },
-    //     'vector-effect': 'non-scaling-stroke'
-    // })
-
     var asd = d3.select('.curves').attr('d');
-    // console.log(asd);
-    // console.log(ca);
 
     var tl = anime.timeline({
         easing: ease,
         duration: duration
     });
 
+    // anima la curva della sessione fino alla curva d'arrivo
     tl.add({
             targets: '.curves',
             d: ca,
         }, 0)
+        // le maniglie diventano rosse
         .add({
             targets: '.handle-behind',
             cy: maxYOffset,
@@ -456,10 +456,11 @@ function animateLines() {
                 })
             }
         }, 0)
+        // rende visibili le curve delle altre sessioni e le anima
         .add({
             targets: '.users-curve',
             d: function (el, i) {
-                return curves_data[i].d
+                return cd[i].d
             },
             update: function () {
                 var a = usersLayer.selectAll('path.users-curve');
@@ -475,16 +476,23 @@ function animateLines() {
         }, '-=' + duration)
         .add({
             targets: '.handle',
-            cy: 300,
-        }, '-=' + duration)
+            opacity: 0,
+            duration: 500,
+            easing: 'linear'
+        }, '-=' + (duration + 500))
         .add({
             targets: ' .handle-behind',
-            cy: 300,
-        }, '-=' + duration);
+            opacity: 0,
+            duration: 500,
+            easing: 'linear'
+        }, '-=' + (duration + 500));
 
 }
 
-// ------------ UTILITY FUNCTIONS
+// ------------ ----------------- ------------
+// ------------ UTILITY FUNCTIONS ------------
+// ------------ ----------------- ------------
+
 // ----- Clamp function
 function clamp(val, min, max) {
     return val > max ? max : val < min ? min : val;
@@ -498,7 +506,8 @@ function storeJSON() {
 
     var obj = {
         "curveID": inc,
-        "d": curve
+        "d": curve,
+        "timestamp": Date(Date.now())
     }
 
     console.log("Da storare nel JSON")
@@ -508,14 +517,11 @@ function storeJSON() {
 }
 
 
-// ----- Resize ellipses function
+// ----- Resize ellipses
 window.onresize = resized;
 
 var circlesToResize = svg.selectAll(".handle");
 var circlesToResizeB = svg.selectAll(".handle-behind");
-// console.log("cerchi");
-// console.log(circlesToResize);
-// console.log(circlesToResizeB);
 
 //la chiama la prima volta per resizare subito i cerchi appena vengono creati
 resized();
@@ -524,13 +530,10 @@ function resized() {
     var scaleX = w / d3.select('svg').node().getBoundingClientRect().width;
     var scaleY = h / d3.select('svg').node().getBoundingClientRect().height;
 
-    // var multiplier = (d3.select('svg').node().getBoundingClientRect().width) / 100;
     var multiplier = 6;
     var multiplier2 = 10;
 
-    // console.log("scale X: " + d3.select('svg').node().getBoundingClientRect().width);
-    // console.log("scale Y: " + d3.select('svg').node().getBoundingClientRect().height);
-
+    // cerchi frontali con stroke
     circlesToResize.each(function (d, i) {
         // if (i != 0 && i != 7) {
             var circleSize = d3.select(this);
@@ -544,6 +547,7 @@ function resized() {
         // }
     })
 
+    // cerchi dietro
     circlesToResizeB.each(function (d, i) {
         // if (i != 0 && i != 7) {
             var circleSize = d3.select(this);
