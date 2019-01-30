@@ -33,6 +33,8 @@
     /* spacing (either padding or margin,
     * it's more for consistency reasons) */
     --sp: 16px;
+    /* header height */
+    --hh: 36px;
     /* text color */
     --t-cl: #ddd;
     /* main font bold */
@@ -108,7 +110,7 @@ div.module.hidden {
 
 #menu {
     position: absolute;
-    z-index: 200;
+    z-index: 250;
     width: 100%;
     height: 100%;
     background-color: rgba(6, 6, 8, 0.9);
@@ -118,10 +120,10 @@ div.module.hidden {
     transition: height 1s cubic-bezier(0.77, 0, 0.175, 1);
     
     /* CPU-Expensive stuff */
-    backdrop-filter: saturate(100%) blur(20px);
+    /* backdrop-filter: saturate(100%) blur(20px);
     -webkit-backdrop-filter: saturate(100%) blur(20px);
     -moz-backdrop-filter: saturate(100%) blur(20px);
-    -ms-backdrop-filter: saturate(100%) blur(20px);
+    -ms-backdrop-filter: saturate(100%) blur(20px); */
     /* CPU-Expensive stuff */
 }
 #menu.show {
@@ -129,10 +131,10 @@ div.module.hidden {
     transition: height 1s cubic-bezier(0.77, 0, 0.175, 1);
     
     /* CPU-Expensive stuff */
-    backdrop-filter: saturate(0%) blur(20px);
-    -webkit-backdrop-filter: saturate(0%) blur(20px);
+    /* backdrop-filter: saturate(0%) blur(20px); */
+    /* -webkit-backdrop-filter: saturate(0%) blur(20px);
     -moz-backdrop-filter: saturate(0%) blur(20px);
-    -ms-backdrop-filter: saturate(0%) blur(20px);
+    -ms-backdrop-filter: saturate(0%) blur(20px); */
     /* CPU-Expensive stuff */
 }
 #menu > ul {
@@ -160,18 +162,33 @@ div.module.hidden {
 } */
 
 #wrapper > #header {
-    height: 36px;
+    height: var(--hh);
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: var(--sp);
+
+    z-index: 300;
 }
 
-#wrapper > #header > * {
+#wrapper > #header > #session-title {
     margin: 0 var(--sp);
 }
 
-#wrapper > #header > #hamburger {
+#wrapper > #header > #header-btns {
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: flex-end;
+}
+
+#wrapper > #header > #header-btns > * {
+    margin: 0 var(--sp);
+}
+
+#wrapper > #header > #header-btns > #hamburger {
     position: relative;
     z-index: 200;
     display: flex;
@@ -183,36 +200,36 @@ div.module.hidden {
     width: 24px;
     cursor: pointer;
 }
-#wrapper > #header > #hamburger > #menu-line:first-child {
+#wrapper > #header > #header-btns > #hamburger > .menu-line:first-child {
     transform: translateY(0px) rotate(0deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger > #menu-line:last-child {
+#wrapper > #header > #header-btns > #hamburger > .menu-line:last-child {
     transform: translateY(0px) rotate(0deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger > #menu-line:nth-child(2) {
+#wrapper > #header > #header-btns > #hamburger > .menu-line:nth-child(2) {
     transform: scale(1);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger.show {
+#wrapper > #header > #header-btns > #hamburger.show {
     transform: rotate(90deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger.show > #menu-line:first-child {
+#wrapper > #header > #header-btns > #hamburger.show > .menu-line:first-child {
     transform: translateY(9px) rotate(-45deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger.show > #menu-line:last-child {
+#wrapper > #header > #header-btns > #hamburger.show > .menu-line:last-child {
     transform: translateY(-8px) rotate(45deg);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
-#wrapper > #header > #hamburger.show > #menu-line:nth-child(2) {
+#wrapper > #header > #header-btns > #hamburger.show > .menu-line:nth-child(2) {
     transform: scale(0);
     transition: transform .75s cubic-bezier(0.77, 0, 0.175, 1);
 }
 
-#wrapper > #header > #hamburger > #menu-line {
+#wrapper > #header > #header-btns > #hamburger > .menu-line {
     height: 2px;
     width: 100%;
     background-color: white;

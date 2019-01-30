@@ -83,10 +83,50 @@ var playback = {
 }
 //initializing playback object
 var cursor = playback.makeCursor("timeline-line");
+
 var PREV_BTN = document.getElementById("previous");
 var PLAY_BTN = document.getElementById("play");
 var NEXT_BTN = document.getElementById("next");
 var DONE_BTN = document.getElementById("playback-endbutton");
+
+// object that controls session data recording consent
+var dataConsent = {
+    approvalBtn: document.getElementById("data-yes"),
+    denialBtn: document.getElementById("data-no"),
+
+    approval: true,
+
+    // waits for user input by placing 
+
+    setApproval: function(bool = true, callback = function() {}) {
+        this.approval = bool;
+        this.removeListeners();
+        callback();
+        console.log(`You chose ${bool}`);
+    },
+
+    init: function(callback = function(){}) {
+        this.approvalBtn.addEventListener('click', () => {
+            this.setApproval(true, callback());
+        });
+        this.denialBtn.addEventListener('click', () => {
+            this.setApproval(false, callback());
+        });
+    },
+
+    removeListeners: function() {
+        this.approvalBtn.style.pointerEvents = 'none';
+        this.denialBtn.style.pointerEvents = 'none';
+    },
+
+    saveSessionData: function() {
+        this.approval == true ? {
+            // save the data
+        } : {
+            // don't save the data
+        }
+    }
+};
 
 
 // "use strict";
@@ -150,12 +190,23 @@ var playButton = {
 
 
 
-
 /* --------------- ======== ---------------- */
 /* ---------------- EVENTS ----------------- */
 
 window.onload = () => {
     setSessionid();
+
+    dataConsent.init(function() {
+        var tut = document.getElementById("tutorial");
+        tut.classList.add("hidden");
+        tut.classList.add("translated");
+        var trn = parseFloat(getComputedStyle(tut).transitionDuration);
+
+        setTimeout(() => {
+            tut.parentElement.removeChild(tut);
+        }, trn * 1000);
+    });
+
     playback.src = 0;
     playback.setContentVolume();
     playButton.init();
@@ -186,9 +237,14 @@ NEXT_BTN.children[0].onclick = () => {
     playNextContent();
 }
 
+
+
 DONE_BTN.onclick = () => {
     DONE_BTN.style.pointerEvents = 'none';
     endSession();
+    saveSessionData(function() {
+        // what do we do after 
+    });
 }
 
 
@@ -316,6 +372,9 @@ function setSessionid() {
     }
 }
 
+
+/* ----------- PLAYBACK FUNCTIONS ---------- */
+
 function playPause() {
     if (playback.playbackElement.paused) {
         playback.playbackElement.play().catch((error) => {
@@ -362,6 +421,9 @@ function playNextContent() {
 
     setSrc();
 }
+
+/* --------------- ========= --------------- */
+
 
 function hightlightTimelineMarker(markerClassName) {
     var els = document.getElementsByClassName('timeline-line-section');
@@ -418,17 +480,27 @@ function getStartingPoint(index) {
     return result;
 }
 
-function updateCursorPosition(index) {
-    var els = document.getElementsByClassName("timeline-line-section");
 
-    Array.prototype.forEach.call(els, (el, i) => {
-        if (i == (index * 2) + 1) {
-            // setting position of cursor
-            cursor.style.left = `${el.offsetLeft}px`;
-        }
-    })
-    cursor.style.visibility = 'visible';
-}
+
+/* --------------- NO LONGER USED? --------------- */
+// function updateCursorPosition(index) {
+//     var els = document.getElementsByClassName("timeline-line-section");
+    
+//     Array.prototype.forEach.call(els, (el, i) => {
+//         if (i == (index * 2) + 1) {
+//             // setting position of cursor
+//             cursor.style.left = `${el.offsetLeft}px`;
+//         }
+//     })
+    
+//     if (cursor.style.visibility != 'visible') {
+//         console.log('setting visible');
+//         cursor.style.visibility = 'visible';
+        
+//     } else return;
+// }
+/* --------------- NO LONGER USED? --------------- */
+
 
 
 function endSession() {
@@ -522,7 +594,7 @@ function endSession() {
             op.fn();
         }, op.start * 1000);
     });
-    }
+}
 
 // increments cursor position, given a point to start from
 function stepOn(startPoint) {
