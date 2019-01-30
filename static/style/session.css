@@ -1,3 +1,23 @@
+#help {
+    opacity: 1;
+    pointer-events: all;
+    text-decoration: underline;
+    padding: calc(var(--sp) / 1.5) var(--sp);
+    transition: opacity 1.35s cubic-bezier(0.77, 0, 0.175, 1);
+}
+#help:hover {
+    cursor: pointer;
+    background-color: var(--c-el-h);
+}
+#help:active {
+    background-color: var(--c-el-a);
+}
+#help.disabled {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.35s cubic-bezier(0.77, 0, 0.175, 1);
+}
+
 #tutorial {
     position: fixed;
     height: calc(100vh - (var(--sp) * 2));
@@ -32,7 +52,7 @@
     opacity: 0;
 }
 #tutorial.translated {
-    transform: translateY(150vh);
+    transform: translateY(100vh);
 }
 
 #tutorial > #tutorial-area {
