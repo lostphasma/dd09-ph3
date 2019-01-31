@@ -524,6 +524,9 @@ function resized() {
     var scaleX = w / d3.select('svg').node().getBoundingClientRect().width;
     var scaleY = h / d3.select('svg').node().getBoundingClientRect().height;
 
+    console.log(d3.select('svg').node().getBoundingClientRect().width);
+    console.log(d3.select('svg').node().getBoundingClientRect().height);
+
     var multiplier = 6;
     var multiplier2 = 10;
 

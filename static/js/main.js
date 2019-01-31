@@ -59,12 +59,10 @@ var playback = {
         }
 
         var a = [].slice.call(document.querySelectorAll(".handle"));
-        a.shift();
-        a.pop();
         
         Array.prototype.forEach.call(a, (pt, i) => {
             var attr = pt.getAttribute("cy");
-            this.contents[i].volume = clamp(mapper(attr, 0, 360, 1, 0), 0, 1);
+            this.contents[i].volume = clamp(mapper(attr, 0, maxYOffset, 1, 0), 0, 1);
         })
 
         this.playbackElement.volume = this.contents[this.current].volume;
@@ -283,7 +281,7 @@ window.onresize = () => {
     playPause();
     playPause();
     // e fammi resizare sta benedetta finestra
-    console.clear();
+    // console.clear();
     SVGResize();
 }
 

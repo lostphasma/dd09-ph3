@@ -203,12 +203,6 @@
     grid-template-columns: 92px 1fr 92px;
 }
 
-#content > #timeline > #timeline-line > #timeline-line-bars #curves {
-    position: absolute;
-    height: 100%;
-    z-index: 60;
-}
-
 #content > #timeline > #timeline-line > #timeline-line-bars #curves > svg {
     width: 100%;
     height: 100%;

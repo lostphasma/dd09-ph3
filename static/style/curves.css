@@ -1,10 +1,17 @@
-#curves > svg {
-  z-index: 100 !important;
-  padding-top: calc(var(--sp) * 4);
-  overflow: hidden;
+#content > #timeline > #timeline-line > #timeline-line-bars #curves {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 60;
 }
 
-#svg_control {
+#curves svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#curves #svg_control {
   display: inline;
   float: left;
   width: 500px;
@@ -13,14 +20,18 @@
   background-color: #fff;
 }
 
-.control_circle {
+#curves .control_circle {
   fill: white;
   stroke: black;
   stroke-width: 1;
 }
 
-#points,
-#points svg {
+#curves rect {
+  pointer-events: none;
+}
+
+#curves #points,
+#curves #points svg {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -30,13 +41,13 @@
   position: absolute;
 }
 
-#points svg {
+#curves #points svg {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-#points .point circle {
+#curves #points .point circle {
   cursor: pointer;
   fill: #E2137E;
   r: 10;
@@ -44,14 +55,14 @@
   stroke-width: 2px;
 }
 
-#points .point-index {
+#curves #points .point-index {
   cursor: pointer;
   fill: #fff;
   font-size: 11px;
   font-weight: bold;
 }
 
-#points .delete-point text {
+#curves #points .delete-point text {
   cursor: pointer;
   fill: #bbb;
   font-size: 12px;
@@ -59,7 +70,7 @@
   stroke-width: 1px;
 }
 
-#points-list {
+#curves #points-list {
   display: block;
   text-align: center;
   margin-top: 10px;
@@ -67,32 +78,67 @@
   list-style-type: none;
 }
 
-.curves {
+#curves .curves {
   stroke: lightskyblue;
-  stroke-width: 3px;
+  stroke-width: 2px;
   fill: none;
 }
 
-.control-line {
+#curves control-line {
   stroke: green;
   fill: none;
 }
 
-.handle {
-  stroke: blue;
-  stroke-width: 3px;
-  fill: var(--c-bg);
+/* ----- HANDLES ----- */
+#curves .handle {
+  fill: blue;
+  stroke: white;
   opacity: 1;
-  cursor: move;
+  stroke-width: 4px;
+  cursor: grab; /*move, ns-resize, grab*/
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
 }
 
-.handle.path0:first-child, .handle.path0:last-child,
-.handle-text.path0:first-child, .handle-text.path0:last-child {
-  visibility: hidden;
+#curves .handle-behind {
+  fill: blue;
+  opacity: 1;
+  pointer-events: none;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
+}
+
+#curves .faded {
+  opacity: 0;
   pointer-events: none;
 }
 
-.handle-text {
+#curves .redHandle {
+  fill: red;
+  stroke: white;
+  stroke-width: 3px;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
+#curves .redHandleBehind {
+  fill: red;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
+#curves .handle-text {
   font-size: 12px;
   font-family: 'Noto Sans Japanese', sans;
 }
+
+#curves .users-curve {
+  fill: none;
+  stroke-width: 1;
+  stroke:none;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
+#curves .user-curve-anim {
+  stroke:blue;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
