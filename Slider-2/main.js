@@ -1,7 +1,11 @@
+// array per la posizione dei punti, si aggiorna ad ogni drag
 var point_positions = [];
+
+// array per storare le curve degli utenti
+var curves_data = [];
+
 //multiple lines non serve
 // var json_data_muliple_lines = [[{"id": "82","x": "50","y": "50"}, {"id": "83","x": "25","y": "110"}, {"id": "97","x": "90","y": "150"}, {"id": "98","x": "150","y": "224"}, {"id": "99","x": "250","y": "150"}, {"id": "100","x": "300","y": "200"}, {"id": "100","x": "320","y": "230"}],[{"id": "1","x": "120","y": "60"}, {"id": "2","x": "30","y": "150"}, {"id": "3","x": "120","y": "170"}, {"id": "4","x": "180","y": "260"}, {"id": "5","x": "300","y": "250"}]];
-
 
 var json_data = [{
     "x": "100",
@@ -30,7 +34,7 @@ var json_data = [{
 }];
 
 var curva_arrivo = [{
-    "x": "50",
+    "x": "100",
     "y": "300"
 }, {
     "x": "150",
@@ -51,19 +55,8 @@ var curva_arrivo = [{
     "x": "650",
     "y": "600"
 }, {
-    "x": "750",
+    "x": "700",
     "y": "300"
-}];
-
-var curve_users = [{
-    curveID: "0",
-    d: "M50,300C100,300 100,300 150,300S200,387 250,387 300,353 350,353 400,300 450,300 500,300 550,300 600,300 650,300 700,300 750,300"
-},{
-    curveID: "1",
-    d: "M50,300C100,300 100,436 150,436S200,328 250,328 300,393 350,393 400,343 450,343 500,440 550,440 600,366 650,366 700,300 750,300"
-},{
-    curveID: "2",
-    d: "M50,300C100,300 100,436 150,436S200,394 250,394 300,364 350,364 400,450 450,450 500,384 550,384 600,431 650,431 700,300 750,300"
 }];
 
 // ----- Raggio delle ellissi e offset delle maniglie per la bezier
@@ -236,14 +229,14 @@ function pathData(d) {
         //x y
         'M', parseInt(p[0].x), ',', parseInt(p[0].y),
         //x1 y1 x2 y2 x y
-        'C', +' ' + parseInt(p[0].x + handleOffset), ',', parseInt(p[0].y), ' ', parseInt(p[1].x - handleOffset), ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
+        'C', + ' ' + parseInt(p[0].x + (handleOffset/4)), ',', parseInt(p[0].y), ' ', parseInt(p[1].x - handleOffset), ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
         //x2 y2 x y
-        'S', +' ' + parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
+        'S', + ' ' + parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
         ' ', parseInt(p[3].x - handleOffset), ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
         ' ', parseInt(p[4].x - handleOffset), ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
         ' ', parseInt(p[5].x - handleOffset), ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
         ' ', parseInt(p[6].x - handleOffset), ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
-        ' ', parseInt(p[7].x - handleOffset), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
+        ' ', parseInt(p[7].x - (handleOffset/4)), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
     ].join('');
 
     return curve;
@@ -387,25 +380,27 @@ curves_init(point_positions);
 
 function animateLines() {
     var p = curva_arrivo;
+
     const ease = 'easeInOutQuad';
     const duration = 1500;
+
+    var cd = curves_data;
 
     // Elabora il d della curva d'arrivo
     ca = [
         //x y
         'M', parseInt(p[0].x), ',', parseInt(p[0].y),
         //x1 y1 x2 y2 x y
-        'C', +' ' + parseInt(p[0].x) + handleOffset, ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
+        'C', +' ' + parseInt(p[0].x) + (handleOffset/4), ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
         //x2 y2 x y
         'S', +' ' + parseInt(p[2].x) - handleOffset, ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
         ' ', parseInt(p[3].x) - handleOffset, ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
         ' ', parseInt(p[4].x) - handleOffset, ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
         ' ', parseInt(p[5].x) - handleOffset, ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
         ' ', parseInt(p[6].x) - handleOffset, ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
-        ' ', parseInt(p[7].x) - handleOffset, ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
+        ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
     ].join('');
 
-    var cd = curves_data
     // crea un nuovo gruppo svg in cui inserire le curve
     svg.selectAll("g.users-layer").remove();
     var usersLayer = svg.append('g').attr('class', 'users-layer');
@@ -499,21 +494,20 @@ function clamp(val, min, max) {
 }
 
 // ----- Store JSON
-var inc = 0;
-var curves_data = [];
+var userID = 0;
 
 function storeJSON() {
 
     var obj = {
-        "curveID": inc,
+        "curveID": userID,
         "d": curve,
         "timestamp": Date(Date.now())
     }
 
     console.log("Da storare nel JSON")
-    curves_data[inc] = obj;
+    curves_data[userID] = obj;
     console.log(curves_data);
-    inc++;
+    userID++;
 }
 
 
