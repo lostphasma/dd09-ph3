@@ -284,11 +284,11 @@ window.onresize = () => {
     resized();
 }
 
-PREV_BTN.children[0].onclick = () => {
+PREV_BTN.onclick = () => {
     playPreviousContent();
 }
 
-PLAY_BTN.children[0].onclick = () => {
+PLAY_BTN.onclick = () => {
     playPause();
 }
 
@@ -296,7 +296,7 @@ playback.playbackElement.onended = () => {
     playNextContent();
 };
 
-NEXT_BTN.children[0].onclick = () => {
+NEXT_BTN.onclick = () => {
     playNextContent();
 }
 
@@ -428,6 +428,7 @@ document.body.onkeyup = (e) => {
 
 /* --------------- ========= --------------- */
 /* --------------- FUNCTIONS --------------- */
+
 
 function setSessionid() {
     let url = new URLSearchParams(window.location.search);
@@ -650,6 +651,7 @@ function endSession() {
             <p>This is how an IT company that uses traditional filtering methods would moderate the same&nbsp;contents.</p>
             <p>No shades, no debates, just one point of view and it does not depend on&nbsp;you.</p>
             <p>Do you like the noise of&nbsp;silence?</p>`;
+            animateLines();
         },
         start: 3
     }, {
@@ -662,7 +664,7 @@ function endSession() {
             msgEl.innerHTML = `
             <p>Let us introduce you to our alternative contents regulation&nbsp;method.</p>
             <p>With this approach nothing will be censored. The&nbsp;community will decide how much visibility to give to each&nbsp;content, helping to create a civic&nbsp;moderation.</p>
-            <p>Don’t&nbsp;mute! Down-Vote!</p>`;
+            <p>Don’t&nbsp;mute! Down-Vote!</p><br>`;
             msgEl.style.opacity = '1';
         },
         start: 10

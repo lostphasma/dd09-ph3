@@ -1,5 +1,6 @@
 :root {
   --strw: 8px;
+  --strc: #fff;
 }
 
 #content > #timeline > #timeline-line > #timeline-line-bars #curves {
@@ -26,12 +27,14 @@
   background-color: #fff;
 }
 
-#curves .control_circle {
+/* #curves .control_circle {
   fill: white;
   stroke: black;
   stroke-width: 1;
 }
+ */
 
+ /* rettangolo maschera gradiente */
 #curves rect {
   pointer-events: none;
 }
@@ -53,13 +56,13 @@
   margin-right: auto;
 }
 
-#curves #points .point circle {
+/* #curves #points .point circle {
   cursor: pointer;
   fill: #E2137E;
   r: 10;
   stroke: #333;
   stroke-width: 2px;
-}
+} */
 
 #curves #points .point-index {
   cursor: pointer;
@@ -98,21 +101,27 @@
 
 /* ----- HANDLES ----- */
 #curves .handle {
-  fill: blue;
+  fill: var(--strc);
   stroke: var(--c-bg);
   opacity: 1;
   stroke-width: var(--strw);
   cursor: grab; /*move, ns-resize, grab*/
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
   -moz-transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -o-transition: opacity .5s;
+
+  
 }
 
 #curves .handle-behind {
-  fill: blue;
+  fill: var(--strc);
   opacity: 1;
   pointer-events: none;
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
   -moz-transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -o-transition: opacity .5s;
 }
 
 #curves .faded {
@@ -145,7 +154,7 @@
 }
 
 #curves .user-curve-anim {
-  stroke:blue;
+  stroke:var(--strc);
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
 }
 

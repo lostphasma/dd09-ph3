@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Firebase request test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <!-- Firebase initialization -->
+    <script src="https://www.gstatic.com/firebasejs/5.8.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
+
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBtgxTHNCdaV73K01M83YaJ8DK45U9VJfA",
+            // authDomain: "ph03-56c1f.firebaseapp.com",
+            // databaseURL: "https://ph03-56c1f.firebaseio.com",
+            projectId: "ph03-56c1f",
+            // storageBucket: "ph03-56c1f.appspot.com",
+            // messagingSenderId: "209808074135"
+        };
+        firebase.initializeApp(config);
+        var db = firebase.firestore();
+    </script>
+
+
+</head>
+
+<body>
+
+    <script>
+        var user = firebase.auth().currentUser;
+        console.log(user.uid);
+        
+        
+        // db.collection("sessions").where();
+    </script>
+
+</body>
+
+</html>

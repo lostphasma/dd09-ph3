@@ -34,28 +34,28 @@ var json_data = [{
 }];
 
 var curva_arrivo = [{
-    "x": "100",
+    "x": "0",
     "y": "0"
 }, {
-    "x": "150",
-    "y": "600"
+    "x": "66",
+    "y": "980"
 }, {
-    "x": "250",
-    "y": "600"
+    "x": "199",
+    "y": "980"
 }, {
-    "x": "350",
-    "y": "600"
+    "x": "333",
+    "y": "980"
 }, {
-    "x": "450",
-    "y": "600"
+    "x": "466",
+    "y": "980"
 }, {
-    "x": "550",
-    "y": "600"
+    "x": "599",
+    "y": "980"
 }, {
-    "x": "650",
-    "y": "600"
+    "x": "733",
+    "y": "980"
 }, {
-    "x": "700",
+    "x": "800",
     "y": "0"
 }];
 
@@ -75,6 +75,9 @@ var jumpOffset = 80;
 // ----- Larghezza e altezza della viewBox dell'SVG
 var w = 800;
 var h = 982;
+
+// ----- colore di path e maniglie
+var sessionColor = setColor();
 
 // ----- Pusha le posizioni dei punti nell'array point_position nel dato momento
 json_data.forEach((el) => {
@@ -102,7 +105,7 @@ var gradient = defs.append("linearGradient")
 
 gradient.append("stop")
     .attr("offset", "0%")
-    .attr("stop-color", "blue")
+    .attr("stop-color", sessionColor)
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
@@ -113,6 +116,7 @@ gradient.append("stop")
 // creo un rettangolo che sarà mascherato dalla linea, assegno il gradiente
 var rect = svg.append('rect')
     .attr('mask', "url(#mask-line)")
+    .attr('id', 'gradient')
     .attr('x', 0)
     .attr('y', -5)
     .attr('width', '100%')
@@ -437,23 +441,25 @@ function animateLines() {
         // le maniglie diventano rosse
         .add({
             targets: '.handle-behind',
-            cy: maxYOffset,
+            cy: maxYOffset - jumpOffset,
             update: function () {
                 var b = d3.select("body").selectAll(".handle-behind");
 
                 b[0].forEach((pt) => {
-                    pt.getAttribute("cy") > maxYOffset - jumpOffset ? pt.classList.add("redHandleBehind") : pt.classList.remove("redHandleBehind")
+                    pt.style.pointerEvents = "none";
+                    pt.getAttribute("cy") > maxYOffset - jumpOffset - 100 ? pt.classList.add("redHandleBehind") : pt.classList.remove("redHandleBehind");
                 })
             }
         }, 0)
         .add({
             targets: '.handle',
-            cy: maxYOffset,
+            cy: maxYOffset - jumpOffset,
             update: function () {
                 var a = d3.select("body").selectAll(".handle");
 
                 a[0].forEach((pt) => {
-                    pt.getAttribute("cy") > maxYOffset - jumpOffset ? pt.classList.add("redHandle") : pt.classList.remove("redHandle")
+                    pt.style.pointerEvents = "none";
+                    pt.getAttribute("cy") > maxYOffset - jumpOffset - 100 ? pt.classList.add("redHandle") : pt.classList.remove("redHandle")
                 })
             }
         }, 0)
@@ -578,4 +584,31 @@ function resized() {
         // }
     })
 
+}
+
+// setta il colore di maniglie e linea on page load
+function setColor() {
+    var url = new URLSearchParams(window.location.search);
+    var param = parseInt(url.get('category'));
+
+    var color = (function(param) {
+        switch (param) {
+            case 1:
+                return '#003aff';
+            case 2:
+                return '#f3c605';
+            case 3:
+                return '#56efb6';
+            case 4:
+                return '#fa8b2e';
+            default:
+                return '#003aff';
+        }
+    })(param);
+
+    // setto all'elemento :root per maniglie
+    document.documentElement.style.setProperty('--strc', color);
+
+    // ritorno valore per assegnare colore a linea tramite d3
+    return color;
 }

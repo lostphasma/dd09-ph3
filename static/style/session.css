@@ -19,6 +19,7 @@
 }
 
 #tutorial {
+    visibility: hidden;
     position: fixed;
     height: calc(100vh - (var(--sp) * 2));
     width: calc(100vw - (var(--sp) * 2));
@@ -312,6 +313,7 @@
 
 #playback > #playback-container {
     height: auto;
+    max-height: 100%;
 }
 
 #playback > #playback-endbutton.module > :first-child {
@@ -387,8 +389,9 @@
     padding: 0;
     border: 0;
     background-color: transparent;
-    outline: none;
     color: var(--c-cl);
+    cursor: pointer;
+    outline: none;
 }
 
 #playback > #playback-controls > * > * {
@@ -396,7 +399,6 @@
 }
 
 #playback > #playback-controls > .playback-control > svg {
-    cursor: pointer;
     fill: var(--c-cl);
 }
 
