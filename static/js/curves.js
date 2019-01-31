@@ -64,8 +64,8 @@ var handleRadius = 6;
 var handleOffset = 70;
 
 // ----- Moltiplicatore del raggio per la funzione resized()
-var multiplier = 12;
-var multiplier2 = 20;
+var multiplier = 10;
+var multiplier2 = 18;
 
 var minYoffset = 0;
 var maxYOffset = 1060;
