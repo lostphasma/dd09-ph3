@@ -62,7 +62,7 @@ var playback = {
         
         Array.prototype.forEach.call(a, (pt, i) => {
             var attr = pt.getAttribute("cy");
-            this.contents[i].volume = clamp(mapper(attr, 0, maxYOffset, 1, 0), 0, 1);
+            this.contents[i].volume = clamp(mapper(attr, 0, maxYOffset - jumpOffset, 1, 0), 0, 1);
         })
 
         this.playbackElement.volume = this.contents[this.current].volume;
@@ -274,7 +274,6 @@ window.onload = () => {
     playback.src = 0;
     playback.setContentVolume();
     playButton.init();
-    SVGResize();
 }
 
 window.onresize = () => {
@@ -282,7 +281,7 @@ window.onresize = () => {
     playPause();
     // e fammi resizare sta benedetta finestra
     // console.clear();
-    SVGResize();
+    resized();
 }
 
 PREV_BTN.children[0].onclick = () => {
@@ -693,15 +692,6 @@ function stepOn(startPoint) {
     // }
 
     // document.getElementById("timecode").innerHTML = `${n(t)}`;
-}
-
-function SVGResize() {
-    var crv = document.getElementById("curves");
-    var tl = document.getElementById("timeline-line-units");
-
-    crv.style.left = tl.offsetLeft+'px';
-    crv.style.width = tl.clientWidth+'px';
-    crv.style.height = tl.clientHeight+'px';
 }
 
 function mutePlayback(currVol) {

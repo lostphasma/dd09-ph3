@@ -1,3 +1,7 @@
+:root {
+  --strw: 8px;
+}
+
 #content > #timeline > #timeline-line > #timeline-line-bars #curves {
   position: absolute;
   height: 100%;
@@ -8,14 +12,16 @@
 #curves svg {
   position: absolute;
   width: 100%;
-  height: 100%;
+  height: calc(100% - (var(--sp) * 4));
+  padding-top: calc((var(--sp) * 4) + 4px);
+  overflow: visible;
 }
 
 #curves #svg_control {
   display: inline;
   float: left;
-  width: 500px;
-  height: 500px;
+  /* width: 500px;
+  height: 500px; */
   margin: 0 10px 10px 0;
   background-color: #fff;
 }
@@ -80,8 +86,9 @@
 
 #curves .curves {
   stroke: lightskyblue;
-  stroke-width: 2px;
+  stroke-width: 4px;
   fill: none;
+  z-index: 10;
 }
 
 #curves control-line {
@@ -92,9 +99,9 @@
 /* ----- HANDLES ----- */
 #curves .handle {
   fill: blue;
-  stroke: white;
+  stroke: var(--c-bg);
   opacity: 1;
-  stroke-width: 4px;
+  stroke-width: var(--strw);
   cursor: grab; /*move, ns-resize, grab*/
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
   -moz-transition: opacity .5s;
@@ -115,8 +122,8 @@
 
 #curves .redHandle {
   fill: red;
-  stroke: white;
-  stroke-width: 3px;
+  stroke: var(--c-bg);
+  stroke-width: var(--strw);
   transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
 }
 

@@ -203,10 +203,10 @@
     grid-template-columns: 92px 1fr 92px;
 }
 
-#content > #timeline > #timeline-line > #timeline-line-bars #curves > svg {
+/* #content > #timeline > #timeline-line > #timeline-line-bars #curves > svg {
     width: 100%;
     height: 100%;
-}
+} */
 
 #content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units {
     display: grid;

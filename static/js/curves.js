@@ -8,34 +8,34 @@ var curves_data = [];
 // var json_data_muliple_lines = [[{"id": "82","x": "50","y": "50"}, {"id": "83","x": "25","y": "110"}, {"id": "97","x": "90","y": "150"}, {"id": "98","x": "150","y": "224"}, {"id": "99","x": "250","y": "150"}, {"id": "100","x": "300","y": "200"}, {"id": "100","x": "320","y": "230"}],[{"id": "1","x": "120","y": "60"}, {"id": "2","x": "30","y": "150"}, {"id": "3","x": "120","y": "170"}, {"id": "4","x": "180","y": "260"}, {"id": "5","x": "300","y": "250"}]];
 
 var json_data = [{
-    "x": "100",
-    "y": "50"
+    "x": "0",
+    "y": "0"
 }, {
-    "x": "150",
-    "y": "50"
+    "x": "66",
+    "y": "0"
 }, {
-    "x": "250",
-    "y": "50"
+    "x": "199",
+    "y": "0"
 }, {
-    "x": "350",
-    "y": "50"
+    "x": "333",
+    "y": "0"
 }, {
-    "x": "450",
-    "y": "50"
+    "x": "466",
+    "y": "0"
 }, {
-    "x": "550",
-    "y": "50"
+    "x": "599",
+    "y": "0"
 }, {
-    "x": "650",
-    "y": "50"
+    "x": "733",
+    "y": "0"
 }, {
-    "x": "700",
-    "y": "50"
+    "x": "800",
+    "y": "0"
 }];
 
 var curva_arrivo = [{
     "x": "100",
-    "y": "50"
+    "y": "0"
 }, {
     "x": "150",
     "y": "600"
@@ -56,21 +56,25 @@ var curva_arrivo = [{
     "y": "600"
 }, {
     "x": "700",
-    "y": "50"
+    "y": "0"
 }];
 
 // ----- Raggio delle ellissi e offset delle maniglie per la bezier
 var handleRadius = 6;
-var handleOffset = 50;
+var handleOffset = 70;
 
-var minYoffset = 300;
-var maxYOffset = 600;
+// ----- Moltiplicatore del raggio per la funzione resized()
+var multiplier = 12;
+var multiplier2 = 20;
 
-var jumpOffset = 60;
+var minYoffset = 0;
+var maxYOffset = 1060;
+
+var jumpOffset = 80;
 
 // ----- Larghezza e altezza della viewBox dell'SVG
 var w = 800;
-var h = 1000;
+var h = 982;
 
 // ----- Pusha le posizioni dei punti nell'array point_position nel dato momento
 json_data.forEach((el) => {
@@ -110,9 +114,9 @@ gradient.append("stop")
 var rect = svg.append('rect')
     .attr('mask', "url(#mask-line)")
     .attr('x', 0)
-    .attr('y', 290)
+    .attr('y', -5)
     .attr('width', '100%')
-    .attr('height', '400')
+    .attr('height', '100%')
     .attr('fill', "url(#svgGradient)");
 
 // ----- CURVES INIT
@@ -514,23 +518,37 @@ function storeJSON() {
 
 
 // ----- Resize ellipses
-window.onresize = resized;
 
 var circlesToResize = svg.selectAll(".handle");
 var circlesToResizeB = svg.selectAll(".handle-behind");
+
+// window.onresize = resized;
 
 //la chiama la prima volta per resizare subito i cerchi appena vengono creati
 resized();
 
 function resized() {
-    var scaleX = w / d3.select('#curves-svg').node().getBoundingClientRect().width;
+
+    function SVGResize() {
+        var crv = document.getElementById("curves");
+        var tl = document.getElementById("timeline-line-units");
+    
+        crv.style.left = tl.offsetLeft + 'px';
+        crv.style.width = tl.clientWidth + 'px';
+        // crv.style.height = tl.clientHeight + 'px';
+
+        // var crvSVG = crv.childNodes[0];
+
+        // crvSVG.style.height = crv.style.height - getComputedStyle(crv).paddingTop;
+    }    
+
+    SVGResize();
+
+    var scaleX = w / (d3.select('#curves-svg').node().getBoundingClientRect().width);
     var scaleY = h / d3.select('#curves-svg').node().getBoundingClientRect().height;
     
     console.log(d3.select('#curves-svg').node().getBoundingClientRect().width);
     console.log(d3.select('#curves-svg').node().getBoundingClientRect().height);
-
-    var multiplier = 2;
-    var multiplier2 = 6;
 
     // cerchi frontali con stroke
     circlesToResize.each(function (d, i) {
@@ -559,4 +577,5 @@ function resized() {
             });
         // }
     })
+
 }
