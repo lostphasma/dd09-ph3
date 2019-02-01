@@ -25,7 +25,7 @@ function writeEntry(pathstr, values) {
 // this method gets a reference of the document on the server
 function getLastEntries() {
 
-    db.collection("sessions").where("category", "==", playback.category).limit(20).get().then((querySnapshot) => {
+    db.collection("sessions").where("category", "==", playback.category).limit(10).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 // push path data 
                 curves_data.push(doc.data());
@@ -51,12 +51,7 @@ function getAverages(arrayName) {
 }
 
 
-var averages = []
-setTimeout(() => {
-    getAverages(averages);
-}, 1000);
-
-// gets average percentage of 
+// gets average of same index among many arrays
 function getContentAverage(arr, index) {
     if (index > 0 && index < 6) {
         var outputArr = [];
@@ -67,7 +62,7 @@ function getContentAverage(arr, index) {
         var result = ((outputArr) => {
             var avg = 0;
             for (i = 0; i < outputArr.length; i++) {
-                avg += parseFloat(outputArr[i]) * 100;
+                avg += parseFloat(outputArr[i]);
             }
             return (avg / arr.length).toFixed(2);
         })(outputArr);

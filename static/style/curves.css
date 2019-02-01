@@ -148,7 +148,7 @@
 
 #curves .users-curve {
   stroke: lightblue;
-  stroke-width: 1;
+  stroke-width: 0;
   fill: none;
   opacity: 0;
   /* transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1); */
@@ -157,10 +157,11 @@
 #curves .user-curve-anim {
   /* stroke:var(--strc); */
   /* transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1); */
-  opacity: 0.4;
+  stroke-width: 1;
+  opacity: .4;
 }
 
-#curves .users-layer > * {
+/* #curves .users-layer > * {
   z-index: 10 !important;
   opacity: 0.65;
-}
+} */

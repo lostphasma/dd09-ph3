@@ -274,6 +274,9 @@ window.onload = () => {
     playback.src = 0;
     playback.setContentVolume();
     playButton.init();
+
+    // get entries of last sessions
+    getLastEntries();
 }
 
 window.onresize = () => {
@@ -320,13 +323,26 @@ HELP_BTN.onclick = () => {
 };
 
 DONE_BTN.onclick = () => {
+    // limit user interaction
     DONE_BTN.style.pointerEvents = 'none';
-
     document.body.onkeyup = '';
 
-    dataConsent.saveSessionData(function() {
-        // what do we do after ?
+    dataConsent.saveSessionData(function () {
+
+        // animate end of session
         endSession();
+
+        // what do we do after ?
+
+        // dataConsent.saveSessionData(() => {
+        //     var data = []
+        //     playback.contents.forEach((content) => {
+        //         data.push(content.volume.toFixed(2));
+        //     })
+        //     writeEntry(curve, data);
+        // });
+
+
     });
 }
 
@@ -595,16 +611,6 @@ function endSession() {
     var msgEl = document.createElement("DIV");
     msgEl.style.padding = 'var(--sp)';
     msgEl.style.margin = '0px';
-
-    dataConsent.saveSessionData(() => {
-        var data = []
-        playback.contents.forEach((content) => {
-            data.push(content.volume.toFixed(2));
-        })
-        writeEntry(curve, data);
-    });
-
-    getLastEntries();
 
     var ops = [{
         fn: function () {

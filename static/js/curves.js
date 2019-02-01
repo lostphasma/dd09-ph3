@@ -411,6 +411,8 @@ function animateLines() {
         ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
     ].join('');
 
+    console.log(ca);
+
     // crea un nuovo gruppo svg in cui inserire le curve
     svg.selectAll("g.users-layer").remove();
     var usersLayer = d3.select("#mask-line").append('g').attr('class', 'users-layer');
@@ -425,8 +427,6 @@ function animateLines() {
         'd': ca,
         'vector-effect': 'non-scaling-stroke'
     })
-
-    var asd = d3.select('.curves').attr('d');
 
     var tl = anime.timeline({
         easing: ease,
@@ -474,12 +474,12 @@ function animateLines() {
                 a[0].forEach((pt) => {
                     pt.classList.add("user-curve-anim")
                 })
-            },
-            delay: anime.stagger(200)
+            }, 
+            delay: anime.stagger(100)
         }, '+=' + duration)
         .add({
             targets: '.curves',
-            d: asd,
+            d: d3.select('.curves').attr('d')
         }, '-=' + duration)
         .add({
             targets: '.handle',
