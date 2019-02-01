@@ -1,0 +1,23 @@
+body {
+    background-color: black
+}
+
+.curves {
+    stroke: lightskyblue;
+    stroke-width: 2px;
+    opacity: .4;
+    fill: none;
+  }
+
+.users-curve {
+    stroke: lightskyblue;
+    stroke-width: 1px;
+    fill: none;
+    opacity: .4;
+}
+
+#users-results {
+position: absolute;
+width: 100%;
+height: 100%;
+}
