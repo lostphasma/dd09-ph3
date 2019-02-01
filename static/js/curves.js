@@ -542,10 +542,6 @@ function resized() {
         crv.style.left = tl.offsetLeft + 'px';
         crv.style.width = tl.clientWidth + 'px';
         // crv.style.height = tl.clientHeight + 'px';
-
-        // var crvSVG = crv.childNodes[0];
-
-        // crvSVG.style.height = crv.style.height - getComputedStyle(crv).paddingTop;
     }    
 
     SVGResize();
@@ -553,21 +549,19 @@ function resized() {
     var scaleX = w / (d3.select('#curves-svg').node().getBoundingClientRect().width);
     var scaleY = h / d3.select('#curves-svg').node().getBoundingClientRect().height;
     
-    console.log(d3.select('#curves-svg').node().getBoundingClientRect().width);
-    console.log(d3.select('#curves-svg').node().getBoundingClientRect().height);
+    // console.log(d3.select('#curves-svg').node().getBoundingClientRect().width);
+    // console.log(d3.select('#curves-svg').node().getBoundingClientRect().height);
 
     // cerchi frontali con stroke
     circlesToResize.each(function (d, i) {
-        // if (i != 0 && i != 7) {
-            var circleSize = d3.select(this);
+        var circleSize = d3.select(this);
 
-            // circleSize.style("stroke-width", multiplier / 4 + "px");
+        // circleSize.style("stroke-width", multiplier / 4 + "px");
 
-            circleSize.attr({
-                rx: (scaleX * multiplier),
-                ry: (scaleY * multiplier)
-            });
-        // }
+        circleSize.attr({
+            rx: (scaleX * multiplier),
+            ry: (scaleY * multiplier)
+        });
     })
 
     // cerchi dietro

@@ -95,44 +95,44 @@ var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
 
 var DONE_BTN = document.getElementById("playback-endbutton");
 
-// object that controls session data recording consent
-var dataConsent = {
-    approvalBtn: document.getElementById("data-yes"),
-    denialBtn: document.getElementById("data-no"),
+// // object that controls session data recording consent
+// var dataConsent = {
+//     approvalBtn: document.getElementById("data-yes"),
+//     denialBtn: document.getElementById("data-no"),
 
-    approval: true,
+//     approval: true,
 
-    // waits for user input by placing 
+//     // waits for user input by placing 
 
-    setApproval: function(bool = true, callback = function() {}) {
-        this.approval = bool;
-        this.removeListeners();
-        callback();
-        console.log(`You chose ${bool}`);
-    },
+//     setApproval: function(bool = true, callback = function() {}) {
+//         this.approval = bool;
+//         this.removeListeners();
+//         callback();
+//         console.log(`You chose ${bool}`);
+//     },
 
-    init: function(callback = function(){}) {
-        this.approvalBtn.addEventListener('click', () => {
-            this.setApproval(true, callback());
-        });
-        this.denialBtn.addEventListener('click', () => {
-            this.setApproval(false, callback());
-        });
-    },
+//     init: function(callback = function(){}) {
+//         this.approvalBtn.addEventListener('click', () => {
+//             this.setApproval(true, callback());
+//         });
+//         this.denialBtn.addEventListener('click', () => {
+//             this.setApproval(false, callback());
+//         });
+//     },
 
-    removeListeners: function() {
-        this.approvalBtn.style.pointerEvents = 'none';
-        this.denialBtn.style.pointerEvents = 'none';
-    },
+//     removeListeners: function() {
+//         this.approvalBtn.style.pointerEvents = 'none';
+//         this.denialBtn.style.pointerEvents = 'none';
+//     },
 
-    saveSessionData: function() {
-        this.approval == true ? {
-            // save the data
-        } : {
-            // don't save the data
-        }
-    }
-};
+//     saveSessionData: function() {
+//         this.approval == true ? {
+//             // save the data
+//         } : {
+//             // don't save the data
+//         }
+//     }
+// };
 
 
 
@@ -169,12 +169,12 @@ var dataConsent = {
     saveSessionData: function(callback = function() {}) {
         if (this.approval == true) {
             // save the data
+            callback();
             console.log('Data saved!');
         } else {
             // don't save the data
             console.log('Data not saved');
         }
-        callback();
     }
 };
 
@@ -516,7 +516,7 @@ function hightlightTimelineMarker(markerClassName) {
         var attribute = el.getAttribute("js-spacer");
 
         if (attribute == markerClassName) {
-            el.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            el.style.backgroundColor = 'var(--c-bg)';
 
         } else el.style.backgroundColor = 'transparent';
     })
@@ -588,7 +588,6 @@ function getStartingPoint(index) {
 
 
 function endSession() {
-    // TO-DO: sostituisci variabili globali con oggetto?
     const target = document.getElementById("playback");
     var els = target.children;
     var timing = 1.2;
@@ -596,6 +595,16 @@ function endSession() {
     var msgEl = document.createElement("DIV");
     msgEl.style.padding = 'var(--sp)';
     msgEl.style.margin = '0px';
+
+    dataConsent.saveSessionData(() => {
+        var data = []
+        playback.contents.forEach((content) => {
+            data.push(content.volume.toFixed(2));
+        })
+        writeEntry(curve, data);
+    });
+
+    getLastEntries();
 
     var ops = [{
         fn: function () {
@@ -651,6 +660,8 @@ function endSession() {
             <p>This is how an IT company that uses traditional filtering methods would moderate the same&nbsp;contents.</p>
             <p>No shades, no debates, just one point of view and it does not depend on&nbsp;you.</p>
             <p>Do you like the noise of&nbsp;silence?</p>`;
+
+            // anima linee (curves.js)
             animateLines();
         },
         start: 3
