@@ -413,7 +413,7 @@ function animateLines() {
 
     // crea un nuovo gruppo svg in cui inserire le curve
     svg.selectAll("g.users-layer").remove();
-    var usersLayer = svg.append('g').attr('class', 'users-layer');
+    var usersLayer = d3.select("#mask-line").append('g').attr('class', 'users-layer');
 
     // crea n curve in base al json, le imposta uguali alla curva d'arrivo
     usersLayer.selectAll('path.curves-layer').data(cd)
