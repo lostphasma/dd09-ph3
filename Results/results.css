@@ -5,15 +5,15 @@ body {
 .curves {
     stroke: lightskyblue;
     stroke-width: 2px;
-    opacity: .4;
+    opacity: 1;
     fill: none;
   }
 
 .users-curve {
     stroke: lightskyblue;
-    stroke-width: 1px;
+    stroke-width: 2px;
     fill: none;
-    opacity: .4;
+    opacity: 0;
 }
 
 #users-results {

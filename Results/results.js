@@ -1,5 +1,5 @@
 var point_positions = [];
-var curves_data = [{
+var curves_results_data = [{
         d: "M100,300C117,300 100,300 150,300S200,387 250,387 300,353 350,353 400,300 450,300 500,300 550,300 600,300 650,300 682,300 700,300"
     }, {
         d: "M100,300C112,300 100,368 150,368S200,458 250,458 300,536 350,536 400,407 450,407 500,337 550,337 600,441 650,441 687,300 700,300"    
@@ -162,13 +162,14 @@ function show_curves(mainLayer, curves) {
 
     mainLayer.selectAll('path.curves').data(curves)
         .enter().append('defs').append('mask').attr('id', 'mask-line').append('path')
-        .attr({
-            'class': function (d, i) {
-                return 'curves path' + i;
-            },
-            d: pathData,
-            'vector-effect': 'non-scaling-stroke'
-        })
+        .attr('data', pathData)
+        // .attr({
+        //     'class': function (d, i) {
+        //         return 'curves path' + i;
+        //     },
+        //     d: pathData,
+        //     'vector-effect': 'non-scaling-stroke'
+        // })
 }
 
 // ----- inizializza la funzione
@@ -184,7 +185,7 @@ function animateLines() {
     const ease = 'easeInOutQuad';
     const duration = 1500;
 
-    var cd = curves_data;
+    var cd = curves_results_data;
 
     // crea un nuovo gruppo svg in cui inserire le curve
     svg.selectAll("g.users-layer").remove();
@@ -219,6 +220,7 @@ function animateLines() {
                 pt.classList.add("user-curve-anim")
             })
         },
+        opacity: .4,
         duration: 1000,
         delay: anime.stagger(100)
     }, 0)
