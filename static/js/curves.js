@@ -65,7 +65,7 @@ var handleOffset = 70;
 
 // ----- Moltiplicatore del raggio per la funzione resized()
 var multiplier = 10;
-var multiplier2 = 18;
+var multiplier2 = 17;
 
 var minYoffset = 0;
 var maxYOffset = 1060;
@@ -145,6 +145,10 @@ function curves_init(point_positions) {
     // ----- DRAGMOVE
     // Elementi draggabili, funzione che controlla il drag delle maniglie
     function dragmove(d, i) {
+
+        // updates volume percentages in-session
+        updatePercentage(i);
+
         // Qui assegna il valore y e aggiorna la posizione dei punti
         // d.x = d3.event.x;
         d.y = clamp(d3.event.y, minYoffset, maxYOffset - jumpOffset);
@@ -174,6 +178,10 @@ function curves_init(point_positions) {
                 }).text(handleText(d, d.handleID));
 
         } else {
+
+            // Si trova in UTILITY di main.js
+            interference(d,i);
+
             d3.select(this).attr({
                 // cx: d.x,
                 cy: maxYOffset - jumpOffset
@@ -580,7 +588,7 @@ function resized() {
 
 }
 
-// setta il colore di maniglie e linea on page load
+// ----- Setta il colore di maniglie e linea on page load
 function setColor() {
     var url = new URLSearchParams(window.location.search);
     var param = parseInt(url.get('category'));

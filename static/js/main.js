@@ -95,55 +95,13 @@ var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
 
 var DONE_BTN = document.getElementById("playback-endbutton");
 
-// // object that controls session data recording consent
-// var dataConsent = {
-//     approvalBtn: document.getElementById("data-yes"),
-//     denialBtn: document.getElementById("data-no"),
-
-//     approval: true,
-
-//     // waits for user input by placing 
-
-//     setApproval: function(bool = true, callback = function() {}) {
-//         this.approval = bool;
-//         this.removeListeners();
-//         callback();
-//         console.log(`You chose ${bool}`);
-//     },
-
-//     init: function(callback = function(){}) {
-//         this.approvalBtn.addEventListener('click', () => {
-//             this.setApproval(true, callback());
-//         });
-//         this.denialBtn.addEventListener('click', () => {
-//             this.setApproval(false, callback());
-//         });
-//     },
-
-//     removeListeners: function() {
-//         this.approvalBtn.style.pointerEvents = 'none';
-//         this.denialBtn.style.pointerEvents = 'none';
-//     },
-
-//     saveSessionData: function() {
-//         this.approval == true ? {
-//             // save the data
-//         } : {
-//             // don't save the data
-//         }
-//     }
-// };
-
 
 
 // object that controls session data recording consent
 var dataConsent = {
     approvalBtn: document.getElementById("data-yes"),
     denialBtn: document.getElementById("data-no"),
-
     approval: true,
-
-    // waits for user input by placing 
 
     setApproval: function(bool = true, callback = function() {}) {
         this.approval = bool;
@@ -179,7 +137,6 @@ var dataConsent = {
 };
 
 
-// "use strict";
 /* global d3, document */
 var playButton = {
     el: document.getElementById("play"),
@@ -246,8 +203,10 @@ var playButton = {
 window.onload = () => {
     setSessionid();
 
-    // this function is called only after clicking on either one
+    // this function is called on page load, but executed
+    // only after clicking on either one
     // of the buttons for data collection
+    // (it listens to the click on the two buttons)
     dataConsent.init(() => {
         tut.classList.add("hidden");
         tut.classList.add("translated");
@@ -346,6 +305,10 @@ DONE_BTN.onclick = () => {
     });
 }
 
+/* --------------- ======== ---------------- */
+
+
+
 
 /* ----------- PLAYBACK RUNTIME ------------ */
 
@@ -405,10 +368,13 @@ playback.playbackElement.addEventListener('pause', () => {
 
 }, false);
 
+/* --------------- ========= --------------- */
+
+
+
 
 
 /* ----------- KEYBOARD SUPPORT ------------ */
-
 
 // TO-DO: Stop listening for keyboard events once DONE_BTN has been clicked
 document.body.onkeyup = (e) => {
@@ -444,7 +410,6 @@ document.body.onkeyup = (e) => {
 
 /* --------------- ========= --------------- */
 /* --------------- FUNCTIONS --------------- */
-
 
 function setSessionid() {
     let url = new URLSearchParams(window.location.search);
@@ -522,8 +487,16 @@ function playNextContent() {
     setSrc();
 }
 
+function mutePlayback(currVol) {
+    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
+}
+
 /* --------------- ========= --------------- */
 
+
+
+
+/* ----------- TIMELINE FUNCTIONS ---------- */
 
 function hightlightTimelineMarker(markerClassName) {
     var els = document.getElementsByClassName('timeline-line-section');
@@ -580,7 +553,26 @@ function getStartingPoint(index) {
     return result;
 }
 
+// increments cursor position, given a point to start from
+function stepOn(startPoint) {
+    var t = playback.currentTime;
+    var d = playback.totalTime;
+    var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
+    var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
+    cursor.style.left = `${r}px`;
 
+    // function n(n){
+    //     return n > 9 ? "" + Math.round(n): "0" + Math.round(n);
+    // }
+
+    // document.getElementById("timecode").innerHTML = `${n(t)}`;
+}
+
+function updatePercentage(i) {
+    var vol = playback.contents[i].volume;
+    var mrkr = document.getElementsByClassName("timeline-marker")[i+1];
+    mrkr.innerHTML = parseInt(vol * 100) + '%';
+}
 
 /* --------------- NO LONGER USED? --------------- */
 // function updateCursorPosition(index) {
@@ -600,6 +592,10 @@ function getStartingPoint(index) {
 //     } else return;
 // }
 /* --------------- NO LONGER USED? --------------- */
+
+/* --------------- =============== --------------- */
+
+
 
 
 
@@ -683,6 +679,14 @@ function endSession() {
             <p>With this approach nothing will be censored. The&nbsp;community will decide how much visibility to give to each&nbsp;content, helping to create a civic&nbsp;moderation.</p>
             <p>Don’t&nbsp;mute! Down-Vote!</p><br>`;
             msgEl.style.opacity = '1';
+
+            var resultsLink = document.createElement("A");
+            resultsLink.href = 'results.html';
+            resultsLink.innerHTML = 'See the results';
+            resultsLink.style.pointerEvents = 'all';
+            resultsLink.style.textDecoration = 'underline';
+            msgEl.append(resultsLink);
+
         },
         start: 10
     }]
@@ -698,23 +702,13 @@ function endSession() {
     });
 }
 
-// increments cursor position, given a point to start from
-function stepOn(startPoint) {
-    var t = playback.currentTime;
-    var d = playback.totalTime;
-    var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
-    var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
-    cursor.style.left = `${r}px`;
 
-    // function n(n){
-    //     return n > 9 ? "" + Math.round(n): "0" + Math.round(n);
-    // }
 
-    // document.getElementById("timecode").innerHTML = `${n(t)}`;
-}
 
-function mutePlayback(currVol) {
-    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
+/* ----------- UTILITY FUNCTIONS ----------- */
+
+function interference(d, i) {
+    console.log(i);
 }
 
 const mapper = (num, in_min, in_max, out_min, out_max) => {
