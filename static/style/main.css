@@ -77,13 +77,11 @@ a {
 
 span {
     font-size: .82em;
-    font-weight: lighter;
     letter-spacing: 0.35px;
 }
 
 #wrapper {
     height: 100%;
-    /* position: absolute; */
     width: calc(100% - (var(--sp) * 2));
     height: calc(100% - (var(--sp) * 2));
     padding: var(--sp);
