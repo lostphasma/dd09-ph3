@@ -72,7 +72,18 @@ results_start.forEach((el) => {
 })
 
 // ----- Crea un svg con dimensioni definite
-var svg = d3.select('#content-svg').append('svg').attr("viewBox", "0 0 " + w + ' ' + h).attr("preserveAspectRatio", "none").attr("id", "users-results");
+var svg = d3.select('#content-svg').append('svg')
+.attr("viewBox", "0 0 " + w + ' ' + h)
+.attr("preserveAspectRatio", "none")
+.attr("id", "users-results")
+.attr("height", function() {return d3.select("#content-grid").node().getBoundingClientRect().height});
+
+window.onresize = function () {
+    d3.select('#users-results').attr("height", function(){return d3.select("#content-grid").node().getBoundingClientRect().height});
+    console.log("resize");    
+}
+
+console.log(d3.select("#content-grid").node().getBoundingClientRect().height);
 
 // ------------ GRADIENT - crea il gradiente
 var defs = svg.append("defs");
@@ -98,7 +109,7 @@ gradient.append("stop")
 var rect = svg.append('rect')
     .attr('mask', "url(#mask-line)")
     .attr('x', 0)
-    .attr('y', -5)
+    .attr('y', 0)
     .attr('width', '100%')
     .attr('height', '100%')
     .attr('fill', "url(#svgGradient)");

@@ -2,7 +2,7 @@
 /*Fai come me, che non  lo faccio direttamente */
 
 svg {
-    visibility: hidden;
+    /* visibility: hidden; */
 }
 
 #wrapper > #content {
@@ -154,6 +154,6 @@ svg {
 #content-svg svg {
     position: absolute;
     width: 100%;
-    height: calc(100% - (var(--sp) * 16));
+    /* height: calc(100% - (var(--sp) * 16)); */
     overflow: visible;
 }
