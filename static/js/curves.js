@@ -179,9 +179,6 @@ function curves_init(point_positions) {
 
         } else {
 
-            // Si trova in UTILITY di main.js
-            interference(d,i);
-
             d3.select(this).attr({
                 // cx: d.x,
                 cy: maxYOffset - jumpOffset

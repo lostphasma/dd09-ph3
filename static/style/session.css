@@ -174,7 +174,7 @@
     position: relative;
 }
 
-#content > #timeline > #timeline-line > div#cursor {
+#content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units > div#cursor {
     position: absolute;
     height: 100%;
     top: 0;
@@ -183,7 +183,7 @@
     transition: border 1s;
 }
 
-#content > #timeline > #timeline-line > div#cursor.blink {
+#content > #timeline > #timeline-line > #timeline-line-bars > #timeline-line-units > div#cursor.blink {
     animation: blinking .85s linear 0s infinite alternate;
     transition: border 1s;
 }

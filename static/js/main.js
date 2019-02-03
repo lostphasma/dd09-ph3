@@ -67,6 +67,15 @@ var playback = {
 
         this.playbackElement.volume = this.contents[this.current].volume;
 
+
+        if (this.playbackElement.volume <= 0 && !this.playbackElement.paused) {
+            interference.play();
+            // console.log(this.playbackElement.volume);
+        } else if (this.playbackElement.paused) {
+            interference.pause();
+        } else interference.pause();
+
+
     },
     makeCursor: function (DOMelement) {
         var el = document.createElement("DIV");
@@ -82,21 +91,6 @@ var playback = {
 
 
 
-//initializing playback object
-var cursor = playback.makeCursor("timeline-line");
-
-var PREV_BTN = document.getElementById("previous");
-var PLAY_BTN = document.getElementById("play");
-var NEXT_BTN = document.getElementById("next");
-
-var HELP_BTN = document.getElementById("help");
-var tut = document.getElementById("tutorial");
-var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
-
-var DONE_BTN = document.getElementById("playback-endbutton");
-
-
-
 // object that controls session data recording consent
 var dataConsent = {
     approvalBtn: document.getElementById("data-yes"),
@@ -107,7 +101,7 @@ var dataConsent = {
         this.approval = bool;
         this.removeListeners();
         callback();
-        console.log(`You chose ${bool}`);
+        console.log(`User chose ${bool}`);
     },
 
     init: function(callback = function(){}) {
@@ -128,13 +122,14 @@ var dataConsent = {
         if (this.approval == true) {
             // save the data
             callback();
-            console.log('Data saved!');
+            console.log('User data has been saved.');
         } else {
             // don't save the data
-            console.log('Data not saved');
+            console.log('User data has not saved');
         }
     }
 };
+
 
 
 /* global d3, document */
@@ -192,6 +187,27 @@ var playButton = {
         return this.state.iconEl.getAttribute("d");
     }
 };
+
+
+
+
+
+
+
+//initializing playback object
+var cursor = playback.makeCursor("timeline-line-units");
+
+var PREV_BTN = document.getElementById("previous");
+var PLAY_BTN = document.getElementById("play");
+var NEXT_BTN = document.getElementById("next");
+
+var HELP_BTN = document.getElementById("help");
+var tut = document.getElementById("tutorial");
+var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
+
+var DONE_BTN = document.getElementById("playback-endbutton");
+
+
 
 
 
@@ -318,6 +334,8 @@ var stepper;
 // stuff to do when playing
 playback.playbackElement.addEventListener('play', () => {
 
+    playback.setContentVolume();
+
     // save current track index
     var c = playback.current;
 
@@ -355,6 +373,9 @@ playback.playbackElement.addEventListener('play', () => {
 
 // stuff to do when paused
 playback.playbackElement.addEventListener('pause', () => {
+
+    // pause interference sound (if it's playing)
+    interference.pause();
 
     // clearing interval every event change (also next and previous content)
     // otherwise we fire multiple setInterval
@@ -707,8 +728,24 @@ function endSession() {
 
 /* ----------- UTILITY FUNCTIONS ----------- */
 
-function interference(d, i) {
-    console.log(i);
+var interference = {
+    el: document.getElementById("playback-interference"),
+    src: 'static/assets/interference.mp3',
+    vol: 1,
+    elSrc: function () {
+        this.el.src = this.src;
+        return this.el.src;
+    },
+    play: function() {
+        if (this.el.paused) {
+            this.el.play();
+        } else return;
+    },
+    pause: function() {
+        if (!this.el.paused) {
+            this.el.pause();
+        } else return;
+    }
 }
 
 const mapper = (num, in_min, in_max, out_min, out_max) => {
