@@ -121,8 +121,14 @@ var dataConsent = {
     saveSessionData: function(callback = function() {}) {
         if (this.approval == true) {
             // save the data
-            callback();
+            var data = []
+            playback.contents.forEach((content) => {
+                data.push(content.volume.toFixed(2));
+            })
+            // writeEntry(curve, data);
             console.log('User data has been saved.');
+
+            callback();
         } else {
             // don't save the data
             console.log('User data has not saved');
@@ -303,21 +309,10 @@ DONE_BTN.onclick = () => {
     document.body.onkeyup = '';
 
     dataConsent.saveSessionData(function () {
+        // What do we do after saving data?
 
         // animate end of session
         endSession();
-
-        // what do we do after ?
-
-        // dataConsent.saveSessionData(() => {
-        //     var data = []
-        //     playback.contents.forEach((content) => {
-        //         data.push(content.volume.toFixed(2));
-        //     })
-        //     writeEntry(curve, data);
-        // });
-
-
     });
 }
 
@@ -590,9 +585,12 @@ function stepOn(startPoint) {
 }
 
 function updatePercentage(i) {
-    var vol = playback.contents[i].volume;
+    var vol = parseInt(playback.contents[i].volume * 100);
     var mrkr = document.getElementsByClassName("timeline-marker")[i+1];
-    mrkr.innerHTML = parseInt(vol * 100) + '%';
+
+    if (vol == 0) { mrkr.classList.add("blinking") } else { mrkr.classList.remove("blinking") };
+
+    mrkr.innerHTML = vol + '%';
 }
 
 /* --------------- NO LONGER USED? --------------- */
