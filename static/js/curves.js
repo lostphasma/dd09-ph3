@@ -335,7 +335,7 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
             // Sposta le maniglie cerchietti
             var handles = handleLayer.selectAll('circle.handle.path' + i).data(d.points)
             var handlesEnter = handles.enter().append("g");
-            
+
             handlesEnter.append('ellipse').filter(function (d, i) {
                     if (i != 0 && i != 7) return d
                 })
@@ -360,7 +360,7 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                 })
                 .call(drag);
 
-                handlesEnter.append('ellipse').filter(function (d, i) {
+            handlesEnter.append('ellipse').filter(function (d, i) {
                     if (i != 0 && i != 7) return d
                 })
                 .attr({
