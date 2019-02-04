@@ -19,7 +19,7 @@
 }
 
 #tutorial {
-    /* visibility: hidden; */
+    visibility: hidden;
     position: fixed;
     height: calc(100vh - (var(--sp) * 2));
     width: calc(100vw - (var(--sp) * 2));

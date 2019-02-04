@@ -196,6 +196,30 @@ var playButton = {
 
 
 
+var interference = {
+    el: document.getElementById("playback-interference"),
+    src: 'static/assets/interference.mp3',
+    vol: 1,
+    elSrc: function () {
+        this.el.src = this.src;
+        return this.el.src;
+    },
+    play: function() {
+        if (this.el.paused) {
+            this.el.play();
+        } else return;
+    },
+    pause: function() {
+        if (!this.el.paused) {
+            this.el.pause();
+        } else return;
+    }
+}
+
+
+
+
+
 
 
 
@@ -212,10 +236,6 @@ var tut = document.getElementById("tutorial");
 var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
 
 var DONE_BTN = document.getElementById("playback-endbutton");
-
-
-
-
 
 
 
@@ -725,26 +745,6 @@ function endSession() {
 
 
 /* ----------- UTILITY FUNCTIONS ----------- */
-
-var interference = {
-    el: document.getElementById("playback-interference"),
-    src: 'static/assets/interference.mp3',
-    vol: 1,
-    elSrc: function () {
-        this.el.src = this.src;
-        return this.el.src;
-    },
-    play: function() {
-        if (this.el.paused) {
-            this.el.play();
-        } else return;
-    },
-    pause: function() {
-        if (!this.el.paused) {
-            this.el.pause();
-        } else return;
-    }
-}
 
 const mapper = (num, in_min, in_max, out_min, out_max) => {
     return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
