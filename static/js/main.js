@@ -1,7 +1,8 @@
 var playback = {
-    playbackElement: document.getElementById("playback-content"),
     path: 'static/assets/',
     category: 1,
+    playbackElement: document.getElementById("playback-content"),
+    captionsElement: document.getElementById("captions-track"),
     contents: [
         {
             src: '1.mp4', subs: '1.vtt', volume: 1
@@ -32,9 +33,9 @@ var playback = {
     get totalTime() {
         return this.playbackElement.duration;
     },
-    get src() {
-        return this.path + this.category + '/' + this.contents[this.current].src;
-    },
+    // get src() {
+    //     return this.path + this.category + '/' + this.contents[this.current].src;
+    // },
     set src(i) {
         this.playbackElement.src = this.path + this.category + '/' + this.contents[i].src;
     },
@@ -87,7 +88,20 @@ var playback = {
     setCurrentTime: function(currentTime) {
         this.playbackElement.currentTime = currentTime;
     },
+    captionsOn: function() {
+        this.captionsElement.track.addEventListener("cuechange", function() {
+            this.mode = 'hidden';
+            if (this.activeCues.length > 0) {
+                document.getElementById("captions-viewer").innerHTML = this.activeCues[0].text;
+            }
+        })        
+    },
+    setCaptions: function() {
+        this.captionsElement.src = this.path + this.category + '/' + this.contents[this.current].subs;
+        console.log(this.captionsElement.src);
+    }
 }
+
 
 
 
@@ -279,17 +293,11 @@ window.onload = () => {
     // get entries of last sessions
     getLastEntries();
 
-
-    var track = document.getElementById("captions-track").track;
-
-    track.addEventListener("cuechange", function() {
-        playback.playbackElement.textTracks[0].mode = 'hidden';
-        var currCues = this.activeCues;
-        if (currCues.length > 0) {
-            document.getElementById("captions-viewer").innerHTML = currCues[0].text;
-        }
-    })
+    playback.captionsOn();
+    playback.setCaptions();
 }
+
+
 
 window.onresize = () => {
     playPause();
@@ -501,6 +509,7 @@ function setSrc() {
     playback.src = playback.current;
     playPause();
     playback.setContentVolume();
+    playback.setCaptions();
 }
 
 function playPreviousContent() {
