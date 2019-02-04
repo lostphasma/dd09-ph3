@@ -356,7 +356,7 @@
     background-color: black;
 }
 
-#playback > #playback-container.module > #subtitles > span {
+#playback > #playback-container.module > #captions-viewer {
     padding: var(--sp);
     font-size: 0.9em;
     font-family: var(--f-s);

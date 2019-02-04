@@ -278,6 +278,17 @@ window.onload = () => {
 
     // get entries of last sessions
     getLastEntries();
+
+
+    var track = document.getElementById("captions-track").track;
+
+    track.addEventListener("cuechange", function() {
+        playback.playbackElement.textTracks[0].mode = 'hidden';
+        var currCues = this.activeCues;
+        if (currCues.length > 0) {
+            document.getElementById("captions-viewer").innerHTML = currCues[0].text;
+        }
+    })
 }
 
 window.onresize = () => {
@@ -740,6 +751,7 @@ function endSession() {
         }, op.start * 1000);
     });
 }
+
 
 
 
