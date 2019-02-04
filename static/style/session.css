@@ -249,6 +249,10 @@
     align-items: center;
     text-align: center;
     border-right: 0.5px solid rgb(120, 120, 120);
+    box-sizing: border-box;
+}
+#timeline-line-bars:last-child {
+    border-right: none;
 }
 
 #content > #timeline > #timeline-line > #timeline-line-bars > .timeline-line-section.scaler > .scale {

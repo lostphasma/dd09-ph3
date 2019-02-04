@@ -22,14 +22,31 @@ function writeEntry(pathstr, values) {
     })
 }
 
+var cd = curves_data;
+
 // this method gets a reference of the document on the server
 function getLastEntries() {
 
     db.collection("sessions").where("category", "==", playback.category).limit(10).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
+                
                 // push path data 
                 curves_data.push(doc.data());
+
             });
+                // curva già elaborata, alleggerisce animazione (?)
+                ca = "M0,0C17.5,0 -4,980 66,980S129,980 199,980 263,980 333,980 396,980 466,980 529,980 599,980 663,980 733,980 782.5,0 800,0"
+            
+                // crea n curve in base al json, le imposta uguali alla curva d'arrivo
+                usersLayer.selectAll('path.curves-layer').data(cd)
+                .enter().append('path')
+                .attr({
+                    'class': function (d, i) {
+                        return 'users-curve users-path' + i;
+                    },
+                    'd': ca,
+                    'vector-effect': 'non-scaling-stroke'
+                })            
         })
         .catch(function (error) {
             console.log("Error getting entries: ", error);

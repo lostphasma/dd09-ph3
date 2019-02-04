@@ -276,7 +276,15 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                 return 'curves path' + i;
             },
             d: pathData,
-            'vector-effect': 'non-scaling-stroke'
+            'vector-effect': function() {
+                // Chrome 1 - 71
+                var isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+                if (isChrome) {
+                    return 'none';                    
+                } else if (!isChrome) {
+                    return 'non-scaling-stroke';
+                }
+            }
         })
         .each(function (d, i) {
             var pathElem = d3.select(this),
@@ -386,120 +394,6 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
 
 // ----- inizializza la funzione
 curves_init(point_positions);
-
-// ------------ ------------- ------------
-// ------------ ANIMATE LINES ------------
-// ------------ ------------- ------------
-function animateLines() {
-    var p = curva_arrivo;
-
-    const ease = 'easeInOutQuad';
-    const duration = 1500;
-
-    var cd = curves_data;
-
-    // Elabora il d della curva d'arrivo in funzione dei punti
-    // ca = [
-    //     //x y
-    //     'M', parseInt(p[0].x), ',', parseInt(p[0].y),
-    //     //x1 y1 x2 y2 x y
-    //     'C', +' ' + parseInt(p[0].x) + (handleOffset/4), ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
-    //     //x2 y2 x y
-    //     'S', +' ' + parseInt(p[2].x) - handleOffset, ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
-    //     ' ', parseInt(p[3].x) - handleOffset, ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
-    //     ' ', parseInt(p[4].x) - handleOffset, ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
-    //     ' ', parseInt(p[5].x) - handleOffset, ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
-    //     ' ', parseInt(p[6].x) - handleOffset, ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
-    //     ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
-    // ].join('');
-    
-    // curva già elaborata, alleggerisce animazione (?)
-    ca = "M0,0C17.5,0 -4,980 66,980S129,980 199,980 263,980 333,980 396,980 466,980 529,980 599,980 663,980 733,980 782.5,0 800,0"
-
-    console.log("Curva d'arrivo " + ca);
-
-    // crea un nuovo gruppo svg in cui inserire le curve
-    svg.selectAll("g.users-layer").remove();
-    var usersLayer = d3.select("#mask-line").append('g').attr('class', 'users-layer');
-
-    // crea n curve in base al json, le imposta uguali alla curva d'arrivo
-    usersLayer.selectAll('path.curves-layer').data(cd)
-    .enter().append('path')
-    .attr({
-        'class': function (d, i) {
-            return 'users-curve users-path' + i;
-        },
-        'd': ca,
-        'vector-effect': 'non-scaling-stroke'
-    })
-
-    var tl = anime.timeline({
-        easing: ease,
-        duration: duration
-    });
-
-    // anima la curva della sessione fino alla curva d'arrivo
-    tl.add({
-            targets: '.curves',
-            d: ca,
-        }, 0)
-        // le maniglie diventano rosse
-        .add({
-            targets: '.handle-behind',
-            cy: maxYOffset - jumpOffset,
-            update: function () {
-                var b = d3.select("body").selectAll(".handle-behind");
-
-                b[0].forEach((pt) => {
-                    pt.style.pointerEvents = "none";
-                    pt.getAttribute("cy") > maxYOffset - jumpOffset - 100 ? pt.classList.add("redHandleBehind") : pt.classList.remove("redHandleBehind");
-                })
-            }
-        }, 0)
-        .add({
-            targets: '.handle',
-            cy: maxYOffset - jumpOffset,
-            update: function () {
-                var a = d3.select("body").selectAll(".handle");
-
-                a[0].forEach((pt) => {
-                    pt.style.pointerEvents = "none";
-                    pt.getAttribute("cy") > maxYOffset - jumpOffset - 100 ? pt.classList.add("redHandle") : pt.classList.remove("redHandle")
-                })
-            }
-        }, 0)
-        // rende visibili le curve delle altre sessioni e le anima
-        .add({
-            targets: '.users-curve',
-            d: function (el, i) {
-                return cd[i].d
-            },
-            update: function () {
-                var a = usersLayer.selectAll('path.users-curve');
-                a[0].forEach((pt) => {
-                    pt.classList.add("user-curve-anim")
-                })
-            }, 
-            delay: anime.stagger(100)
-        }, '+=' + duration)
-        .add({
-            targets: '.curves',
-            d: d3.select('.curves').attr('d')
-        }, '-=' + duration)
-        .add({
-            targets: '.handle',
-            opacity: 0,
-            duration: 500,
-            easing: 'linear'
-        }, '-=' + (duration + 500))
-        .add({
-            targets: ' .handle-behind',
-            opacity: 0,
-            duration: 500,
-            easing: 'linear'
-        }, '-=' + (duration + 500));
-
-}
 
 // ------------ ----------------- ------------
 // ------------ UTILITY FUNCTIONS ------------

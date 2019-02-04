@@ -1,4 +1,5 @@
 var point_positions = [];
+
 var curves_data = [{
         d: "M0,0C17,0 -4,485 66,485S129,561 199,561 263,309 333,309 396,323 466,323 529,425 599,425 663,122 733,122 782,0 800,0"
     }, {
@@ -60,6 +61,9 @@ var jumpOffset = 80;
 var w = 800;
 var h = 982;
 
+// ----- Colore di path e maniglie
+var sessionColor = setColor();
+
 // ----- Pusha le posizioni dei punti nell'array point_position nel dato momento
 results_start.forEach((el) => {
     var li_x = parseInt(el.x);
@@ -79,8 +83,7 @@ var svg = d3.select('#content-svg').append('svg')
 .attr("height", function() {return d3.select("#content-grid").node().getBoundingClientRect().height});
 
 window.onresize = function () {
-    d3.select('#users-results').attr("height", function(){return d3.select("#content-grid").node().getBoundingClientRect().height});
-    console.log("resize");    
+    d3.select('#users-results').attr("height", function(){return d3.select("#content-grid").node().getBoundingClientRect().height});   
 }
 
 // ------------ GRADIENT - crea il gradiente
@@ -95,7 +98,7 @@ var gradient = defs.append("linearGradient")
 
 gradient.append("stop")
     .attr("offset", "0%")
-    .attr("stop-color", "blue")
+    .attr("stop-color", sessionColor)
     .attr("stop-opacity", 1);
 
 gradient.append("stop")
@@ -146,6 +149,8 @@ function pathData(d) {
         }
     });
 
+
+    //è sempre uguale, si puòevitare di calcolare
     curve = [
         //x y
         'M', parseInt(p[0].x), ',', parseInt(p[0].y),
@@ -188,7 +193,7 @@ curves_init(point_positions);
 // ------------ ANIMATE LINES ------------
 // ------------ ------------- ------------
 
-function animateLines() {
+function animateLinesResults() {
 
     const ease = 'easeInOutQuad';
     const duration = 1500;
@@ -234,7 +239,7 @@ function animateLines() {
 }
 
 setTimeout(() => {
-    animateLines();
+    animateLinesResults();
 }, 1000);
 
 
