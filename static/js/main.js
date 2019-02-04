@@ -294,7 +294,7 @@ window.onload = () => {
 window.onresize = () => {
     playPause();
     playPause();
-    // e fammi resizare sta benedetta finestra
+    // e fammi resizare sta benedetta finestra || che bello edo quando trovo ste cose nel codice <3
     // console.clear();
     resized();
 }

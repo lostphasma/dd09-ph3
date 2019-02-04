@@ -83,8 +83,6 @@ window.onresize = function () {
     console.log("resize");    
 }
 
-console.log(d3.select("#content-grid").node().getBoundingClientRect().height);
-
 // ------------ GRADIENT - crea il gradiente
 var defs = svg.append("defs");
 

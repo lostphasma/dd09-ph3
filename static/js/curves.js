@@ -1,12 +1,10 @@
-// array per la posizione dei punti, si aggiorna ad ogni drag
+// Array per la posizione dei punti, si aggiorna ad ogni drag
 var point_positions = [];
 
-// array per storare le curve degli utenti
+// Array per storare le curve degli utenti
 var curves_data = [];
 
-//multiple lines non serve
-// var json_data_muliple_lines = [[{"id": "82","x": "50","y": "50"}, {"id": "83","x": "25","y": "110"}, {"id": "97","x": "90","y": "150"}, {"id": "98","x": "150","y": "224"}, {"id": "99","x": "250","y": "150"}, {"id": "100","x": "300","y": "200"}, {"id": "100","x": "320","y": "230"}],[{"id": "1","x": "120","y": "60"}, {"id": "2","x": "30","y": "150"}, {"id": "3","x": "120","y": "170"}, {"id": "4","x": "180","y": "260"}, {"id": "5","x": "300","y": "250"}]];
-
+// Punti di partenza della curva
 var json_data = [{
     "x": "0",
     "y": "0"
@@ -76,7 +74,7 @@ var jumpOffset = 80;
 var w = 800;
 var h = 982;
 
-// ----- colore di path e maniglie
+// ----- Colore di path e maniglie
 var sessionColor = setColor();
 
 // ----- Pusha le posizioni dei punti nell'array point_position nel dato momento
@@ -113,7 +111,7 @@ gradient.append("stop")
     .attr("stop-color", "red")
     .attr("stop-opacity", 1);
 
-// creo un rettangolo che sarà mascherato dalla linea, assegno il gradiente
+// Creo un rettangolo che sarà mascherato dalla linea, assegno il gradiente
 var rect = svg.append('rect')
     .attr('mask', "url(#mask-line)")
     .attr('id', 'gradient')
@@ -392,7 +390,6 @@ curves_init(point_positions);
 // ------------ ------------- ------------
 // ------------ ANIMATE LINES ------------
 // ------------ ------------- ------------
-
 function animateLines() {
     var p = curva_arrivo;
 
@@ -401,22 +398,25 @@ function animateLines() {
 
     var cd = curves_data;
 
-    // Elabora il d della curva d'arrivo
-    ca = [
-        //x y
-        'M', parseInt(p[0].x), ',', parseInt(p[0].y),
-        //x1 y1 x2 y2 x y
-        'C', +' ' + parseInt(p[0].x) + (handleOffset/4), ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
-        //x2 y2 x y
-        'S', +' ' + parseInt(p[2].x) - handleOffset, ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
-        ' ', parseInt(p[3].x) - handleOffset, ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
-        ' ', parseInt(p[4].x) - handleOffset, ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
-        ' ', parseInt(p[5].x) - handleOffset, ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
-        ' ', parseInt(p[6].x) - handleOffset, ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
-        ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
-    ].join('');
+    // Elabora il d della curva d'arrivo in funzione dei punti
+    // ca = [
+    //     //x y
+    //     'M', parseInt(p[0].x), ',', parseInt(p[0].y),
+    //     //x1 y1 x2 y2 x y
+    //     'C', +' ' + parseInt(p[0].x) + (handleOffset/4), ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
+    //     //x2 y2 x y
+    //     'S', +' ' + parseInt(p[2].x) - handleOffset, ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
+    //     ' ', parseInt(p[3].x) - handleOffset, ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
+    //     ' ', parseInt(p[4].x) - handleOffset, ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
+    //     ' ', parseInt(p[5].x) - handleOffset, ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
+    //     ' ', parseInt(p[6].x) - handleOffset, ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
+    //     ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
+    // ].join('');
+    
+    // curva già elaborata, alleggerisce animazione (?)
+    ca = "M0,0C17.5,0 -4,980 66,980S129,980 199,980 263,980 333,980 396,980 466,980 529,980 599,980 663,980 733,980 782.5,0 800,0"
 
-    console.log(ca);
+    console.log("Curva d'arrivo " + ca);
 
     // crea un nuovo gruppo svg in cui inserire le curve
     svg.selectAll("g.users-layer").remove();
@@ -553,14 +553,12 @@ function resized() {
 
     var scaleX = w / (d3.select('#curves-svg').node().getBoundingClientRect().width);
     var scaleY = h / d3.select('#curves-svg').node().getBoundingClientRect().height;
-    
-    // console.log(d3.select('#curves-svg').node().getBoundingClientRect().width);
-    // console.log(d3.select('#curves-svg').node().getBoundingClientRect().height);
 
-    // cerchi frontali con stroke
+    // cerchi maniglie frontali (con stroke)
     circlesToResize.each(function (d, i) {
         var circleSize = d3.select(this);
 
+        // volendo qui si potrebbe resizare lo stroke delle maniglie
         // circleSize.style("stroke-width", multiplier / 4 + "px");
 
         circleSize.attr({
@@ -569,12 +567,10 @@ function resized() {
         });
     })
 
-    // cerchi dietro
+    // cerchi maniglie dietro
     circlesToResizeB.each(function (d, i) {
         // if (i != 0 && i != 7) {
             var circleSize = d3.select(this);
-
-            // circleSize.style("stroke-width", multiplier / 2 + "px");
 
             circleSize.attr({
                 rx: (scaleX * multiplier2),
