@@ -85,27 +85,28 @@ json_data.forEach((el) => {
 //     })
 // })
 
-
-
 //----- Crea un svg con dimensioni definitez
-var svg = d3.select('#curves').append('svg').attr({width: 1000, height: 800});
+var svg = d3.select('#curves').append('svg').attr({
+    width: 1000,
+    height: 800
+});
 
 // ------------ GRADIENT - crea il gradiente
 var defs = svg.append("defs");
 
 var gradient = defs.append("linearGradient")
-   .attr("id", "svgGradient")
-   .attr("x1", "100%")
-   .attr("x2", "100%")
-   .attr("y1", "0%")
-   .attr("y2", "100%");
+    .attr("id", "svgGradient")
+    .attr("x1", "100%")
+    .attr("x2", "100%")
+    .attr("y1", "0%")
+    .attr("y2", "100%");
 
-   gradient.append("stop")
+gradient.append("stop")
     .attr("offset", "0%")
     .attr("stop-color", "blue")
     .attr("stop-opacity", 1);
 
-   gradient.append("stop")
+gradient.append("stop")
     .attr("offset", "100%")
     .attr("stop-color", "white")
     .attr("stop-opacity", 1);
@@ -123,8 +124,9 @@ var rect = svg.append('rect')
 
 
 function curves_init(point_positions) {
+
     var curves = [{
-        type: 'Q',
+        type: 'S',
         points: point_positions
     }];
     // console.log("curves", curves);
@@ -135,61 +137,71 @@ function curves_init(point_positions) {
     var handleTextLayer = svg.append('g').attr('class', 'handle-text-layer');
     var handleLayer = svg.append('g').attr('class', 'handle-layer');
 
+    //dichiara il behavior drag(), lo chiami con .call(drag)
     var drag = d3.behavior.drag()
-        .origin(function(d) {
+        .origin(function (d) {
             return d;
         })
         .on('drag', dragmove);
 
     // elementi draggabili, funzione che controlla il drag delle maniglie
     function dragmove(d) {
+        console.log(d);
+        
         // d.x = d3.event.x;
         d.y = clamp(d3.event.y, minYoffset, maxYOffset);
-        
+
         // se il mouse è inferiore a un certo valore y, non eseguire la funzione
         // da problemi, la curva si aggiorna comunque
         // if (d.y > 300) {
 
-            // pallino maniglia
-            if ( d.y < maxYOffset - 20 ) {
-                d3.select(this).attr({
-                    // cx: d.x,
-                    cy: d.y
-                });
+        // pallino maniglia
+        if (d.y < maxYOffset - 20) {
+            d3.select(this).attr({
+                // cx: d.x,
+                cy: d.y
+            });
 
-                d3.select(this).classed("redHandle", false);
+            d3.select(this).classed("redHandle", false);
 
-                handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
+            handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
                 .attr({
                     // x: d.x,
                     y: d.y
                 }).text(handleText(d, d.handleID));
 
-            } else {
-                d3.select(this).attr({
-                    // cx: d.x,
-                    cy: maxYOffset  
-                });
+        } else {
+            d3.select(this).attr({
+                // cx: d.x,
+                cy: maxYOffset
+            });
 
-                d3.select(this).classed("redHandle", true);
+            d3.select(this).classed("redHandle", true);
 
-                handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
+            handleTextLayer.selectAll('text.handle-text.path' + d.pathID + '.p' + (d.handleID + 1))
                 .attr({
                     // x: d.x,
                     y: maxYOffset
                 }).text(handleText(d, d.handleID));
+        }
 
-            }
+        // aggiorna la curva
+        d.pathElem.attr('d', pathData);
 
-            // aggiorna la curva
-            d.pathElem.attr('d', pathData); 
-                
         // }
+        // console.log(d.pathElem.attr('d', pathData));
     }
-
+    
     show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag);
 }
 
+
+function handleText(d, i) {
+    if (0 < i < 7) {
+        return 'volume' + (i + 0) + ': ' + d.y;
+    }
+    // return 'volume' + (i + 1) + ': ' + d.x + '/' + d.y;
+}
 
 
 //----- Prima curva deve essere C
@@ -214,102 +226,101 @@ function pathData(d) {
     d.points.forEach(el => {
         // console.log(el);
         el.y = clamp(el.y, minYoffset, maxYOffset);
-        if ( el.y >= maxYOffset - 20 ) {
+        if (el.y >= maxYOffset - 20) {
             el.y = maxYOffset;
         }
     });
-    
+
     curve = [
         //x y
         'M', parseInt(p[0].x), ',', parseInt(p[0].y),
         //x1 y1 x2 y2 x y
-        'C', + ' ' + parseInt(p[0].x + handleOffset), ',', parseInt(p[0].y), ' ', parseInt(p[1].x - handleOffset), ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
+        'C', +' ' + parseInt(p[0].x + handleOffset), ',', parseInt(p[0].y), ' ', parseInt(p[1].x - handleOffset), ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
         //x2 y2 x y
-        'S', + ' ' + parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y), 
-        ' ', parseInt(p[3].x - handleOffset), ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y), 
+        'S', +' ' + parseInt(p[2].x - handleOffset), ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
+        ' ', parseInt(p[3].x - handleOffset), ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
         ' ', parseInt(p[4].x - handleOffset), ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
         ' ', parseInt(p[5].x - handleOffset), ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
         ' ', parseInt(p[6].x - handleOffset), ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
         ' ', parseInt(p[7].x - handleOffset), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
-        ].join('');
+    ].join('');
 
     // console.log("curve", curve);
     return curve;
-}
 
-function handleText(d, i) {
-    if (0<i<7) {
-        return 'volume' + (i + 0) + ': ' + d.y;
-    }
-    // return 'volume' + (i + 1) + ': ' + d.x + '/' + d.y;
 }
 
 // ------------ Disegna le curve
 
 function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
 
+    console.log("show curve")
+
     mainLayer.selectAll('path.curves').data(curves)
         .enter().append('defs').append('mask').attr('id', 'mask-line').append('path')
         .attr({
-            'class': function(d, i) {
+            'class': function (d, i) {
                 return 'curves path' + i;
             },
-             d: pathData
+            d: pathData
         })
         // .attr(
         //     "stroke", "url(#svgGradient)"
         //     )
-        .each(function(d, i) {
-            var pathElem = d3.select(this),
-            controlLineElem,
-            handleTextElem;
+        .each(function (d, i) {
+            var pathElem = d3.select(this);
+            console.log(pathElem);
 
-    handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
-        .data(d.points).enter().append('text')
-        .attr({
-            'class': function(handleD, handleI) {
-                return 'handle-text path' + i + ' p' + (handleI + 1);
-            },
-            x: function(d) {
-                return d.x
-            },
-            y: function(d) {
-                return d.y
-            },
+                // controlLineElem,
+                // handleTextElem;
 
-            //controlla quanto distante è il testo dai pallini
-            dx: -30,
-            dy: 30
-        })
-        .text(handleText);
-    
-        //sposta le maniglie cerchietti
-    handleLayer.selectAll('circle.handle.path' + i)
-        .data(d.points).enter().append('circle')
-        .attr({
-            'class': 'handle path' + i,
-            cx: function(d) {
-                return d.x
-            },
-            cy: function(d) {  
-                return d.y;
-            },
 
-            r: handleRadius
-        })
-        .each(function(d, handleI) {
-            d.pathID = i;
-            d.handleID = handleI;
-            d.pathElem = pathElem;
-            d.controlLineElem = controlLineElem;
-        })
-        .call(drag);
-    });
+            handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
+                .data(d.points).enter().append('text')
+                .attr({
+                    'class': function (handleD, handleI) {
+                        return 'handle-text path' + i + ' p' + (handleI + 1);
+                    },
+                    x: function (d) {
+                        return d.x
+                    },
+                    y: function (d) {
+                        return d.y
+                    },
+
+                    //controlla quanto distante è il testo dai pallini
+                    dx: -30,
+                    dy: 30
+                })
+                .text(handleText);
+
+            //sposta le maniglie cerchietti
+            handleLayer.selectAll('circle.handle.path' + i)
+                .data(d.points).enter().append('circle')
+                .attr({
+                    'class': 'handle path' + i,
+                    cx: function (d) {
+                        return d.x
+                    },
+                    cy: function (d) {
+                        return d.y;
+                    },
+
+                    r: handleRadius
+                })
+                .each(function (d, handleI) {
+                    d.pathID = i;
+                    d.handleID = handleI;
+                    d.pathElem = pathElem;
+                })
+                .call(drag);
+
+                
+        });
 }
 
+
 curves_init(point_positions);
-
-
 
 
 // ------------ STORE JSON
@@ -317,10 +328,10 @@ var inc = 0;
 var curves_data = [];
 
 function storeJSON() {
-    
+
     var obj = {
-        "curveID" : inc,
-        "curve " : curve
+        "curveID": inc,
+        "curve ": curve
     }
 
     console.log("Da storare nel JSON")
@@ -360,28 +371,28 @@ function animateLines() {
 
 
     tl.add({
-        targets: '.curves',
-        d: ca,
-    }, 0)
-    .add({
-        targets: '.handle', 
-        cy: maxYOffset,
-        update: function() {
-            var a = d3.select("body").selectAll(".handle");
+            targets: '.curves',
+            d: ca,
+        }, 0)
+        .add({
+            targets: '.handle',
+            cy: maxYOffset,
+            update: function () {
+                var a = d3.select("body").selectAll(".handle");
 
-            a[0].forEach((pt) => {
-                pt.getAttribute("cy") > maxYOffset - 20 ? pt.classList.add("redHandle") : pt.classList.remove("redHandle")
-            })
-        }
-    }, 0)
-    .add({
-        targets: '.curves',
-        d: asd,
-    }, '+=' + duration)
-    .add({
-        targets: '.handle',
-        cy: 300,
-    }, '-=' + duration);
+                a[0].forEach((pt) => {
+                    pt.getAttribute("cy") > maxYOffset - 20 ? pt.classList.add("redHandle") : pt.classList.remove("redHandle")
+                })
+            }
+        }, 0)
+        .add({
+            targets: '.curves',
+            d: asd,
+        }, '+=' + duration)
+        .add({
+            targets: '.handle',
+            cy: 300,
+        }, '-=' + duration);
 
 }
 
@@ -389,4 +400,3 @@ function animateLines() {
 function clamp(val, min, max) {
     return val > max ? max : val < min ? min : val;
 }
-
