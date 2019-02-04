@@ -1,26 +1,46 @@
-#curves > svg {
-  z-index: 100 !important;
-  padding-top: calc(var(--sp) * 4);
-  overflow: hidden;
+:root {
+  --strw: 8px;
+  --strc: #fff;
 }
 
-#svg_control {
+#content > #timeline > #timeline-line > #timeline-line-bars #curves {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 60;
+}
+
+#curves svg {
+  position: absolute;
+  width: 100%;
+  height: calc(100% - (var(--sp) * 4));
+  padding-top: calc((var(--sp) * 4) + 4px);
+  overflow: visible;
+}
+
+#curves #svg_control {
   display: inline;
   float: left;
-  width: 500px;
-  height: 500px;
+  /* width: 500px;
+  height: 500px; */
   margin: 0 10px 10px 0;
   background-color: #fff;
 }
 
-.control_circle {
+/* #curves .control_circle {
   fill: white;
   stroke: black;
   stroke-width: 1;
 }
+ */
 
-#points,
-#points svg {
+ /* rettangolo maschera gradiente */
+#curves rect {
+  pointer-events: none;
+}
+
+#curves #points,
+#curves #points svg {
   display: block;
   margin-left: auto;
   margin-right: auto;
@@ -30,28 +50,28 @@
   position: absolute;
 }
 
-#points svg {
+#curves #points svg {
   display: block;
   margin-left: auto;
   margin-right: auto;
 }
 
-#points .point circle {
+/* #curves #points .point circle {
   cursor: pointer;
   fill: #E2137E;
   r: 10;
   stroke: #333;
   stroke-width: 2px;
-}
+} */
 
-#points .point-index {
+#curves #points .point-index {
   cursor: pointer;
   fill: #fff;
   font-size: 11px;
   font-weight: bold;
 }
 
-#points .delete-point text {
+#curves #points .delete-point text {
   cursor: pointer;
   fill: #bbb;
   font-size: 12px;
@@ -59,7 +79,7 @@
   stroke-width: 1px;
 }
 
-#points-list {
+#curves #points-list {
   display: block;
   text-align: center;
   margin-top: 10px;
@@ -67,32 +87,81 @@
   list-style-type: none;
 }
 
-.curves {
+#curves .curves {
   stroke: lightskyblue;
-  stroke-width: 3px;
+  stroke-width: 4px;
   fill: none;
+  z-index: 10;
 }
 
-.control-line {
+#curves control-line {
   stroke: green;
   fill: none;
 }
 
-.handle {
-  stroke: blue;
-  stroke-width: 3px;
-  fill: var(--c-bg);
+/* ----- HANDLES ----- */
+#curves .handle {
+  fill: var(--strc);
+  stroke: var(--c-bg);
   opacity: 1;
-  cursor: move;
+  stroke-width: var(--strw);
+  cursor: grab; /*move, ns-resize, grab*/
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -o-transition: opacity .5s;
+
+  
 }
 
-.handle.path0:first-child, .handle.path0:last-child,
-.handle-text.path0:first-child, .handle-text.path0:last-child {
-  visibility: hidden;
+#curves .handle-behind {
+  fill: var(--strc);
+  opacity: 1;
+  pointer-events: none;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+  -moz-transition: opacity .5s;
+  -webkit-transition: opacity .5s;
+  -o-transition: opacity .5s;
+}
+
+#curves .faded {
+  opacity: 0;
   pointer-events: none;
 }
 
-.handle-text {
+#curves .redHandle {
+  fill: red;
+  stroke: var(--c-bg);
+  stroke-width: var(--strw);
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
+#curves .redHandleBehind {
+  fill: red;
+  transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1);
+}
+
+#curves .handle-text {
   font-size: 12px;
   font-family: 'Noto Sans Japanese', sans;
 }
+
+#curves .users-curve {
+  stroke: lightblue;
+  stroke-width: 0;
+  fill: none;
+  opacity: 0;
+  /* transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1); */
+}
+
+#curves .user-curve-anim {
+  /* stroke:var(--strc); */
+  /* transition: fill .35s cubic-bezier(0.5, 0, 0.175, 1); */
+  stroke-width: 1;
+  opacity: .4;
+}
+
+/* #curves .users-layer > * {
+  z-index: 10 !important;
+  opacity: 0.65;
+} */

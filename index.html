@@ -22,17 +22,19 @@
     <div id="wrapper">
         <div id="header">
             <div id="session-title">phase_3</div>
-            <div id="hamburger">
-                <div id="menu-line"></div>
-                <div id="menu-line"></div>
-                <div id="menu-line"></div>
+            <div id="header-btns">
+                <div id="hamburger">
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                </div>
             </div>
         </div>
         <div id="content">
             <div id="hero"></div>
             <a href="categories.html">
-                <div class="module" id="continue">
-                    Continue
+                <div class="module show" id="continue">
+                    Skip
                 </div>
             </a>
         </div>
@@ -41,11 +43,11 @@
 
 <script src="static/js/menu.js"></script>
 <script src="static/lib/typeit.min.js"></script>
+
 <script>
-    var s1 = 'Hate&nbsp;Speech cannot be easily defined, but by agreement it expresses loathing and intolerance.';
-    var s2 = '<br><br>The consequences can change from mere bullying or intimidation to actual violent events.'
-    var s3 = 'IT&nbsp;Companies are trying to regulate Hate&nbsp;Speech with different approaches.';
-    var s4 = '<br><br>This is a hard challenge because it is a controversial and debated phenomenon, as it lies in a complex nexus with free&nbsp;speech.';
+    var s1 = 'Regulating online Hate&nbsp;Speech has proven to be a hard challenge for IT&nbsp;Companies.';
+    var s2 = '<br><br>What would you do if you had the power to regulate a&nbsp;choir of controversial contents?'
+    var s3 = '<br><br>Select a&nbsp;topic among the following categories.';
 
     let sentences = new TypeIt('#hero', {
             speed: 50,
@@ -54,19 +56,16 @@
             lifeLike: true,
             afterComplete: () => {
                 setTimeout(() => {
-                    document.getElementById("continue").classList.add("show");
-                }, 1500);
+                    document.getElementById("continue").innerHTML = 'Continue';
+                    // document.getElementsByClassName("ti-cursor")[0].style.visibility = 'hidden';
+                }, 1000);
             }
         })
         .type(s1)
-        .pause(750)
+        .pause(1000)
         .type(s2)
-        .pause(1200)
-        .delete()
         .pause(1000)
         .type(s3)
-        .pause(750)
-        .type(s4)
         .go();
 </script>
 

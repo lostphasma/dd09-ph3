@@ -38,30 +38,45 @@ var playback = {
     set src(i) {
         this.playbackElement.src = this.path + this.category + '/' + this.contents[i].src;
     },
-    setContentVolume: function(bool) {
-        const incr = 0.1;
+    // setContentVolume: function(bool) {
+    //     const incr = 0.1;
         
-        if (bool == true) {
-            this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
-        } else if (bool == false) {
-            this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
-        } else {
-            this.src = this.current;
-            this.playbackElement.volume = this.contents[this.current].volume;        
-        }
-
-        this.contents[this.current].volume = this.playbackElement.volume;
-    },
-    // setContentVolume: function() {
-    //     var a = document.querySelectorAll(".handle");
-
-    //     Array.prototype.forEach.call(a, (pt) => {
-    //         console.log(pt);
-    //         this.playbackElement.volume = map(pt, 0, 360, 0, 1);
-    //     })        
+    //     if (bool == true) {
+    //         this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
+    //     } else if (bool == false) {
+    //         this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
+    //     } else {
+    //         this.src = this.current;
+    //         this.playbackElement.volume = this.contents[this.current].volume;        
+    //     }
 
     //     this.contents[this.current].volume = this.playbackElement.volume;
     // },
+    setContentVolume: function() {
+
+        const mapper = (num, in_min, in_max, out_min, out_max) => {
+            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+        }
+
+        var a = [].slice.call(document.querySelectorAll(".handle"));
+        
+        Array.prototype.forEach.call(a, (pt, i) => {
+            var attr = pt.getAttribute("cy");
+            this.contents[i].volume = clamp(mapper(attr, 0, maxYOffset - jumpOffset, 1, 0), 0, 1);
+        })
+
+        this.playbackElement.volume = this.contents[this.current].volume;
+
+
+        if (this.playbackElement.volume <= 0 && !this.playbackElement.paused) {
+            interference.play();
+            // console.log(this.playbackElement.volume);
+        } else if (this.playbackElement.paused) {
+            interference.pause();
+        } else interference.pause();
+
+
+    },
     makeCursor: function (DOMelement) {
         var el = document.createElement("DIV");
         el.id = "cursor";
@@ -73,15 +88,56 @@ var playback = {
         this.playbackElement.currentTime = currentTime;
     },
 }
-//initializing playback object
-var cursor = playback.makeCursor("timeline-line");
-var PREV_BTN = document.getElementById("previous");
-var PLAY_BTN = document.getElementById("play");
-var NEXT_BTN = document.getElementById("next");
-var DONE_BTN = document.getElementById("playback-endbutton");
 
 
-"use strict";
+
+// object that controls session data recording consent
+var dataConsent = {
+    approvalBtn: document.getElementById("data-yes"),
+    denialBtn: document.getElementById("data-no"),
+    approval: true,
+
+    setApproval: function(bool = true, callback = function() {}) {
+        this.approval = bool;
+        this.removeListeners();
+        callback();
+        console.log(`User chose ${bool}`);
+    },
+
+    init: function(callback = function(){}) {
+        this.approvalBtn.addEventListener('click', () => {
+            this.setApproval(true, callback());
+        });
+        this.denialBtn.addEventListener('click', () => {
+            this.setApproval(false, callback());
+        });
+    },
+
+    removeListeners: function() {
+        this.approvalBtn.style.pointerEvents = 'none';
+        this.denialBtn.style.pointerEvents = 'none';
+    },
+
+    saveSessionData: function(callback = function() {}) {
+        if (this.approval == true) {
+            // save the data
+            var data = []
+            playback.contents.forEach((content) => {
+                data.push(content.volume.toFixed(2));
+            })
+            // writeEntry(curve, data);
+            console.log('User data has been saved.');
+
+            callback();
+        } else {
+            // don't save the data
+            console.log('User data has not saved');
+        }
+    }
+};
+
+
+
 /* global d3, document */
 var playButton = {
     el: document.getElementById("play"),
@@ -140,27 +196,83 @@ var playButton = {
 
 
 
+
+
+
+
+//initializing playback object
+var cursor = playback.makeCursor("timeline-line-units");
+
+var PREV_BTN = document.getElementById("previous");
+var PLAY_BTN = document.getElementById("play");
+var NEXT_BTN = document.getElementById("next");
+
+var HELP_BTN = document.getElementById("help");
+var tut = document.getElementById("tutorial");
+var trn = parseFloat(getComputedStyle(tut).transitionDuration) * 1000;
+
+var DONE_BTN = document.getElementById("playback-endbutton");
+
+
+
+
+
+
+
 /* --------------- ======== ---------------- */
 /* ---------------- EVENTS ----------------- */
 
 window.onload = () => {
     setSessionid();
+
+    // this function is called on page load, but executed
+    // only after clicking on either one
+    // of the buttons for data collection
+    // (it listens to the click on the two buttons)
+    dataConsent.init(() => {
+        tut.classList.add("hidden");
+        tut.classList.add("translated");
+        HELP_BTN.classList.remove('disabled');
+
+        // trick the browser into thinking that the user pressed play
+        // then we start the playback after the tutorial closing transition
+        playPause();
+        playPause();
+        
+        setTimeout(() => {
+            dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);
+            dataConsent.denialBtn.parentElement.removeChild(dataConsent.denialBtn);
+            
+            var cnstxt = document.getElementById("consent-text");
+            cnstxt.parentElement.removeChild(cnstxt);
+            tut.childNodes[1].style.gridTemplateRows = '1fr 1fr';
+            
+            // start the audio after the tutorial dialog closes
+            playPause();
+        }, trn);
+    });
+
     playback.src = 0;
+    playback.setContentVolume();
     playButton.init();
+
+    // get entries of last sessions
+    getLastEntries();
 }
 
 window.onresize = () => {
     playPause();
     playPause();
     // e fammi resizare sta benedetta finestra
-    console.clear();
+    // console.clear();
+    resized();
 }
 
-PREV_BTN.children[0].onclick = () => {
+PREV_BTN.onclick = () => {
     playPreviousContent();
 }
 
-PLAY_BTN.children[0].onclick = () => {
+PLAY_BTN.onclick = () => {
     playPause();
 }
 
@@ -168,15 +280,45 @@ playback.playbackElement.onended = () => {
     playNextContent();
 };
 
-NEXT_BTN.children[0].onclick = () => {
+NEXT_BTN.onclick = () => {
     playNextContent();
 }
 
+
+HELP_BTN.onclick = () => {
+    // console.log(HELP_BTN);
+    if (tut.classList.contains("hidden")) {
+        tut.classList.remove("hidden");
+        tut.classList.remove("translated");
+        setTimeout(() => {
+            HELP_BTN.innerHTML = 'close';
+        }, trn);
+    } else {
+        tut.classList.add("hidden");
+        tut.classList.add("translated");
+        HELP_BTN.classList.remove('disabled');
+        setTimeout(() => {
+            HELP_BTN.innerHTML = 'help';
+        }, trn);
+    }
+};
+
 DONE_BTN.onclick = () => {
-    // endSession();
+    // limit user interaction
     DONE_BTN.style.pointerEvents = 'none';
-    enqueueOps(endOps);
+    document.body.onkeyup = '';
+
+    dataConsent.saveSessionData(function () {
+        // What do we do after saving data?
+
+        // animate end of session
+        endSession();
+    });
 }
+
+/* --------------- ======== ---------------- */
+
+
 
 
 /* ----------- PLAYBACK RUNTIME ------------ */
@@ -186,6 +328,8 @@ var stepper;
 
 // stuff to do when playing
 playback.playbackElement.addEventListener('play', () => {
+
+    playback.setContentVolume();
 
     // save current track index
     var c = playback.current;
@@ -225,6 +369,9 @@ playback.playbackElement.addEventListener('play', () => {
 // stuff to do when paused
 playback.playbackElement.addEventListener('pause', () => {
 
+    // pause interference sound (if it's playing)
+    interference.pause();
+
     // clearing interval every event change (also next and previous content)
     // otherwise we fire multiple setInterval
     clearInterval(stepper);
@@ -237,10 +384,13 @@ playback.playbackElement.addEventListener('pause', () => {
 
 }, false);
 
+/* --------------- ========= --------------- */
+
+
+
 
 
 /* ----------- KEYBOARD SUPPORT ------------ */
-
 
 // TO-DO: Stop listening for keyboard events once DONE_BTN has been clicked
 document.body.onkeyup = (e) => {
@@ -303,6 +453,9 @@ function setSessionid() {
     }
 }
 
+
+/* ----------- PLAYBACK FUNCTIONS ---------- */
+
 function playPause() {
     if (playback.playbackElement.paused) {
         playback.playbackElement.play().catch((error) => {
@@ -314,8 +467,9 @@ function playPause() {
 }
 
 function setSrc() {
-    playback.setContentVolume();
+    playback.src = playback.current;
     playPause();
+    playback.setContentVolume();
 }
 
 function playPreviousContent() {
@@ -349,6 +503,17 @@ function playNextContent() {
     setSrc();
 }
 
+function mutePlayback(currVol) {
+    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
+}
+
+/* --------------- ========= --------------- */
+
+
+
+
+/* ----------- TIMELINE FUNCTIONS ---------- */
+
 function hightlightTimelineMarker(markerClassName) {
     var els = document.getElementsByClassName('timeline-line-section');
 
@@ -356,7 +521,7 @@ function hightlightTimelineMarker(markerClassName) {
         var attribute = el.getAttribute("js-spacer");
 
         if (attribute == markerClassName) {
-            el.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+            el.style.backgroundColor = 'var(--c-bg)';
 
         } else el.style.backgroundColor = 'transparent';
     })
@@ -404,180 +569,11 @@ function getStartingPoint(index) {
     return result;
 }
 
-function updateCursorPosition(index) {
-    var els = document.getElementsByClassName("timeline-line-section");
-
-    Array.prototype.forEach.call(els, (el, i) => {
-        if (i == (index * 2) + 1) {
-            // setting position of cursor
-            cursor.style.left = `${el.offsetLeft}px`;
-        }
-    })
-    cursor.style.visibility = 'visible';
-}
-
-
-// rimuovi variabili globali con oggetto?
-const target = document.getElementById("playback");
-var els = target.children;
-var timing = 1.2;
-var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
-var msgEl = document.createElement("P");
-
-var endOps = [{
-    fn: function () {
-        playback.playbackElement.pause();
-        cursor.style.visibility = 'hidden';
-        
-        var els = document.getElementsByClassName('timeline-line-section');
-        Array.prototype.forEach.call(els, (el) => {
-            el.style.backgroundColor = 'transparent';
-        })    
-    },
-    start: 0
-}, {
-    fn: function () {
-        DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
-        // remove first two elements that are Children of target
-        for (var i = 0; i < 2; i++) {
-            els[i].classList.add("hidden");
-        }
-    },
-    start: 0
-}, {
-    fn: function () {
-        for (var i = 0; i < 2; i++) {
-            target.removeChild(els[0]);
-        }
-        target.style.gridTemplateRows = '1fr';
-        DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
-    },
-    start: 500
-}, {
-    fn: function () {
-        DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
-        DONE_BTN.style.transform = `translateY(0px)`;
-        DONE_BTN.style.maxHeight = '100%';
-
-        DONE_BTN.children[0].style.opacity = '0';
-    },
-    start: 1000
-}, {
-    fn: function () {
-        DONE_BTN.removeChild(DONE_BTN.children[0]);
-        msgEl.style.opacity = '0';
-        msgEl.style.transition = `opacity ${timing / 3}s linear`;
-        DONE_BTN.appendChild(msgEl);
-    },
-    start: 1500
-}, {
-    fn: function () {
-        msgEl.style.opacity = '1';
-        msgEl.innerHTML = `
-        Che bel messaggino wiwi!<br>
-        Proprio bello!`;
-    },
-    start: 3000
-}, {
-    fn: function () {
-        msgEl.style.opacity = '0';
-    },
-    start: 5000
-}, {
-    fn: function () {
-        msgEl.innerHTML = `
-        Beh dopo il messaggino bello cosa diciamo?<br>
-        Boh raga pd che sbatti sti setTimeout nestati.`;
-        msgEl.style.opacity = '1';
-    },
-    start: 6000
-}, {
-    fn: function () {
-        msgEl.style.opacity = '0';
-    },
-    start: 8000
-}, {
-    fn: function () {
-        msgEl.innerHTML = `
-        Ciao raga è stato bello.<br>
-        Buonanotte`;
-        msgEl.style.opacity = '1';
-    },
-    start: 9000
-}]
-function enqueueOps(ops) {
-    // micro-function to compute timers?
-    // maybe: forEach obj.start in ops
-    // calculate timeout by adding previous
-    // objects in endOps array
-    ops.forEach((op) => {
-        setTimeout(() => {
-            op.fn();
-        }, op.start);
-    });
-}
-
-function endSession() {
-    const target = document.getElementById("playback");
-    var els = target.children;
-    DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
-
-    // remove first two elements that are Children of target
-    for (var i = 0; i < 2; i++) {
-        els[i].classList.add("hidden");
-    }
-
-    setTimeout(() => {
-        for (var i = 0; i < 2; i++) {
-            target.removeChild(els[0]);
-        }
-        target.style.gridTemplateRows = '1fr';
-        DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
-
-        setTimeout(() => {
-            var timing = 1.2;
-            var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
-            DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
-            DONE_BTN.style.transform = `translateY(0px)`;
-            DONE_BTN.style.maxHeight = '100%';
-
-            DONE_BTN.children[0].style.opacity = '0';
-
-            setTimeout(() => {
-                DONE_BTN.removeChild(DONE_BTN.children[0]);
-                var msgEl = document.createElement("P");
-                msgEl.style.opacity = '0';
-                msgEl.style.transition = `opacity ${timing / 3}s linear`;
-                DONE_BTN.appendChild(msgEl);
-
-                setTimeout(() => {
-                    msgEl.style.opacity = '1';
-                    msgEl.innerHTML = `
-                    Che bel messaggino wiwi!<br>
-                    Proprio bello!`;
-
-                    setTimeout(() => {
-                        msgEl.style.opacity = '0';
-
-                        setTimeout(() => {
-                            msgEl.innerHTML = `
-                            Beh dopo il messaggino bello cosa diciamo?<br>
-                            Boh raga pd che sbatti sti setTimeout nestati.`;
-                            msgEl.style.opacity = '1';
-
-                        }, 1000);
-                    }, 3000);
-                }, 750);
-            }, 500);
-        }, 500);
-    }, 500);
-}
-
 // increments cursor position, given a point to start from
 function stepOn(startPoint) {
     var t = playback.currentTime;
     var d = playback.totalTime;
-    var w = document.querySelectorAll(".timeline-line-section")[1].clientWidth * 2;
+    var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
     var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
     cursor.style.left = `${r}px`;
 
@@ -588,8 +584,166 @@ function stepOn(startPoint) {
     // document.getElementById("timecode").innerHTML = `${n(t)}`;
 }
 
-function mutePlayback(currVol) {
-    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
+function updatePercentage(i) {
+    var vol = parseInt(playback.contents[i].volume * 100);
+    var mrkr = document.getElementsByClassName("timeline-marker")[i+1];
+
+    if (vol == 0) { mrkr.classList.add("blinking") } else { mrkr.classList.remove("blinking") };
+
+    mrkr.innerHTML = vol + '%';
+}
+
+/* --------------- NO LONGER USED? --------------- */
+// function updateCursorPosition(index) {
+//     var els = document.getElementsByClassName("timeline-line-section");
+    
+//     Array.prototype.forEach.call(els, (el, i) => {
+//         if (i == (index * 2) + 1) {
+//             // setting position of cursor
+//             cursor.style.left = `${el.offsetLeft}px`;
+//         }
+//     })
+    
+//     if (cursor.style.visibility != 'visible') {
+//         console.log('setting visible');
+//         cursor.style.visibility = 'visible';
+        
+//     } else return;
+// }
+/* --------------- NO LONGER USED? --------------- */
+
+/* --------------- =============== --------------- */
+
+
+
+
+
+function endSession() {
+    const target = document.getElementById("playback");
+    var els = target.children;
+    var timing = 1.2;
+    var bezier = 'cubic-bezier(0.77, 0, 0.175, 1)';
+    var msgEl = document.createElement("DIV");
+    msgEl.style.padding = 'var(--sp)';
+    msgEl.style.margin = '0px';
+
+    var ops = [{
+        fn: function () {
+            playback.playbackElement.pause();
+            cursor.style.visibility = 'hidden';
+
+            var els = document.getElementsByClassName('timeline-line-section');
+            Array.prototype.forEach.call(els, (el) => {
+                el.style.backgroundColor = 'transparent';
+            })
+            DONE_BTN.style.maxHeight = `${DONE_BTN.clientHeight}px`;
+        },
+        start: 0
+    }, {
+        fn: function () {
+            // remove first two elements that are Children of target
+            for (var i = 0; i < 2; i++) {
+                els[i].classList.add("hidden");
+            }
+        },
+        start: 0
+    }, {
+        fn: function () {
+            for (var i = 0; i < 2; i++) {
+                target.removeChild(els[0]);
+            }
+            target.style.gridTemplateRows = '1fr';
+            DONE_BTN.style.transform = `translateY(${target.clientHeight - (DONE_BTN.clientHeight)}px)`;
+        },
+        start: 0.5
+    }, {
+        fn: function () {
+            DONE_BTN.style.transition = `max-height ${timing}s ${bezier}, transform ${timing}s ${bezier}`;
+            DONE_BTN.style.transform = `translateY(0px)`;
+            DONE_BTN.style.maxHeight = '100%';
+            DONE_BTN.style.width = '100%';
+
+            DONE_BTN.children[0].style.opacity = '0';
+        },
+        start: 1
+    }, {
+        fn: function () {
+            DONE_BTN.removeChild(DONE_BTN.children[0]);
+            msgEl.style.opacity = '0';
+            msgEl.style.transition = `opacity ${timing / 3}s linear`;
+            DONE_BTN.appendChild(msgEl);
+        },
+        start: 1.5
+    }, {
+        fn: function () {
+            msgEl.style.opacity = '1';
+            msgEl.innerHTML = `
+            <p>This is how an IT company that uses traditional filtering methods would moderate the same&nbsp;contents.</p>
+            <p>No shades, no debates, just one point of view and it does not depend on&nbsp;you.</p>
+            <p>Do you like the noise of&nbsp;silence?</p>`;
+
+            // anima linee (curves.js)
+            animateLines();
+        },
+        start: 3
+    }, {
+        fn: function () {
+            msgEl.style.opacity = '0';
+        },
+        start: 9
+    }, {
+        fn: function () {
+            msgEl.innerHTML = `
+            <p>Let us introduce you to our alternative contents regulation&nbsp;method.</p>
+            <p>With this approach nothing will be censored. The&nbsp;community will decide how much visibility to give to each&nbsp;content, helping to create a civic&nbsp;moderation.</p>
+            <p>Don’t&nbsp;mute! Down-Vote!</p><br>`;
+            msgEl.style.opacity = '1';
+
+            var resultsLink = document.createElement("A");
+            resultsLink.href = 'results.html';
+            resultsLink.innerHTML = 'See the results';
+            resultsLink.style.pointerEvents = 'all';
+            resultsLink.style.textDecoration = 'underline';
+            msgEl.append(resultsLink);
+
+        },
+        start: 10
+    }]
+
+    // micro-function to compute timers?
+    // maybe: forEach obj.start in ops
+    // calculate timeout by adding previous
+    // objects in endOps array
+    ops.forEach((op) => {
+        setTimeout(() => {
+            op.fn();
+        }, op.start * 1000);
+    });
+}
+
+
+
+
+/* ----------- UTILITY FUNCTIONS ----------- */
+
+var interference = {
+    el: document.getElementById("playback-interference"),
+    src: 'static/assets/interference.mp3',
+    vol: 1,
+    elSrc: function () {
+        this.el.src = this.src;
+        return this.el.src;
+    },
+    play: function() {
+        if (this.el.paused) {
+            this.el.play();
+        } else return;
+    },
+    pause: function() {
+        if (!this.el.paused) {
+            this.el.pause();
+        } else return;
+    }
 }
 
 const mapper = (num, in_min, in_max, out_min, out_max) => {
