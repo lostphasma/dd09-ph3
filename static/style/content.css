@@ -2,7 +2,7 @@
 /* Fai come me, che non  lo faccio direttamente */
 
 svg {
-    /* visibility: hidden; */
+    visibility: hidden;
 }
 
 #wrapper > #content {
@@ -16,7 +16,7 @@ svg {
 
 #wrapper > #content > #content-timeline {
     width: calc(100% + var(--sp) * 2);
-    height: calc(100% + var(--hh) + (var(--sp) * 2) );
+    height: calc(100% + var(--hh) + (var(--sp) * 3) );
 
     margin-top: calc( var(--hh) * (-2) - var(--sp) );
     margin-left: calc( var(--sp) * (-1) );
@@ -78,6 +78,7 @@ svg {
 }
 
 #content-selector > .selector {
+    margin: var(--sp);
     text-align: center;
 
     display: flex;
@@ -86,8 +87,16 @@ svg {
 
     box-sizing: border-box;
     grid-row: 1 / 2;
-}
 
+    z-index: 100;
+    cursor: pointer;
+}
+#content-selector > .selector:hover {
+    background-color: var(--c-el-h);
+}
+#content-selector > .selector:active {
+    background-color: var(--c-el-a);
+}
 
 #wrapper > #content > #content-area {
     display: grid;

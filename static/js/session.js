@@ -1,110 +1,3 @@
-var playback = {
-    path: 'static/assets/',
-    category: 1,
-    playbackElement: document.getElementById("playback-content"),
-    captionsElement: document.getElementById("captions-track"),
-    contents: [
-        {
-            src: '1.mp4', subs: '1.vtt', volume: 1
-        },
-        {
-            src: '2.mp4', subs: '2.vtt', volume: 1
-        },
-        {
-            src: '3.mp4', subs: '3.vtt', volume: 1
-        },
-        {
-            src: '4.mp4', subs: '4.vtt', volume: 1
-        },
-        {
-            src: '5.mp4', subs: '5.vtt', volume: 1
-        },
-        {
-            src: '6.mp4', subs: '6.vtt', volume: 1
-        }
-    ],
-    current: 0,
-    get contentsLength() {
-        return this.contents.length;
-    },
-    get currentTime() {
-        return this.playbackElement.currentTime;
-    },
-    get totalTime() {
-        return this.playbackElement.duration;
-    },
-    // get src() {
-    //     return this.path + this.category + '/' + this.contents[this.current].src;
-    // },
-    set src(i) {
-        this.playbackElement.src = this.path + this.category + '/' + this.contents[i].src;
-    },
-    // setContentVolume: function(bool) {
-    //     const incr = 0.1;
-        
-    //     if (bool == true) {
-    //         this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
-    //     } else if (bool == false) {
-    //         this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
-    //     } else {
-    //         this.src = this.current;
-    //         this.playbackElement.volume = this.contents[this.current].volume;        
-    //     }
-
-    //     this.contents[this.current].volume = this.playbackElement.volume;
-    // },
-    setContentVolume: function() {
-
-        const mapper = (num, in_min, in_max, out_min, out_max) => {
-            return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-        }
-
-        var a = [].slice.call(document.querySelectorAll(".handle"));
-        
-        Array.prototype.forEach.call(a, (pt, i) => {
-            var attr = pt.getAttribute("cy");
-            this.contents[i].volume = clamp(mapper(attr, 0, maxYOffset - jumpOffset, 1, 0), 0, 1);
-        })
-
-        this.playbackElement.volume = this.contents[this.current].volume;
-
-
-        if (this.playbackElement.volume <= 0 && !this.playbackElement.paused) {
-            interference.play();
-            // console.log(this.playbackElement.volume);
-        } else if (this.playbackElement.paused) {
-            interference.pause();
-        } else interference.pause();
-
-
-    },
-    makeCursor: function (DOMelement) {
-        var el = document.createElement("DIV");
-        el.id = "cursor";
-        el.style.visibility = 'hidden';
-        document.getElementById(DOMelement).appendChild(el);
-        return el;
-    },
-    setCurrentTime: function(currentTime) {
-        this.playbackElement.currentTime = currentTime;
-    },
-    captionsOn: function() {
-        this.captionsElement.track.addEventListener("cuechange", function() {
-            this.mode = 'hidden';
-            if (this.activeCues.length > 0) {
-                document.getElementById("captions-viewer").innerHTML = this.activeCues[0].text;
-            }
-        })        
-    },
-    setCaptions: function() {
-        this.captionsElement.src = this.path + this.category + '/' + this.contents[this.current].subs;
-        console.log(this.captionsElement.src);
-    }
-}
-
-
-
-
 // object that controls session data recording consent
 var dataConsent = {
     approvalBtn: document.getElementById("data-yes"),
@@ -147,64 +40,6 @@ var dataConsent = {
             // don't save the data
             console.log('User data has not saved');
         }
-    }
-};
-
-
-
-/* global d3, document */
-var playButton = {
-    el: document.getElementById("play"),
-
-    states: {
-        playing: {
-            nextState: "paused",
-            iconEl: document.querySelector("#pause-icon")
-        },
-        paused:  {
-            nextState: "playing",
-            iconEl: document.querySelector("#play-icon")
-        }
-    },
-
-    animationDuration: 350,
-
-    init: function () {
-        this.setInitialState();
-        this.replaceUseEl();
-        this.el.addEventListener("click", this.goToNextState.bind(this));
-    },
-
-    setInitialState: function () {
-      var initialIconRef = this.el.querySelector("use").getAttribute("xlink:href");
-      var stateName = this.el.querySelector(initialIconRef).getAttribute("data-state");
-      this.setState(stateName);
-    },
-
-    replaceUseEl: function () {
-        d3.select(this.el.querySelector("use")).remove();
-        d3.select(this.el.querySelector("svg")).append("path")
-            .attr("class", "js-icon")
-            .attr("d", this.stateIconPath());
-    },
-
-    goToNextState: function () {
-        this.setState(this.state.nextState);
-    },
-
-    setState: function (stateName) {
-        this.state = this.states[stateName];
-
-        // moved transition from goToNextState to here
-        // so that setState function can be used with animation
-        // and not just cycling
-        d3.select(this.el.querySelector(".js-icon")).transition()
-            .duration(this.animationDuration)
-            .attr("d", this.stateIconPath());
-    },
-
-    stateIconPath: function () {
-        return this.state.iconEl.getAttribute("d");
     }
 };
 
@@ -272,8 +107,8 @@ window.onload = () => {
 
         // trick the browser into thinking that the user pressed play
         // then we start the playback after the tutorial closing transition
-        playPause();
-        playPause();
+        playback.playPause();
+        playback.playPause();
         
         setTimeout(() => {
             dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);
@@ -284,7 +119,7 @@ window.onload = () => {
             tut.childNodes[1].style.gridTemplateRows = '1fr 1fr';
             
             // start the audio after the tutorial dialog closes
-            playPause();
+            playback.playPause();
         }, trn);
     });
 
@@ -301,8 +136,8 @@ window.onload = () => {
 
 
 window.onresize = () => {
-    playPause();
-    playPause();
+    playback.playPause();
+    playback.playPause();
     // e fammi resizare sta benedetta finestra || che bello edo quando trovo ste cose nel codice <3
     // console.clear();
     resized();
@@ -310,22 +145,22 @@ window.onresize = () => {
 
 
 PREV_BTN.onclick = () => {
-    playPreviousContent();
+    playback.playPreviousContent();
 }
 
 
 PLAY_BTN.onclick = () => {
-    playPause();
+    playback.playPause();
 }
 
 
 playback.playbackElement.onended = () => {
-    playNextContent();
+    playback.playNextContent();
 };
 
 
 NEXT_BTN.onclick = () => {
-    playNextContent();
+    playback.playNextContent();
 }
 
 
@@ -347,8 +182,7 @@ HELP_BTN.onclick = () => {
     }
 };
 
-
-DONE_BTN.onclick = () => {
+DONE_BTN.addEventListener("click", () => {
     // limit user interaction
     DONE_BTN.style.pointerEvents = 'none';
     document.body.onkeyup = '';
@@ -358,7 +192,19 @@ DONE_BTN.onclick = () => {
         // animate end of session
         endSession();
     });
-}
+}, false)
+
+// DONE_BTN.onclick = () => {
+//     // limit user interaction
+//     DONE_BTN.style.pointerEvents = 'none';
+//     document.body.onkeyup = '';
+
+//     dataConsent.saveSessionData(function () {
+//         // What do we do after saving data?
+//         // animate end of session
+//         endSession();
+//     });
+// }
 
 /* --------------- ======== ---------------- */
 
@@ -441,23 +287,23 @@ playback.playbackElement.addEventListener('pause', () => {
 document.body.onkeyup = (e) => {
     switch (e.keyCode) {
         case 32:
-            playPause();
+            playback.playPause();
             return;
         case 37:
-            playPreviousContent();
+            playback.playPreviousContent();
             return;
-        case 38:
-            playback.setContentVolume(true);
-            return;
+        // case 38:
+        //     playback.setContentVolume(true);
+        //     return;
         case 39:
-            playNextContent();
+            playback.playNextContent();
             return;
-        case 40:
-            playback.setContentVolume(false);
-            return;
+        // case 40:
+        //     playback.setContentVolume(false);
+        //     return;
         case 77:
             // current volume as a parameter
-            mutePlayback(playback.playbackElement.volume);
+            playback.mutePlayback(playback.playbackElement.volume);
             return;
         default:
             // console.log(e.keyCode);
@@ -499,61 +345,6 @@ function setSessionid() {
 }
 
 
-/* ----------- PLAYBACK FUNCTIONS ---------- */
-
-function playPause() {
-    if (playback.playbackElement.paused) {
-        playback.playbackElement.play().catch((error) => {
-            console.log("Error: " + error);
-        });
-    } else {
-        playback.playbackElement.pause();
-    }
-}
-
-function setSrc() {
-    playback.src = playback.current;
-    playPause();
-    playback.setContentVolume();
-    playback.setCaptions();
-}
-
-function playPreviousContent() {
-    clearInterval(stepper);
-
-    const skipThreshold = 0.75;
-    if (playback.currentTime > skipThreshold) {
-        playback.setCurrentTime(0);
-
-    } else if (playback.currentTime <= skipThreshold) {
-
-        if (playback.current <= 0) {
-            playback.current = playback.contents.length - 1;
-        } else {
-            playback.current -= 1;
-        };
-
-    }
-
-    setSrc();
-}
-
-function playNextContent() {
-    clearInterval(stepper);
-
-    if (playback.current >= playback.contents.length - 1) {
-        playback.current = 0;
-
-    } else playback.current += 1;
-
-    setSrc();
-}
-
-function mutePlayback(currVol) {
-    currVol == 0 ? playback.playbackElement.volume = 1 : playback.playbackElement.volume = 0;
-}
-
-/* --------------- ========= --------------- */
 
 
 
