@@ -1,67 +1,71 @@
+var SLKTR = document.getElementById("content-selector");
+var AVG = [];
+
+
 window.onload = () => {
     document.title = setSessionid();
+    getAverages(AVG);
 };
 
-window.onresize = () => {
-    playback.playPause();
-    playback.playPause();
-    // e fammi resizare sta benedetta finestra || che bello edo quando trovo ste cose nel codice <3
-    // console.clear();
-    resized();
+// window.onresize = () => {
+//     playback.playPause();
+//     playback.playPause();
+//     // e fammi resizare sta benedetta finestra, Per Diana || che bello edo quando trovo ste cose nel codice <3
+//     console.clear();
+//     resized();
+// }
+
+SLKTR.onclick = (e) => {
+    // really not elegant way of getting content index
+    var ci = parseInt(e.target.innerHTML) - 1;
+
+    // content element
+    var ce = SLKTR.children[ci];
+    
+    // if click on selector that's playing
+    if (e.target.classList.contains("playing") && !playback.playbackElement.paused) {
+        ce.classList.remove("playing");
+
+        ce.classList.add("paused");
+        playback.playbackElement.pause();
+
+    } else if (e.target.classList.contains("paused") && playback.playbackElement.paused) {
+        ce.classList.remove("paused");
+
+        ce.classList.add("playing");
+        playback.playbackElement.play();
+
+    // if click on selector that's NOT playing
+    } else {
+        for (var i = 0; i < SLKTR.children.length; i++) {
+            SLKTR.children[i].classList.remove("playing");
+            SLKTR.children[i].classList.remove("paused");
+        }
+        playback.current = ci;
+        playback.setSrc();
+        e.target.classList.add("playing");
+    }
+
+    hightlightTimelineMarker(ci);
+
+    // document.getElementById("content-info").children[0].innerHTML = showContentInfo(c);
+    var cavg = Math.round(getContentAverage(AVG, ci+1) * 100) + '%';
+    document.getElementById("content-info").children[2].innerHTML = `${cavg}`;
 }
-
-playback.playbackElement.onended = () => {
-    playback.playNextContent();
-};
-
-
-
 
 
 
 /* ----------- PLAYBACK RUNTIME ------------ */
 
-// entity used to update cursor position every 100 milliseconds
-var stepper;
+playback.playbackElement.addEventListener('ended', () => {
+    document.querySelector(".selector.playing").classList.remove("playing");
+    document.querySelector(".selector.playing").classList.add("paused");
+},false)
 
 // stuff to do when playing
-playback.playbackElement.addEventListener('play', () => {
+// playback.playbackElement.addEventListener('play', () => {
 
-    playback.setContentVolume();
-
-    // save current track index
-    var c = playback.current;
-
-    // compute left coordinate for cursor position
-    var start = getStartingPoint(c);
-    
-    // setTimeout interval constant
-    const ms = 100;
-
-    stepper = setInterval(() => {
-        // update cursor position and increment it 
-        stepOn(start);
-    }, ms);
-
-    // stop blinking (interrupt pause state)
-    cursor.classList.remove("blink");
-
-    setTimeout(() => {
-
-        // highlight current track's area
-        setTimeline(c);
-
-        // if hidden, show playback cursor
-        if (cursor.style.visibility != 'visible') {
-            cursor.style.visibility = 'visible';
-        } else return;
-
-    }, ms);
-
-    // animate play button to play state 
-    playButton.setState('playing');
-
-}, false);
+// }, false);
 
 
 // stuff to do when paused
@@ -83,78 +87,19 @@ playback.playbackElement.addEventListener('play', () => {
 
 /* ----------- TIMELINE FUNCTIONS ---------- */
 
-function hightlightTimelineMarker(markerClassName) {
-    var els = document.getElementsByClassName('timeline-line-section');
+function hightlightTimelineMarker(which) {
+    var els = document.getElementById("content-grid");
+    var pla = document.querySelectorAll(".content-grid-bar.playing");
 
-    Array.prototype.forEach.call(els, (el) => {
-        var attribute = el.getAttribute("js-spacer");
-
-        if (attribute == markerClassName) {
-            el.style.backgroundColor = 'var(--c-bg)';
-
-        } else el.style.backgroundColor = 'transparent';
-    })
-}
-
-function setTimeline(which) {
-    // updateCursorPosition(which);
-    switch (which) {
-        case 0:
-            hightlightTimelineMarker('first');
-            return;
-        case 1:
-            hightlightTimelineMarker('second');
-            return;
-        case 2:
-            hightlightTimelineMarker('third');
-            return;
-        case 3:
-            hightlightTimelineMarker('fourth');
-            return;
-        case 4:
-            hightlightTimelineMarker('fifth');
-            return;
-        case 5:
-            hightlightTimelineMarker('sixth');
-            return;
-        default:
-            console.log('something\'s wrong!');
-            return;
+    for (var i = 0; i < pla.length; i++) {
+        pla[i].classList.remove("playing");
     }
+
+    els.children[which * 2].classList.add("playing");
+    els.children[which * 2 + 1].classList.add("playing");
+
+    return which;
 }
-
-// plug playback.current to get current timeline starting point 
-// for incrementing cursor position
-function getStartingPoint(index) {
-    var els = document.getElementsByClassName("timeline-line-section");
-    var result;
-
-    Array.prototype.forEach.call(els, (el, i) => {
-        if (i == (index * 2) + 1) {
-            // getting coordinate of given section starting (leftmost) point
-            result = el.offsetLeft;
-        }
-    })
-    return result;
-}
-
-// increments cursor position, given a point to start from
-function stepOn(startPoint) {
-    var t = playback.currentTime;
-    var d = playback.totalTime;
-    var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
-    var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
-    cursor.style.left = `${r}px`;
-
-    // function n(n){
-    //     return n > 9 ? "" + Math.round(n): "0" + Math.round(n);
-    // }
-
-    // document.getElementById("timecode").innerHTML = `${n(t)}`;
-}
-
-
-
 
 
 
@@ -205,4 +150,8 @@ function setColor() {
 
     // ritorno valore per assegnare colore a linea tramite d3
     return color;
+}
+
+function showContentInfo(c = 0) {
+    return c+1;
 }

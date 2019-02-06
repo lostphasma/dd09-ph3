@@ -13,14 +13,18 @@
     font-size: 2.1em;
 
     margin-bottom: calc(var(--sp) * 4);
+
+    visibility: hidden;
 }
 #wrapper > #content > #hero .ti-cursor {
     left: -1.3ch !important;
 }
 
 #wrapper > #content > a {
-    display: inline-block;
+    display: block;
     position: relative;
+    text-align: center;
+    max-width: 100px;
 }
 
 #wrapper > #content > a > div#continue {
