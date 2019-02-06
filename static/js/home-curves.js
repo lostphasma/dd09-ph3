@@ -127,20 +127,20 @@ var svg = d3.select('#home-curves').append('svg').attr("viewBox", "0 0 " + w + '
 var defs = svg.append("defs");
 
 for (i = 0; i < 4; i++) {
-    var gradient = defs.append("linearGradient")
-    .attr("id", "svgGradient" + (i+1))
-    .attr("x1", "100%").attr("x2", "100%")
-    .attr("y1", "0%").attr("y2", "100%");
+    // var gradient = defs.append("linearGradient")
+    // .attr("id", "svgGradient" + (i+1))
+    // .attr("x1", "100%").attr("x2", "100%")
+    // .attr("y1", "0%").attr("y2", "100%");
 
-    gradient.append("stop")
-    .attr("offset", "0%")
-    .attr("stop-color", setColor(i+1))
-    .attr("stop-opacity", 1);
+    // gradient.append("stop")
+    // .attr("offset", "0%")
+    // .attr("stop-color", setColor(i+1))
+    // .attr("stop-opacity", 1);
 
-    gradient.append("stop")
-    .attr("offset", "100%")
-    .attr("stop-color", "red")
-    .attr("stop-opacity", 1);
+    // gradient.append("stop")
+    // .attr("offset", "100%")
+    // .attr("stop-color", "red")
+    // .attr("stop-opacity", 1);
 
     // creo 4 rettangoli che saranno mascherati dalla linea, assegno il gradiente corrispettivo
     var rect = svg.append('rect')
@@ -152,7 +152,8 @@ for (i = 0; i < 4; i++) {
     .attr('y', 0)
     .attr('width', '100%')
     .attr('height', '100%')
-    .attr('fill', "url(#svgGradient" + (i+1) + ")");
+    .attr('fill', setColor(i+1))
+    // .attr('fill', "url(#svgGradient" + (i+1) + ")");
 }
 
 
@@ -226,10 +227,10 @@ function animateLines(e) {
             // Rimuove on dal rettangolo precedente
             var rectz = Array.from(document.querySelectorAll(".on"));
             // rectz.classList.remove('on');
-            // for (i = 0; i < rectz.length; i++){
-            //     console.log("dio" + i);
-            //     rectz[i].classList.remove('on');
-            // }
+            for (i = 0; i < rectz.length; i++){
+                console.log("dio" + i);
+                rectz[i].classList.remove('on');
+            }
 
             // Assegna on al rettangolo corrispettivo
             for (i=0; i<4; i++){
