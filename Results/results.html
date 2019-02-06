@@ -10,7 +10,10 @@
 </head>
 
 <body>
-    <p onclick="animateLines()" style="color: white"> Ciao </p>
+    <p onmouseover="animateLines(this)" style="color: white" js-data="1"> Cat 1 </p>
+    <p onmouseover="animateLines(this)" style="color: white" js-data="2"> Cat 2 </p>
+    <p onmouseover="animateLines(this)" style="color: white" js-data="3"> Cat 3 </p>
+    <p onmouseover="animateLines(this)" style="color: white" js-data="4"> Cat 4 </p>
     <div id="results-curves"></div>
 
     <script src="/static/lib/d3.js"></script>

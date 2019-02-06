@@ -8,29 +8,29 @@ var curves_data = [];
 // var json_data_muliple_lines = [[{"id": "82","x": "50","y": "50"}, {"id": "83","x": "25","y": "110"}, {"id": "97","x": "90","y": "150"}, {"id": "98","x": "150","y": "224"}, {"id": "99","x": "250","y": "150"}, {"id": "100","x": "300","y": "200"}, {"id": "100","x": "320","y": "230"}],[{"id": "1","x": "120","y": "60"}, {"id": "2","x": "30","y": "150"}, {"id": "3","x": "120","y": "170"}, {"id": "4","x": "180","y": "260"}, {"id": "5","x": "300","y": "250"}]];
 
 var json_data = [{
-    "x": "100",
-    "y": "300"
+    "x": "0",
+    "y": "0"
+}, {
+    "x": "50",
+    "y": "0"
 }, {
     "x": "150",
-    "y": "300"
+    "y": "0"
 }, {
     "x": "250",
-    "y": "300"
+    "y": "0"
 }, {
     "x": "350",
-    "y": "300"
+    "y": "0"
 }, {
     "x": "450",
-    "y": "300"
+    "y": "0"
 }, {
     "x": "550",
-    "y": "300"
+    "y": "0"
 }, {
-    "x": "650",
-    "y": "300"
-}, {
-    "x": "700",
-    "y": "300"
+    "x": "600",
+    "y": "0"
 }];
 
 var curva_arrivo = [{
@@ -63,13 +63,13 @@ var curva_arrivo = [{
 var handleRadius = 6;
 var handleOffset = 50;
 
-var minYoffset = 300;
+var minYoffset = 0;
 var maxYOffset = 600;
 
 var jumpOffset = 60;
 
 // ----- Larghezza e altezza della viewBox dell'SVG
-var w = 800;
+var w = 600;
 var h = 850;
 
 // ----- Pusha le posizioni dei punti nell'array point_position nel dato momento
@@ -110,9 +110,9 @@ gradient.append("stop")
 var rect = svg.append('rect')
     .attr('mask', "url(#mask-line)")
     .attr('x', 0)
-    .attr('y', 290)
+    .attr('y', 0)
     .attr('width', '100%')
-    .attr('height', '400')
+    .attr('height', '100%')
     .attr('fill', "url(#svgGradient)");
 
 // ----- CURVES INIT
@@ -504,9 +504,28 @@ function storeJSON() {
         "timestamp": Date(Date.now())
     }
 
-    console.log("Da storare nel JSON")
+    console.log("Curva " + userID);
     curves_data[userID] = obj;
-    console.log(curves_data);
+    console.log(curves_data[userID].d);
+
+    var mainLayer = svg.append('g').attr('class', 'main-layer');
+    mainLayer.selectAll('path.curves').data(curves_data)
+        .enter().append('path')
+        .attr({
+            'class': function (d, i) {
+                return 'curves path' + i;
+            },
+            d: curves_data[userID].d,
+            'vector-effect': 'non-scaling-stroke'
+        })
+
+    // for (k = 0; k < curves_data.length; k++){
+    //     var d = curves_data[k].d;
+    //     console.log(d);
+    //     // console.log(k);
+    // }
+    
+
     userID++;
 }
 
