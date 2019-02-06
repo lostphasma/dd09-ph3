@@ -18,6 +18,8 @@
 :root {
     /* background */
     --c-bg: #18181a;
+    /* background */
+    --c-bg-h: #262629;
     /* button # a*1.1 a a*1.2 */
     --c-el: #373539;
     /* button hover */

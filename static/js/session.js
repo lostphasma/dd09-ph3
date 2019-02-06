@@ -146,6 +146,7 @@ window.onresize = () => {
 
 PREV_BTN.onclick = () => {
     playback.playPreviousContent();
+    playback.setCaptions();
 }
 
 
@@ -156,11 +157,13 @@ PLAY_BTN.onclick = () => {
 
 playback.playbackElement.onended = () => {
     playback.playNextContent();
+    playback.setCaptions();
 };
 
 
 NEXT_BTN.onclick = () => {
     playback.playNextContent();
+    playback.setCaptions();
 }
 
 
@@ -358,7 +361,7 @@ function hightlightTimelineMarker(markerClassName) {
         var attribute = el.getAttribute("js-spacer");
 
         if (attribute == markerClassName) {
-            el.style.backgroundColor = 'var(--c-bg)';
+            el.style.backgroundColor = 'var(--c-bg-h)';
 
         } else el.style.backgroundColor = 'transparent';
     })

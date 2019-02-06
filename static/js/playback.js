@@ -59,8 +59,6 @@ var playback = {
         this.src = this.current;
         this.playPause();
         this.setContentVolume();
-        this.clearCaptions();
-        this.setCaptions();
     },
     
     playPreviousContent: function () {
@@ -112,12 +110,14 @@ var playback = {
         this.playbackElement.volume = this.contents[this.current].volume;
 
 
-        if (this.playbackElement.volume <= 0 && !this.playbackElement.paused) {
-            interference.play();
-            // console.log(this.playbackElement.volume);
-        } else if (this.playbackElement.paused) {
-            interference.pause();
-        } else interference.pause();
+        if (typeof interference !== 'undefined' && interference) {
+            if (this.playbackElement.volume <= 0 && !this.playbackElement.paused) {
+                interference.play();
+                // console.log(this.playbackElement.volume);
+            } else if (this.playbackElement.paused) {
+                interference.pause();
+            } else interference.pause();
+        } else return;
     },
     
     makeCursor: function (DOMelement) {
@@ -142,6 +142,8 @@ var playback = {
     },
     
     setCaptions: function() {
+        this.clearCaptions();
+
         this.captionsElement.src = this.path + this.category + '/' + this.contents[this.current].subs;
         console.log(this.captionsElement.src);
     },
