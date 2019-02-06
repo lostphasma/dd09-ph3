@@ -288,7 +288,7 @@ function resized() {
     SVGResize();
 
     var scaleX = w / (d3.select('#curves-svg').node().getBoundingClientRect().width);
-    var scaleY = h / d3.select('#curves-svg').node().getBoundingClientRect().height;
+    var scaleY = h / (d3.select('#curves-svg').node().getBoundingClientRect().height);
 
     // cerchi maniglie frontali (con stroke)
     circlesToResize.each(function (d, i) {

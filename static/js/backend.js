@@ -22,45 +22,60 @@ function writeEntry(pathstr, values) {
     })
 }
 
-var cd = curves_data;
+// var cd = curves_data;
 
 // this method gets a reference of the document on the server
-function getLastEntries() {
+function getLastEntries(num, bool = false) {
 
-    db.collection("sessions").where("category", "==", playback.category).limit(10).get().then((querySnapshot) => {
+    db.collection("sessions").where("category", "==", playback.category).limit(num).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
-                
-                // push path data 
+                // push path data
                 curves_data.push(doc.data());
-
             });
+
+            if (bool == true) {
                 // curva già elaborata, alleggerisce animazione (?)
                 ca = "M0,0C17.5,0 -4,980 66,980S129,980 199,980 263,980 333,980 396,980 466,980 529,980 599,980 663,980 733,980 782.5,0 800,0"
-            
+
                 // crea n curve in base al json, le imposta uguali alla curva d'arrivo
-                usersLayer.selectAll('path.curves-layer').data(cd)
-                .enter().append('path')
-                .attr({
-                    'class': function (d, i) {
-                        return 'users-curve users-path' + i;
-                    },
-                    'd': ca,
-                    'vector-effect': 'non-scaling-stroke'
-                })            
+                usersLayer.selectAll('path.curves-layer').data(curves_data)
+                    .enter().append('path')
+                    .attr({
+                        'class': function (d, i) {
+                            return 'users-curve users-path' + i;
+                        },
+                        'd': ca,
+                        'vector-effect': 'non-scaling-stroke'
+                    })
+            } else { animateLinesResults(); }
         })
         .catch(function (error) {
             console.log("Error getting entries: ", error);
         });
-
 }
 
+function getAllEntries(callBack = function(){}) {
+    for (var i = 0; i < 4; i++) {
+        var t = 0;
+        db.collection("sessions").where("category", "==", i+1).limit(10).get().then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                // push path data
+                all_results_data[t].push(doc.data());
+            });
+            t++;
+            if (t == 4) {   
+                callBack();
+            }
+        })
+    }
+}
 
-// TO-DO: get the category the result page is showing
 function getAverages(arrayName) {
     db.collection("sessions").where("category", "==", playback.category).get().then((querySnapshot) => {
             querySnapshot.forEach((doc) => {
                 arrayName.push(doc.data().values);
             });
+            computeAvg(playback.current);
         })
         .catch(function (error) {
             console.log("Error getting averages: ", error);

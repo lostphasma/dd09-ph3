@@ -32,7 +32,7 @@ var dataConsent = {
             playback.contents.forEach((content) => {
                 data.push(content.volume.toFixed(2));
             })
-            // writeEntry(curve, data);
+            writeEntry(curve, data);
             console.log('User data has been saved.');
 
             callback();
@@ -128,7 +128,7 @@ window.onload = () => {
     playButton.init();
 
     // get entries of last sessions
-    getLastEntries();
+    getLastEntries(10, true);
     
     playback.captionsOn();
     playback.setCaptions();
@@ -291,15 +291,18 @@ document.body.onkeyup = (e) => {
     switch (e.keyCode) {
         case 32:
             playback.playPause();
+            playback.setCaptions();
             return;
         case 37:
             playback.playPreviousContent();
+            playback.setCaptions();
             return;
         // case 38:
         //     playback.setContentVolume(true);
         //     return;
         case 39:
             playback.playNextContent();
+            playback.setCaptions();
             return;
         // case 40:
         //     playback.setContentVolume(false);

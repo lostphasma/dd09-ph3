@@ -143,9 +143,7 @@ var playback = {
     
     setCaptions: function() {
         this.clearCaptions();
-
         this.captionsElement.src = this.path + this.category + '/' + this.contents[this.current].subs;
-        console.log(this.captionsElement.src);
     },
     
     clearCaptions: function() {
