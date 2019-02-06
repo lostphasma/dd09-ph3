@@ -121,7 +121,7 @@ results_start.forEach((el) => {
 })
 
 // ----- Crea un svg con dimensioni definite
-var svg = d3.select('#results-curves').append('svg').attr("viewBox", "0 0 " + w + ' ' + h).attr("preserveAspectRatio", "none").attr("id", "users-results");
+var svg = d3.select('#home-curves').append('svg').attr("viewBox", "0 0 " + w + ' ' + h).attr("preserveAspectRatio", "none").attr("id", "users-results");
 
 // ------------ GRADIENT - crea 4 gradients
 var defs = svg.append("defs");
@@ -218,7 +218,7 @@ function animateLines(e) {
         d: function (el, i) {
             return cd[i].d
         },
-        opacity: .4,
+        opacity: 1,
         duration: 750,
         delay: anime.stagger(30),
 

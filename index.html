@@ -8,13 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="static/style/main.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="static/style/index.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="static/style/home-curves.css" />
 </head>
 
-<body>
+<body ontouchstart="">
     <div id="menu">
         <ul>
             <li><a href="#">Home</a></li>
-            <li><a href="categories.html">Categories</a></li>
             <li><a href="#">Results</a></li>
             <li><a href="#">About</a></li>
         </ul>
@@ -30,13 +30,25 @@
                 </div>
             </div>
         </div>
-        <div id="content">
-            <div id="hero"></div>
-            <a href="#">
-                <div class="module show" id="continue">
-                    Skip
+        <div id="home-curves"></div>
+            <div id="content">
+                <div id="hero">
+                    <div id="hero-text" class="show"></div>
+                    <div id="hero-categories">
+                        <ul>
+                            <li js-data="1" onmouseover="animateLines(this)"><a href="session.html?category=1">Race</a></li>
+                            <li js-data="2" onmouseover="animateLines(this)"><a href="session.html?category=2">Gender</a></li>
+                            <li js-data="3" onmouseover="animateLines(this)"><a href="session.html?category=3">Disability</a></li>
+                            <li js-data="4" onmouseover="animateLines(this)"><a href="session.html?category=4">Homophobia</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </a>
+                <a href="#">
+                    <div class="module show" id="continue">
+                        Skip
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
 </body>
@@ -44,29 +56,10 @@
 <script src="static/js/menu.js"></script>
 <script src="static/lib/typeit.min.js"></script>
 
-<script>
-    var s1 = 'Regulating online Hate&nbsp;Speech has proven to be a hard challenge for IT&nbsp;Companies.';
-    var s2 = '<br><br>What would you do if you had the power to regulate a&nbsp;choir of controversial contents?'
-    var s3 = '<br><br>Select a&nbsp;topic among the following categories.';
+<script src="static/lib/d3.js"></script>
+<script src="static/lib/anime.min.js"></script>
 
-    let sentences = new TypeIt('#hero', {
-            speed: 50,
-            deleteSpeed: 15,
-            startDelay: 1000,
-            lifeLike: true,
-            afterComplete: () => {
-                setTimeout(() => {
-                    document.getElementById("continue").innerHTML = 'Continue';
-                    // document.getElementsByClassName("ti-cursor")[0].style.visibility = 'hidden';
-                }, 800);
-            }
-        })
-        .type(s1)
-        .pause(1000)
-        .type(s2)
-        .pause(1000)
-        .type(s3)
-        .go();
-</script>
+<script src="static/js/home.js"></script>
+<script src="static/js/home-curves.js"></script>
 
 </html>

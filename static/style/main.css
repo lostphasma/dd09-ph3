@@ -49,6 +49,11 @@
     --f-el: 'IBM Plex Mono ExtraLight';
     /* fallback font */
     --f-f: Helvetica, Arial, sans-serif;
+
+    /* transition-timing-function */
+    --trtf: cubic-bezier(0.77, 0, 0.175, 1);
+    /* transition-duration */
+    --trd: 1s;
 }
 
 html,
