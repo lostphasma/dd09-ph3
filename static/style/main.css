@@ -168,7 +168,6 @@ div.module.hidden {
 
 #wrapper > #header {
     height: var(--hh);
-    min-height: var(--hh) !important;
     display: flex;
     align-items: center;
     justify-content: space-between;

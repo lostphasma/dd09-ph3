@@ -1,3 +1,11 @@
+#wrapper > #header {
+    /*
+        override default style 
+        to make menu btn visible on about page
+    */
+    min-height: var(--hh) !important;
+}
+
 #content {
     width: 100%;
     max-height: 100%;
