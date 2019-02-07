@@ -127,21 +127,6 @@ var svg = d3.select('#home-curves').append('svg').attr("viewBox", "0 0 " + w + '
 var defs = svg.append("defs");
 
 for (i = 0; i < 4; i++) {
-    // var gradient = defs.append("linearGradient")
-    // .attr("id", "svgGradient" + (i+1))
-    // .attr("x1", "100%").attr("x2", "100%")
-    // .attr("y1", "0%").attr("y2", "100%");
-
-    // gradient.append("stop")
-    // .attr("offset", "0%")
-    // .attr("stop-color", setColor(i+1))
-    // .attr("stop-opacity", 1);
-
-    // gradient.append("stop")
-    // .attr("offset", "100%")
-    // .attr("stop-color", "red")
-    // .attr("stop-opacity", 1);
-
     // creo 4 rettangoli che saranno mascherati dalla linea, assegno il gradiente corrispettivo
     var rect = svg.append('rect')
     .attr('id', 'rectGradient' + (i+1))
@@ -228,7 +213,6 @@ function animateLines(e) {
             var rectz = Array.from(document.querySelectorAll(".on"));
             // rectz.classList.remove('on');
             for (i = 0; i < rectz.length; i++){
-                console.log("dio" + i);
                 rectz[i].classList.remove('on');
             }
 
@@ -286,33 +270,5 @@ function resized() {
     }    
 
     SVGResize();
-
-    var scaleX = w / (d3.select('#curves-svg').node().getBoundingClientRect().width);
-    var scaleY = h / (d3.select('#curves-svg').node().getBoundingClientRect().height);
-
-    // cerchi maniglie frontali (con stroke)
-    circlesToResize.each(function (d, i) {
-        var circleSize = d3.select(this);
-
-        // volendo qui si potrebbe resizare lo stroke delle maniglie
-        // circleSize.style("stroke-width", multiplier / 4 + "px");
-
-        circleSize.attr({
-            rx: (scaleX * multiplier),
-            ry: (scaleY * multiplier)
-        });
-    })
-
-    // cerchi maniglie dietro
-    circlesToResizeB.each(function (d, i) {
-        // if (i != 0 && i != 7) {
-            var circleSize = d3.select(this);
-
-            circleSize.attr({
-                rx: (scaleX * multiplier2),
-                ry: (scaleY * multiplier2)
-            });
-        // }
-    })
 
 }

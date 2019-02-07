@@ -18,9 +18,6 @@ CONTINUE_BTN.onclick = () => {
 
 
 
-
-
-
 var s1 = 'Regulating online Hate&nbsp;Speech has proven to be a hard challenge for IT&nbsp;Companies.';
 var s2 = '<br><br>What would you do if you had the power to regulate a&nbsp;choir of controversial contents?'
 var s3 = '<br><br>Select a&nbsp;topic among the following categories.';

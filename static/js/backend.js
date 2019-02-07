@@ -1,17 +1,3 @@
-// authentication process
-// var fbauth = firebase.auth(fb)
-//     .signInAnonymously()
-//     .catch(function (error) {
-
-//         // Handle errors here
-//         var errorCode = error.code;
-//         var errorMessage = error.message;
-
-//         console.log(errorCode);
-//         console.log(errorMessage);
-
-//     });
-
 function writeEntry(pathstr, values) {
     var tstmp = new firebase.firestore.Timestamp.now();
     var entry = db.collection("sessions").doc((tstmp.seconds).toString()).set({

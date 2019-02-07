@@ -1,7 +1,7 @@
 var TL = document.getElementById("content-grid");
 var SLKTR = document.getElementById("content-selector");
 var AVG = [];
-
+var METADATA;
 
 window.onload = () => {
     document.title = setSessionid();
@@ -10,10 +10,11 @@ window.onload = () => {
 
     playback.current = 0;
     SLKTR.children[playback.current].classList.add("playing");
-    playback.playbackElement.play();
     playback.setSrc();
 
     hightlightTimelineMarker(playback.current);
+
+    getMetaData(playback.category);
 };
 
 window.onresize = () => {
@@ -27,15 +28,15 @@ window.onresize = () => {
 SLKTR.onclick = (e) => {
     // really not elegant way of getting content index
     var ci = parseInt(e.target.innerHTML) - 1;
-    setResultSrc(e, ci);
+    setResultPageSrc(e, ci);
+    setMetaData(ci);
 }
-
-
 
 TL.onclick = (e) => {
     // content index
     var ci = Math.floor(getChildIndex(e) / 2);
-    setResultSrc(e, ci);
+    setResultPageSrc(e, ci);
+    setMetaData(ci);
 }
 
 
@@ -43,32 +44,11 @@ TL.onclick = (e) => {
 /* ----------- PLAYBACK RUNTIME ------------ */
 
 playback.playbackElement.addEventListener('ended', () => {
-    document.querySelector(".selector.playing").classList.remove("playing");
-    document.querySelector(".selector.playing").classList.add("paused");
+    // playing element
+    var pe = document.querySelector(".selector.playing");
+    pe.classList.remove("playing");
+    pe.classList.add("paused");
 },false)
-
-// stuff to do when playing
-// playback.playbackElement.addEventListener('play', () => {
-
-// }, false);
-
-
-// stuff to do when paused
-// playback.playbackElement.addEventListener('pause', () => {
-
-    // clearing interval every event change (also next and previous content)
-    // otherwise we fire multiple setInterval
-    // clearInterval(stepper);
-
-    // start to blink
-    // cursor.classList.add("blink");
-
-    // animate play button to pause state
-    // playButton.setState('paused');
-
-// }, false);
-
-
 
 /* ----------- TIMELINE FUNCTIONS ---------- */
 
@@ -141,7 +121,7 @@ function setColor() {
     return color;
 }
 
-function setResultSrc(e, ci) {
+function setResultPageSrc(e, ci) {
     playback.current = ci;
 
     // content element
@@ -171,7 +151,6 @@ function setResultSrc(e, ci) {
     }
 
     hightlightTimelineMarker(ci);
-
     computeAvg(ci);
 }
 
@@ -192,6 +171,49 @@ function computeAvg(i) {
     document.getElementById("content-info").children[2].innerHTML = `${cavg}%`;
 }
 
-function showContentInfo(c = 0) {
-    return c+1;
+function getMetaData(i) {
+    var url = 'static/assets/' + i + '/' + i + '-meta.json';
+    tinyxhr(url, (u, data) => {
+        // returned data
+        METADATA = JSON.parse(data);
+        // console.log(METADATA);
+        setMetaData(playback.current);
+    })
+}
+
+function setMetaData(i) {
+    // current data
+    cd = METADATA[i];
+    document.getElementById("content-desc").children[1].innerHTML = cd.desc;
+    document.getElementById("content-source").children[0].href = cd.source;
+}
+
+function tinyxhr(url,cb,method,post,contenttype)
+{
+ var requestTimeout,xhr;
+ try{ xhr = new XMLHttpRequest(); }catch(e){
+ try{ xhr = new ActiveXObject("Msxml2.XMLHTTP"); }catch (e){
+  if(console)console.log("tinyxhr: XMLHttpRequest not supported");
+  return null;
+ }
+ }
+ requestTimeout = setTimeout(function() {xhr.abort(); cb(new Error("tinyxhr: aborted by a timeout"), "",xhr); }
+                             , 10000);
+ xhr.onreadystatechange = function()
+ {
+  if (xhr.readyState != 4) return;
+  clearTimeout(requestTimeout);
+  cb(xhr.status != 200?new Error("tinyxhr: server respnse status is "+xhr.status):false, xhr.responseText,xhr);
+ }
+ xhr.open(method?method.toUpperCase():"GET", url, true);
+ 
+ //xhr.withCredentials = true;
+  
+ if(!post)
+  xhr.send();
+ else
+ {
+  xhr.setRequestHeader('Content-type', contenttype?contenttype:'application/x-www-form-urlencoded');
+  xhr.send(post)
+ }
 }

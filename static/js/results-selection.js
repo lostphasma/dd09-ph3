@@ -164,35 +164,6 @@ function curves_init(svg, i, mainLayer) {
         .attr('vector-effect', 'non-scaling-stroke')
 }
 
-// ----- inizializza la funzione
-// curves_init(svgRace, 0);
-// curves_init(svgGender, 1);
-// curves_init(svgDisability, 2);
-// curves_init(svgReligion, 3);
-
-/*
-
-// ------------ ------------- ------------
-// ------------ ANIMATE LINES ------------
-// ------------ ------------- ------------
-
-var usersLayer = d3.select("#mask-line").append('g').attr('class', 'users-layer');
-
-    // crea n curve in base al JSON, le imposta uguali alla curva d'arrivo
-    usersLayer.selectAll('path.curves-layer').data(curves_results_data[0])
-    .enter().append('path')
-    .attr({
-        'class': function (d, i) {
-            return 'users-curve users-path' + i;
-        },
-        'd': pathData, //was curve
-        'vector-effect': 'non-scaling-stroke'
-    })
-
-
-*/
-
-
 
 
 // ------------ ----------------- ------------

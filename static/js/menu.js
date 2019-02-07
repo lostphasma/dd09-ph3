@@ -22,6 +22,9 @@ menu.button.onclick = () => {
     menu.reveal();
 }
 
+// document.addEventListener('touchmove', preventBouncing, {
+//     passive: false
+// });
 
 /* --------------- ========= --------------- */
 
@@ -32,6 +35,9 @@ menu.button.onclick = () => {
 /* --------------- ========= --------------- */
 /* --------------- FUNCTIONS --------------- */
 
-
+function preventBouncing(e) {
+    //preventing the easing on iOS devices
+    e.preventDefault();
+}
 
 /* --------------- ========= --------------- */

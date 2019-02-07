@@ -29,22 +29,6 @@ var playback = {
     },
 
 
-    // setContentVolume: function(bool) {
-    //     const incr = 0.1;
-        
-    //     if (bool == true) {
-    //         this.playbackElement.volume = clamp(this.playbackElement.volume + incr, 0, 1).toFixed(2);
-    //     } else if (bool == false) {
-    //         this.playbackElement.volume = clamp(this.playbackElement.volume - incr, 0, 1).toFixed(2);
-    //     } else {
-    //         this.src = this.current;
-    //         this.playbackElement.volume = this.contents[this.current].volume;        
-    //     }
-
-    //     this.contents[this.current].volume = this.playbackElement.volume;
-    // },
-
-
     playPause: function () {
         if (this.playbackElement.paused) {
             this.playbackElement.play().catch((error) => {

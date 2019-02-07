@@ -48,7 +48,7 @@ a > .module > div.svg-container > svg {
     stroke: white;
     fill: none;
     stroke-width: 2;
-    opacity: .7;
+    opacity: 1;
 }
 
 .off {

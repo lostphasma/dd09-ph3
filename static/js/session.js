@@ -197,21 +197,6 @@ DONE_BTN.addEventListener("click", () => {
     });
 }, false)
 
-// DONE_BTN.onclick = () => {
-//     // limit user interaction
-//     DONE_BTN.style.pointerEvents = 'none';
-//     document.body.onkeyup = '';
-
-//     dataConsent.saveSessionData(function () {
-//         // What do we do after saving data?
-//         // animate end of session
-//         endSession();
-//     });
-// }
-
-/* --------------- ======== ---------------- */
-
-
 
 
 
@@ -327,25 +312,31 @@ document.body.onkeyup = (e) => {
 function setSessionid() {
     let url = new URLSearchParams(window.location.search);
     let param = parseInt(url.get('category'));
+    const prefix = 'RegulHate – '
     playback.category = param;
 
     var title = document.getElementById("session-title");
     switch (param) {
         case 1:
-            title.innerHTML = 'Race';
+            document.title = 'RegulHate – Race'
+            title.innerHTML = prefix + 'Race';
             return;
         case 2:
-            title.innerHTML = 'Gender';
+            document.title = 'RegulHate – Gender'
+            title.innerHTML = prefix + 'Gender';
             return;
         case 3:
-            title.innerHTML = 'Disability';
+            document.title = 'RegulHate – Disability'
+            title.innerHTML = prefix + 'Disability';
             return;
         case 4:
-            title.innerHTML = 'Religion';
+            document.title = 'RegulHate – Religion'
+            title.innerHTML = prefix + 'Religion';
             return;
         default:
             playback.category = 1;
-            title.innerHTML = 'Race';
+            document.title = 'RegulHate – Race'
+            title.innerHTML = prefix + 'Race';
             return;
     }
 }
@@ -419,12 +410,6 @@ function stepOn(startPoint) {
     var w = document.querySelectorAll(".timeline-line-section.bar")[0].clientWidth * 2;
     var r = (startPoint + mapper(t, 0, d, 0, w)).toFixed(2);
     cursor.style.left = `${r}px`;
-
-    // function n(n){
-    //     return n > 9 ? "" + Math.round(n): "0" + Math.round(n);
-    // }
-
-    // document.getElementById("timecode").innerHTML = `${n(t)}`;
 }
 
 function updatePercentage(i) {
@@ -435,31 +420,6 @@ function updatePercentage(i) {
 
     mrkr.innerHTML = vol + '%';
 }
-
-/* --------------- NO LONGER USED? --------------- */
-// function updateCursorPosition(index) {
-//     var els = document.getElementsByClassName("timeline-line-section");
-    
-//     Array.prototype.forEach.call(els, (el, i) => {
-//         if (i == (index * 2) + 1) {
-//             // setting position of cursor
-//             cursor.style.left = `${el.offsetLeft}px`;
-//         }
-//     })
-    
-//     if (cursor.style.visibility != 'visible') {
-//         console.log('setting visible');
-//         cursor.style.visibility = 'visible';
-        
-//     } else return;
-// }
-/* --------------- NO LONGER USED? --------------- */
-
-/* --------------- =============== --------------- */
-
-
-
-
 
 
 /* ----------- UTILITY FUNCTIONS ----------- */

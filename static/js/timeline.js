@@ -34,22 +34,6 @@ function endSession() {
     msgEl.style.padding = 'var(--sp)';
     msgEl.style.margin = '0px';
 
-    // Elabora il d della curva d'arrivo in funzione dei punti
-    // ca = [
-    //     //x y
-    //     'M', parseInt(p[0].x), ',', parseInt(p[0].y),
-    //     //x1 y1 x2 y2 x y
-    //     'C', +' ' + parseInt(p[0].x) + (handleOffset/4), ',', parseInt(p[0].y), ' ', parseInt(p[1].x) - handleOffset, ',', parseInt(p[1].y), ' ', parseInt(p[1].x), ',', parseInt(p[1].y),
-    //     //x2 y2 x y
-    //     'S', +' ' + parseInt(p[2].x) - handleOffset, ',', parseInt(p[2].y), ' ', parseInt(p[2].x), ',', parseInt(p[2].y),
-    //     ' ', parseInt(p[3].x) - handleOffset, ',', parseInt(p[3].y), ' ', parseInt(p[3].x), ',', parseInt(p[3].y),
-    //     ' ', parseInt(p[4].x) - handleOffset, ',', parseInt(p[4].y), ' ', parseInt(p[4].x), ',', parseInt(p[4].y),
-    //     ' ', parseInt(p[5].x) - handleOffset, ',', parseInt(p[5].y), ' ', parseInt(p[5].x), ',', parseInt(p[5].y),
-    //     ' ', parseInt(p[6].x) - handleOffset, ',', parseInt(p[6].y), ' ', parseInt(p[6].x), ',', parseInt(p[6].y),
-    //     ' ', parseInt(p[7].x) - (handleOffset/4), ',', parseInt(p[7].y), ' ', parseInt(p[7].x), ',', parseInt(p[7].y)
-    // ].join('');
-    
-
     // -----
     // ----- TIMELINE DECLARATION
     // -----

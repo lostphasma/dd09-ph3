@@ -291,53 +291,6 @@ function show_curves(mainLayer, handleTextLayer, handleLayer, curves, drag) {
                 controlLineElem,
                 handleTextElem;
 
-            // handleTextElem = handleTextLayer.selectAll('text.handle-text.path' + i)
-            //     .data(d.points).enter().append('text').filter(function (d, i) {
-            //         if (i != 0 && i != 7) return d
-            //     })
-            //     .attr({
-            //         'class': function (handleD, handleI) {
-            //             return 'handle-text path' + i + ' p' + (handleI + 1);
-            //         },
-            //         x: function (d) {
-            //             return d.x
-            //         },
-            //         y: function (d) {
-            //             return d.y
-            //         },
-
-            //         // Controlla quanto distante è il testo dai pallini
-            //         dx: -30,
-            //         dy: 30
-            //     })
-            //     .text(handleText);
-
-            // // Sposta le maniglie cerchietti
-            // handleLayer.selectAll('circle.handle.path' + i)
-            //     .data(d.points).enter().append('ellipse').filter(function (d, i) {
-            //         if (i != 0 && i != 7) return d
-            //     })
-            //     .attr({
-            //         'class': 'handle path' + i,
-            //         cx: function (d) {
-            //             return d.x
-            //         },
-            //         cy: function (d) {
-            //             return d.y;
-            //         },
-
-            //         rx: handleRadius,
-            //         ry: handleRadius,
-            //         'vector-effect': 'non-scaling-stroke'
-            //     })
-            //     .each(function (d, handleI) {
-            //         d.pathID = i;
-            //         d.handleID = handleI;
-            //         d.pathElem = pathElem;
-            //         d.controlLineElem = controlLineElem;
-            //     })
-            //     .call(drag);
-
             // Sposta le maniglie cerchietti
             var handles = handleLayer.selectAll('circle.handle.path' + i).data(d.points)
             var handlesEnter = handles.enter().append("g");
