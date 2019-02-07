@@ -16,10 +16,6 @@ svg {
     grid-template: 2fr minmax(0px, 1fr) / 1fr;
     grid-gap: var(--sp);
     
-    /* display: flex; */
-    /* flex-direction: column; */
-
-    align-items: end;
 }
 
 #wrapper > #content > #content-timeline {
@@ -155,16 +151,18 @@ svg {
 }
 
 #wrapper > #content > #content-area {
+    position: relative;
+
     display: grid;
     grid-template: 1fr / 1fr 1.75fr;
     grid-gap: var(--sp);
 
-    align-content: center;
+    /* align-content: center; */
 
     z-index: 30;
-
-    /* max-height: 240px; */
-    height: 100%;
+    
+    /* margin-bottom: var(--sp); */
+    max-height: 100%;
 }
 
 #content-area > #content-viewer {
@@ -196,8 +194,9 @@ svg {
 
 #content-info > #content-desc {
     align-self: start;
-    overflow: scroll;
-    max-height: 150px;
+    overflow-y: auto;
+    max-height: 120px;
+    min-height: 0px;
     padding: calc(var(--sp) / 2);
     border: 1px solid var(--c-bg-h);
     box-shadow: 
