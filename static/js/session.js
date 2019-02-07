@@ -33,12 +33,11 @@ var dataConsent = {
                 data.push(content.volume.toFixed(2));
             })
             writeEntry(curve, data);
-            console.log('User data has been saved.');
 
             callback();
         } else {
             // don't save the data
-            console.log('User data has not saved');
+            callback();
         }
     }
 };
