@@ -144,8 +144,8 @@ window.onresize = () => {
 
 
 PREV_BTN.onclick = () => {
-    playback.playPreviousContent();
     playback.setCaptions();
+    playback.playPreviousContent();
 }
 
 
@@ -155,14 +155,14 @@ PLAY_BTN.onclick = () => {
 
 
 playback.playbackElement.onended = () => {
-    playback.playNextContent();
     playback.setCaptions();
+    playback.playNextContent();
 };
 
 
 NEXT_BTN.onclick = () => {
-    playback.playNextContent();
     playback.setCaptions();
+    playback.playNextContent();
 }
 
 
