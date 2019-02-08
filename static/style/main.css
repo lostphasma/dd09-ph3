@@ -246,7 +246,7 @@ div.module.hidden {
     visibility: hidden;
 }
 
-@media (max-width: 640px), (max-height: 720px) {
+@media (max-width: 640px), (max-height: 480px) {
     html, body {
         pointer-events: none;
     }
