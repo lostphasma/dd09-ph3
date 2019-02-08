@@ -71,9 +71,10 @@ function getAverages(arrayName) {
 
 // gets average of same index among many arrays
 function getContentAverage(arr, index) {
-    if (index > 0 && index < 6) {
+    
+    if (index >= 0 && index <= 6) {
         var outputArr = [];
-
+        
         arr.forEach((entry) => {
             outputArr.push(entry[index]);
         });
@@ -85,6 +86,6 @@ function getContentAverage(arr, index) {
             return (avg / arr.length).toFixed(2);
         })(outputArr);
     } else return false;
-
+    
     return result;
 }
