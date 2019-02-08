@@ -106,8 +106,6 @@ window.onload = () => {
 
         // trick the browser into thinking that the user pressed play
         // then we start the playback after the tutorial closing transition
-        // playback.playPause();
-        // playback.playPause();
         
         setTimeout(() => {
             dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);
@@ -144,8 +142,8 @@ window.onresize = () => {
 
 
 PREV_BTN.onclick = () => {
-    playback.setCaptions();
     playback.playPreviousContent();
+    playback.setCaptions();
 }
 
 
@@ -155,14 +153,14 @@ PLAY_BTN.onclick = () => {
 
 
 playback.playbackElement.onended = () => {
-    playback.setCaptions();
     playback.playNextContent();
+    playback.setCaptions();
 };
 
 
 NEXT_BTN.onclick = () => {
-    playback.setCaptions();
     playback.playNextContent();
+    playback.setCaptions();
 }
 
 
