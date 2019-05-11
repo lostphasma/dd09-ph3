@@ -166,7 +166,7 @@ function getChildIndex(e) {
 }
 
 function computeAvg(i) {
-    var cavg = Math.round(getContentAverage(AVG, i) * 100);
+    var cavg = Math.round(getContentAverage(AVG, i+1) * 100);
     isNaN(cavg) ? cavg = 'n.a.' : cavg;
     document.getElementById("content-info").children[2].innerHTML = `${cavg}%`;
 }

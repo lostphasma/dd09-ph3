@@ -191,7 +191,7 @@ function endSession() {
         begin: function () {
             msgEl.style.opacity = '0';
         }
-    }, 12000)
+    }, 10500)
 
     // Fa comparire il secondo messaggio
     .add({
@@ -209,7 +209,7 @@ function endSession() {
             resultsLink.style.textDecoration = 'underline';
             msgEl.append(resultsLink);
         },
-    }, 13000)
+    }, 11500)
 
     // Rende visibili le curve delle altre sessioni e le anima
     .add({

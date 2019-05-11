@@ -106,6 +106,8 @@ window.onload = () => {
 
         // trick the browser into thinking that the user pressed play
         // then we start the playback after the tutorial closing transition
+        playback.playPause();
+        playback.playPause();
         
         setTimeout(() => {
             dataConsent.approvalBtn.parentElement.removeChild(dataConsent.approvalBtn);

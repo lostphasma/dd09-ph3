@@ -47,13 +47,13 @@ var playback = {
     
     playPreviousContent: function () {
         clearInterval(stepper);
-        const skipThreshold = 0.75;
 
+        const skipThreshold = 0.75;
         if (this.currentTime > skipThreshold) {
             this.setCurrentTime(0);
-            
+
         } else if (this.currentTime <= skipThreshold) {
-            
+
             if (this.current <= 0) {
                 this.current = this.contents.length - 1;
             } else {
@@ -126,9 +126,8 @@ var playback = {
     },
     
     setCaptions: function() {
-        // this.clearCaptions();
+        this.clearCaptions();
         this.captionsElement.src = this.path + this.category + '/' + this.contents[this.current].subs;
-        this.captionsOn();
     },
     
     clearCaptions: function() {
